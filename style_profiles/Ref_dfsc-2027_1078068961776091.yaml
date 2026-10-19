@@ -1,0 +1,117 @@
+name: Ref_dfsc-2027_1078068961776091
+description: 'Auto-analysed reference: Facebook: https://www.facebook.com/share/v/1DSeQULbZm/'
+review_status: UNREVIEWED
+category_only: false
+source_videos:
+- path: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  duration: 60.012
+reference_timecodes:
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  t: 17.875
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  t: 18.125
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  t: 30.125
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  t: 33.0
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  t: 34.0
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  t: 35.0
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  t: 36.0
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  t: 37.0
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  t: 38.0
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  t: 39.0
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  t: 40.0
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  t: 41.0
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  t: 42.0
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4
+  t: 42.25
+  note: cut
+key_frames: []
+screenshots: []
+editing:
+  average_shot_length: 4.001
+  median_shot_length: 1.0
+  cuts_per_minute: 14.0
+  pacing_cuts_per_5s:
+  - 0
+  - 0
+  - 0
+  - 2
+  - 0
+  - 0
+  - 3
+  - 5
+  - 4
+  - 0
+  - 0
+  - 0
+  - 0
+  hook:
+    seconds: 3.0
+    cuts: 0
+    motion: 0.0
+    text_ratio: 0.125
+  camera_motion:
+    pan_speed: 0.0006
+    tilt_speed: 0.0002
+    zoom_speed: -0.0061
+    shake: 0.0043
+    unit: 'fraction of frame width per second (zoom: radial, + = push in)'
+animation: {}
+visual:
+  palette:
+  - hex: '#06101C'
+    share: 0.419
+  - hex: '#10223C'
+    share: 0.274
+  - hex: '#617958'
+    share: 0.112
+  - hex: '#E9EDE9'
+    share: 0.109
+  - hex: '#A2A9AC'
+    share: 0.085
+  brightness: 0.263
+  contrast: 0.15
+  saturation: 0.63
+  text:
+    frames_with_text_ratio: 0.75
+    median_center_y: 0.539
+    median_height: 0.1056
+    zone: middle
+audio:
+  bpm: 123.0
+  onsets_per_sec: 2.03
+  rms_db: -15.4
+  integrated_lufs: -14.0
+  true_peak: -0.25
+use_cases: []
+related_code:
+- studio/style/analyzer.py
+projects: []
+history:
+- at: '2026-10-19T09:24:36Z'
+  action: created_from_analysis
+  by: style-analyzer
+  status: UNREVIEWED

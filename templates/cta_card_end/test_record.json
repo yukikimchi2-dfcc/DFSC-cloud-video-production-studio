@@ -1,10 +1,10 @@
 {
   "template": "cta_card_end",
   "version": "1.0.0",
-  "tested_at": "2026-10-19T08:44:05",
+  "tested_at": "2026-10-19T09:31:23",
   "brand": "Neutral",
   "frames_rendered": 33,
-  "render_seconds": 0.68,
+  "render_seconds": 1.27,
   "preview_png": "preview.png",
   "preview_gif": "preview.gif",
   "gif_bytes": 677103,

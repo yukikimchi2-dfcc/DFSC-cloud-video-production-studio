@@ -235,3 +235,4 @@ secrets/
 credentials*.json
 token*.json
 .env
+projects/*/references/style_reports/*_keyframes/

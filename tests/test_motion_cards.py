@@ -66,3 +66,23 @@ def test_brand_lockup_uses_brand_logo():
     f = render(cards.BrandLockupCard(logo="dfsc_lockup", color="#FFFFFF", panel=True), t=3, brand=load_brand("dfsc-2027"))
     green = (f[..., 1] > 0.6) & (f[..., 0] < 0.4)
     assert green.sum() > 30  # the green English line / paper plane of the lockup
+
+
+def test_quote_mark_does_not_overlap_quote_text():
+    """Regression: the 「 mark used to run into the first line of the quote."""
+    import numpy as np
+    from studio.brand import BrandKit
+    from studio.core.timeline import RenderContext
+    from studio.motion.cards import QuoteCard
+    card = QuoteCard("創業不是一個人的旅程，而是一群人的啟航。", author="評審", x=90, y=700, w=900, h=420)
+    ctx = RenderContext(1080, 1920, 30, brand=BrandKit.neutral())
+    mark, text = card.kids[0], card.kids[1]
+
+    def ink_rows(layer):
+        p = layer.render(ctx, 3.0)
+        rows = np.where(p.rgba[..., 3].max(axis=1) > 0.2)[0]
+        return p.y + rows.min(), p.y + rows.max()
+
+    mark_top, mark_bottom = ink_rows(mark)
+    text_top, _ = ink_rows(text)
+    assert mark_bottom < text_top, (mark_bottom, text_top)

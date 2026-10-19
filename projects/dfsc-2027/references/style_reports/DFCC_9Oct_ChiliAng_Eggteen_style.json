@@ -1,0 +1,154 @@
+{
+ "source": "/home/user/DFSC-cloud-video-production-studio/workspace/references/drive/1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2/DFCC_9Oct_ChiliAng_Eggteen.mp4",
+ "format": {
+  "width": 1080,
+  "height": 1920,
+  "fps": 60.01437125748503,
+  "duration": 69.675,
+  "aspect": 0.5625
+ },
+ "editing": {
+  "shots": 9,
+  "average_shot_length": 7.742,
+  "median_shot_length": 9.05,
+  "shortest_shot": 1.375,
+  "longest_shot": 16.125,
+  "cuts_per_minute": 6.89,
+  "cut_times": [
+   2.875,
+   4.375,
+   7.875,
+   18.75,
+   33.625,
+   43.125,
+   59.25,
+   60.625
+  ],
+  "pacing_cuts_per_5s": [
+   2,
+   1,
+   0,
+   1,
+   0,
+   0,
+   1,
+   0,
+   1,
+   0,
+   0,
+   1,
+   1,
+   0
+  ]
+ },
+ "hook": {
+  "seconds": 3.0,
+  "cuts": 1,
+  "motion": 0.0162,
+  "text_ratio": 0.917
+ },
+ "camera_motion": {
+  "pan_speed": 0.0004,
+  "tilt_speed": 0.001,
+  "zoom_speed": -0.0006,
+  "shake": 0.0071,
+  "unit": "fraction of frame width per second (zoom: radial, + = push in)"
+ },
+ "text": {
+  "frames_with_text_ratio": 0.955,
+  "median_center_y": 0.402,
+  "median_height": 0.0405,
+  "zone": "middle"
+ },
+ "colour": {
+  "brightness": 0.607,
+  "contrast": 0.178,
+  "saturation": 0.234,
+  "brightness_range": [
+   0.159,
+   0.849
+  ],
+  "palette": [
+   {
+    "hex": "#BAADA2",
+    "share": 0.404
+   },
+   {
+    "hex": "#957A6F",
+    "share": 0.223
+   },
+   {
+    "hex": "#D0E2E9",
+    "share": 0.171
+   },
+   {
+    "hex": "#343037",
+    "share": 0.109
+   },
+   {
+    "hex": "#599290",
+    "share": 0.094
+   }
+  ]
+ },
+ "structure": {
+  "intro_shot": {
+   "start": 0.0,
+   "end": 2.875,
+   "duration": 2.875
+  },
+  "outro_shot": {
+   "start": 60.625,
+   "end": 69.675,
+   "duration": 9.05
+  },
+  "opens_dark": false,
+  "ends_dark": false,
+  "outro_has_text": true
+ },
+ "audio": {
+  "bpm": 66.3,
+  "onsets_per_sec": 3.43,
+  "rms_db": -14.0,
+  "integrated_lufs": -14.1,
+  "true_peak": 0.05
+ },
+ "keyframes": [
+  {
+   "t": 1.44,
+   "file": "DFCC_9Oct_ChiliAng_Eggteen_keyframes/kf_0001.44s.jpg"
+  },
+  {
+   "t": 3.62,
+   "file": "DFCC_9Oct_ChiliAng_Eggteen_keyframes/kf_0003.62s.jpg"
+  },
+  {
+   "t": 6.12,
+   "file": "DFCC_9Oct_ChiliAng_Eggteen_keyframes/kf_0006.12s.jpg"
+  },
+  {
+   "t": 13.31,
+   "file": "DFCC_9Oct_ChiliAng_Eggteen_keyframes/kf_0013.31s.jpg"
+  },
+  {
+   "t": 26.19,
+   "file": "DFCC_9Oct_ChiliAng_Eggteen_keyframes/kf_0026.19s.jpg"
+  },
+  {
+   "t": 38.38,
+   "file": "DFCC_9Oct_ChiliAng_Eggteen_keyframes/kf_0038.38s.jpg"
+  },
+  {
+   "t": 51.19,
+   "file": "DFCC_9Oct_ChiliAng_Eggteen_keyframes/kf_0051.19s.jpg"
+  },
+  {
+   "t": 59.94,
+   "file": "DFCC_9Oct_ChiliAng_Eggteen_keyframes/kf_0059.94s.jpg"
+  },
+  {
+   "t": 65.15,
+   "file": "DFCC_9Oct_ChiliAng_Eggteen_keyframes/kf_0065.15s.jpg"
+  }
+ ]
+}

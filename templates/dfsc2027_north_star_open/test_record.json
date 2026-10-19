@@ -1,10 +1,10 @@
 {
   "template": "dfsc2027_north_star_open",
   "version": "0.1.0",
-  "tested_at": "2026-10-19T08:44:06",
+  "tested_at": "2026-10-19T09:31:25",
   "brand": "DFSC 2027",
   "frames_rendered": 57,
-  "render_seconds": 1.03,
+  "render_seconds": 1.61,
   "preview_png": "preview.png",
   "preview_gif": "preview.gif",
   "gif_bytes": 98926,

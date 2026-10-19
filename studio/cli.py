@@ -130,7 +130,10 @@ def cmd_qc(a):
     from .qc.checks import run_qc
     from .qc.report import write_report
     cfg = load_config(a.project)
-    report = run_qc(a.video, cfg, brand=load_brand(a.project) if a.project else None)
+    from .versioning import parse
+    mode = a.mode or (parse(a.video) or {}).get("mode")
+    loudness = cfg["render"]["final"]["loudness_lufs"] if mode == "final" else None  # true peak read from config
+    report = run_qc(a.video, cfg, brand=load_brand(a.project) if a.project else None, loudness_target=loudness)
     out = Path(a.out or REPO_ROOT / "workspace" / "qc")
     md, js = write_report(report, out)
     print(f"QC {'PASSED' if report.passed else 'FAILED'} -> {md}")
@@ -284,6 +287,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     s = sub.add_parser("qc", help="quality-check a video")
     s.add_argument("video")
+    s.add_argument("--mode", choices=["preview", "final"], help="final adds the LUFS / true-peak check (auto from filename)")
     s.add_argument("--project")
     s.add_argument("--out")
     s.set_defaults(fn=cmd_qc)

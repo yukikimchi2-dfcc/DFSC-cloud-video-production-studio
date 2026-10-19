@@ -1,13 +1,13 @@
 {
   "template": "quote_card",
   "version": "1.0.0",
-  "tested_at": "2026-10-19T08:44:08",
+  "tested_at": "2026-10-19T09:31:26",
   "brand": "Neutral",
   "frames_rendered": 37,
-  "render_seconds": 0.97,
+  "render_seconds": 0.88,
   "preview_png": "preview.png",
   "preview_gif": "preview.gif",
-  "gif_bytes": 654890,
+  "gif_bytes": 655177,
   "checks": {
     "nonblank_frame": true,
     "gif_under_1_5mb": true

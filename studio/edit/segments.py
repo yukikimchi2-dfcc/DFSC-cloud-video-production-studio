@@ -190,7 +190,18 @@ def select_segments(transcript: Transcript, goal: str = "", roles: list[str] | N
         while picks and sum(segs[i].end - segs[i].start + 2 * pad for _, i, _ in picks) > max_duration:
             picks.pop()
     picks.sort(key=lambda p: (roles.index(p[0]), segs[p[1]].start))
-    events = [EDLEvent(0, role, transcript.source, max(segs[i].start - pad, 0), segs[i].end + pad, segs[i].text,
+    def padded(i: int) -> tuple[float, float]:
+        # pad into silence, but never past the midpoint of the gap to a neighbouring sentence,
+        # otherwise adjacent picks overlap and the cut repeats a few frames of audio
+        lo = segs[i].start - pad
+        hi = segs[i].end + pad
+        if i > 0:
+            lo = max(lo, (segs[i - 1].end + segs[i].start) / 2)
+        if i + 1 < len(segs):
+            hi = min(hi, (segs[i].end + segs[i + 1].start) / 2)
+        return max(lo, 0.0), max(hi, segs[i].end)
+
+    events = [EDLEvent(0, role, transcript.source, *padded(i), segs[i].text,
                        round(sc, 3), reason=f"{type(scorer).__name__} score") for role, i, sc in picks]
     edl = EDL(title or Path(transcript.source).stem, fps, events, goal)
     edl.relink()

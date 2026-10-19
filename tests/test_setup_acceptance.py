@@ -52,11 +52,25 @@ def test_2_remote_is_configured():
 
 
 # ---- Test 3 — Google Drive ---------------------------------------------------------
+# 3a (public read) and 3b (authenticated write) are accepted separately: "anyone with the link"
+# folders need no credentials to read, but uploading results back to Drive does.
+@pytest.mark.network
+def test_3a_drive_public_read_lists_reference_folders():
+    import gdown
+    from studio.config import PROJECTS_DIR, load_yaml
+    url = load_yaml(PROJECTS_DIR / "dfsc-2027" / "project.yaml")["drive"]["reference_folders"][0]
+    try:
+        items = gdown.download_folder(url=url, skip_download=True, quiet=True)
+    except Exception as e:  # noqa: BLE001
+        pytest.skip(f"BLOCKED: public Drive folder not reachable from this environment ({type(e).__name__})")
+    assert items and all(it.id for it in items)
+
+
 @pytest.mark.network
 def test_3_drive_read_write_verify(tmp_path):
     folder = os.environ.get("STUDIO_DRIVE_TEST_FOLDER")
     if not (os.environ.get("STUDIO_DRIVE_CREDENTIALS") or os.environ.get("STUDIO_DRIVE_TOKEN")) or not folder:
-        pytest.skip("BLOCKED: no Drive credentials / STUDIO_DRIVE_TEST_FOLDER — see docs/zh/03_Google_Drive_连接.md")
+        pytest.skip("BLOCKED (3b write): no Drive credentials / STUDIO_DRIVE_TEST_FOLDER — see docs/zh/03_Google_Drive_连接.md")
     from studio.cli import _drive_check
     from studio.storage.drive import DriveStore
     result = _drive_check(DriveStore(), folder)

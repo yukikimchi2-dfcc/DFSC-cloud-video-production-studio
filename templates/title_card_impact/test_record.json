@@ -1,10 +1,10 @@
 {
   "template": "title_card_impact",
   "version": "1.0.0",
-  "tested_at": "2026-10-19T08:44:10",
+  "tested_at": "2026-10-19T09:31:29",
   "brand": "Neutral",
   "frames_rendered": 21,
-  "render_seconds": 0.62,
+  "render_seconds": 0.57,
   "preview_png": "preview.png",
   "preview_gif": "preview.gif",
   "gif_bytes": 408444,

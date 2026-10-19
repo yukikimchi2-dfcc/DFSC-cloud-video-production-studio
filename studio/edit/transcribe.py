@@ -201,7 +201,10 @@ def _backend(cfg: dict) -> str:
 
 def _transcribe_local(path, cfg, lang, traditional, conv) -> tuple[list[Segment], str, str]:
     model, model_name = _load_model(cfg)
-    raw_segments, info = model.transcribe(str(path), language=lang, word_timestamps=True, vad_filter=True,
+    # Decode with our FFmpeg instead of faster-whisper's PyAV path: PyAV releases have broken its
+    # decode_audio() signature before, and FFmpeg is already the studio's single media dependency.
+    audio = read_audio(path, sample_rate=16000, mono=True)[:, 0]
+    raw_segments, info = model.transcribe(audio, language=lang, word_timestamps=True, vad_filter=True,
                                           initial_prompt=PROMPT_TC if traditional else None)
     segs = []
     for rs in raw_segments:

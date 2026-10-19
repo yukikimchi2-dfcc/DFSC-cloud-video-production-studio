@@ -1,0 +1,79 @@
+name: Ref_dfsc-2027_DFCC_9Oct_JoshuaChin_SmartRental
+description: 'Auto-analysed reference: Drive: DFCC_9Oct_JoshuaChin_SmartRental.mov'
+review_status: UNREVIEWED
+category_only: false
+source_videos:
+- path: /home/user/DFSC-cloud-video-production-studio/workspace/references/drive/1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo/DFCC_9Oct_JoshuaChin_SmartRental.mov
+  duration: 50.9
+reference_timecodes:
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/drive/1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo/DFCC_9Oct_JoshuaChin_SmartRental.mov
+  t: 31.125
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/drive/1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo/DFCC_9Oct_JoshuaChin_SmartRental.mov
+  t: 41.875
+  note: cut
+key_frames: []
+screenshots: []
+editing:
+  average_shot_length: 16.967
+  median_shot_length: 10.75
+  cuts_per_minute: 2.36
+  pacing_cuts_per_5s:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 1
+  - 0
+  - 1
+  - 0
+  - 0
+  hook:
+    seconds: 3.0
+    cuts: 0
+    motion: 0.0518
+    text_ratio: 0.958
+  camera_motion:
+    pan_speed: 0.0025
+    tilt_speed: 0.0014
+    zoom_speed: 0.0086
+    shake: 0.0151
+    unit: 'fraction of frame width per second (zoom: radial, + = push in)'
+animation: {}
+visual:
+  palette:
+  - hex: '#2F3539'
+    share: 0.306
+  - hex: '#68796B'
+    share: 0.231
+  - hex: '#E4E6E3'
+    share: 0.219
+  - hex: '#BCACA3'
+    share: 0.157
+  - hex: '#57B3E8'
+    share: 0.087
+  brightness: 0.525
+  contrast: 0.239
+  saturation: 0.2
+  text:
+    frames_with_text_ratio: 0.953
+    median_center_y: 0.399
+    median_height: 0.037
+    zone: middle
+audio:
+  bpm: 80.7
+  onsets_per_sec: 3.28
+  rms_db: -14.7
+  integrated_lufs: -14.35
+  true_peak: 0.52
+use_cases: []
+related_code:
+- studio/style/analyzer.py
+projects: []
+history:
+- at: '2026-10-19T09:23:05Z'
+  action: created_from_analysis
+  by: style-analyzer
+  status: UNREVIEWED

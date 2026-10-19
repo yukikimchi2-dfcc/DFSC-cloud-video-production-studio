@@ -32,3 +32,17 @@ def test_claude_prompt_built_without_calling_api():
     t = make_transcript()
     prompt = ClaudeScorer().build_prompt(t.segments, "招生广告")
     assert "招生广告" in prompt and "[4]" in prompt and "CTA" in prompt
+
+
+def test_padding_never_makes_adjacent_picks_overlap():
+    """Regression (found on a real interview): 0.08 s padding crossed a 40 ms gap between sentences."""
+    from studio.edit.segments import select_segments
+    from studio.edit.transcribe import Segment, Transcript, Word
+    texts = ["創業最重要的是開始", "我的專案是氣球", "歡迎大家來參加報名"]
+    segs, t = [], 0.0
+    for txt in texts:
+        segs.append(Segment(t, t + 2.0, txt, [Word(t, t + 2.0, txt)]))
+        t += 2.04                                   # 40 ms gaps
+    edl = select_segments(Transcript("x.mp4", "zh", segs), goal="招生", roles=["Hook", "Storyline", "CTA"])
+    spans = sorted((e.src_in, e.src_out) for e in edl.events)
+    assert all(a[1] <= b[0] for a, b in zip(spans, spans[1:])), spans

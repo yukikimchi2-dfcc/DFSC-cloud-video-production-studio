@@ -270,10 +270,15 @@ class StatCard(Card):
 class QuoteCard(Card):
     def __init__(self, quote: str, author: str = "", text_color="text", accent="accent", quote_size: float = 58, **kw):
         super().__init__(**kw)
+        # The 「 mark sits in its own band above the text: its vertical stroke drops most of the
+        # em box, so placing the text by card-height ratio let it run into the first line.
+        mark_size = quote_size * 1.5
+        mark_y = self.y + 24
+        text_y = max(self.y + self.h * 0.28, mark_y + mark_size * 0.95 + 16)
         self.kids = [
-            TextLayer("「", x=self.x + 50, y=self.y + 20, size=quote_size * 2.2, role="title", color=accent,
+            TextLayer("「", x=self.x + 44, y=mark_y, size=mark_size, role="title", color=accent,
                       align="left", animation="pop", safe_clamp=False),
-            TextLayer(quote, x=self.x + self.w / 2, y=self.y + self.h * 0.28, size=quote_size, role="body",
+            TextLayer(quote, x=self.x + self.w / 2, y=text_y, size=quote_size, role="body",
                       color=text_color, animation="typewriter", stagger=0.045, max_width=self.w * 0.8,
                       line_spacing=1.35, start=0.15, safe_clamp=False),
         ]

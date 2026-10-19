@@ -1,0 +1,131 @@
+name: Ref_dfsc-2027_2113554862590743
+description: 'Auto-analysed reference: Facebook: https://www.facebook.com/share/r/1CL7DzWC9D/'
+review_status: UNREVIEWED
+category_only: false
+source_videos:
+- path: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  duration: 40.94
+reference_timecodes:
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 2.75
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 4.25
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 5.375
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 6.875
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 8.0
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 9.375
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 11.25
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 12.75
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 15.375
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 16.375
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 17.875
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 18.125
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 22.125
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 23.875
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 24.75
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 25.625
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 28.125
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 30.25
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 33.25
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/2113554862590743.mp4
+  t: 34.5
+  note: cut
+key_frames: []
+screenshots: []
+editing:
+  average_shot_length: 1.78
+  median_shot_length: 1.5
+  cuts_per_minute: 32.24
+  pacing_cuts_per_5s:
+  - 2
+  - 4
+  - 2
+  - 4
+  - 3
+  - 2
+  - 3
+  - 2
+  - 0
+  hook:
+    seconds: 3.0
+    cuts: 1
+    motion: 0.0329
+    text_ratio: 0.667
+  camera_motion:
+    pan_speed: 0.0025
+    tilt_speed: 0.0006
+    zoom_speed: -0.0027
+    shake: 0.0157
+    unit: 'fraction of frame width per second (zoom: radial, + = push in)'
+animation: {}
+visual:
+  palette:
+  - hex: '#121913'
+    share: 0.451
+  - hex: '#433E33'
+    share: 0.193
+  - hex: '#7F705A'
+    share: 0.138
+  - hex: '#E2E1DD'
+    share: 0.127
+  - hex: '#C0B07C'
+    share: 0.091
+  brightness: 0.325
+  contrast: 0.225
+  saturation: 0.324
+  text:
+    frames_with_text_ratio: 0.893
+    median_center_y: 0.629
+    median_height: 0.0308
+    zone: middle
+audio:
+  bpm: 143.6
+  onsets_per_sec: 3.22
+  rms_db: -13.7
+  integrated_lufs: -14.13
+  true_peak: 0.01
+use_cases: []
+related_code:
+- studio/style/analyzer.py
+projects: []
+history:
+- at: '2026-10-19T09:24:24Z'
+  action: created_from_analysis
+  by: style-analyzer
+  status: UNREVIEWED

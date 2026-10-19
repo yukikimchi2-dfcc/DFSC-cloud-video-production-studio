@@ -1,10 +1,10 @@
 {
   "template": "stat_counter",
   "version": "1.0.0",
-  "tested_at": "2026-10-19T08:44:09",
+  "tested_at": "2026-10-19T09:31:27",
   "brand": "Neutral",
   "frames_rendered": 25,
-  "render_seconds": 0.66,
+  "render_seconds": 0.56,
   "preview_png": "preview.png",
   "preview_gif": "preview.gif",
   "gif_bytes": 462972,

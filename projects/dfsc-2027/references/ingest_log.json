@@ -1,0 +1,93 @@
+{
+  "run_at": "2026-10-19T09:21:55+00:00",
+  "drive": [
+    {
+      "url": "https://drive.google.com/drive/folders/1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo",
+      "files": 1,
+      "videos": 1,
+      "sample": [
+        "DFCC_9Oct_JoshuaChin_SmartRental.mov"
+      ]
+    },
+    {
+      "url": "https://drive.google.com/drive/folders/1x4YaQ1NOiW04Wnb_kM-N8N-1uT1sykG8",
+      "files": 1,
+      "videos": 1,
+      "sample": [
+        "DFCC_YYLim_QJoyBalloon.mp4"
+      ]
+    },
+    {
+      "url": "https://drive.google.com/drive/folders/1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2",
+      "files": 2,
+      "videos": 1,
+      "sample": [
+        "9Oct_ChiliAng_Eggteen_final(1)-封面.jpg",
+        "DFCC_9Oct_ChiliAng_Eggteen.mp4"
+      ]
+    }
+  ],
+  "facebook": [
+    {
+      "url": "https://www.facebook.com/share/r/1CL7DzWC9D/",
+      "file": "2113554862590743.mp4"
+    },
+    {
+      "url": "https://www.facebook.com/share/v/1DSeQULbZm/",
+      "file": "1078068961776091.mp4"
+    }
+  ],
+  "analyzed": [
+    {
+      "video": "Drive: DFCC_9Oct_JoshuaChin_SmartRental.mov",
+      "report": "projects/dfsc-2027/references/style_reports/DFCC_9Oct_JoshuaChin_SmartRental_style.md",
+      "profile": "Ref_dfsc-2027_DFCC_9Oct_JoshuaChin_SmartRental",
+      "duration": 50.9,
+      "shots": 3,
+      "avg_shot": 16.967,
+      "cuts_per_min": 2.36,
+      "bpm": 80.7
+    },
+    {
+      "video": "Drive: DFCC_YYLim_QJoyBalloon.mp4",
+      "report": "projects/dfsc-2027/references/style_reports/DFCC_YYLim_QJoyBalloon_style.md",
+      "profile": "Ref_dfsc-2027_DFCC_YYLim_QJoyBalloon",
+      "duration": 57.941,
+      "shots": 15,
+      "avg_shot": 3.863,
+      "cuts_per_min": 14.5,
+      "bpm": 136.0
+    },
+    {
+      "video": "Drive: DFCC_9Oct_ChiliAng_Eggteen.mp4",
+      "report": "projects/dfsc-2027/references/style_reports/DFCC_9Oct_ChiliAng_Eggteen_style.md",
+      "profile": "Ref_dfsc-2027_DFCC_9Oct_ChiliAng_Eggteen",
+      "duration": 69.675,
+      "shots": 9,
+      "avg_shot": 7.742,
+      "cuts_per_min": 6.89,
+      "bpm": 66.3
+    },
+    {
+      "video": "Facebook: https://www.facebook.com/share/r/1CL7DzWC9D/",
+      "report": "projects/dfsc-2027/references/style_reports/2113554862590743_style.md",
+      "profile": "Ref_dfsc-2027_2113554862590743",
+      "duration": 40.94,
+      "shots": 23,
+      "avg_shot": 1.78,
+      "cuts_per_min": 32.24,
+      "bpm": 143.6
+    },
+    {
+      "video": "Facebook: https://www.facebook.com/share/v/1DSeQULbZm/",
+      "report": "projects/dfsc-2027/references/style_reports/1078068961776091_style.md",
+      "profile": "Ref_dfsc-2027_1078068961776091",
+      "duration": 60.012,
+      "shots": 15,
+      "avg_shot": 4.001,
+      "cuts_per_min": 14.0,
+      "bpm": 123.0
+    }
+  ],
+  "errors": []
+}

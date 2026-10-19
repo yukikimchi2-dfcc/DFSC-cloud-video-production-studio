@@ -1,10 +1,10 @@
 {
   "template": "subtitle_word_highlight",
   "version": "1.0.0",
-  "tested_at": "2026-10-19T08:44:09",
+  "tested_at": "2026-10-19T09:31:29",
   "brand": "DFSC 2027",
   "frames_rendered": 26,
-  "render_seconds": 0.68,
+  "render_seconds": 1.79,
   "preview_png": "preview.png",
   "preview_gif": "preview.gif",
   "gif_bytes": 533311,

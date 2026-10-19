@@ -1,0 +1,121 @@
+{
+ "source": "/home/user/DFSC-cloud-video-production-studio/workspace/references/drive/1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo/DFCC_9Oct_JoshuaChin_SmartRental.mov",
+ "format": {
+  "width": 1080,
+  "height": 1920,
+  "fps": 60.0,
+  "duration": 50.9,
+  "aspect": 0.5625
+ },
+ "editing": {
+  "shots": 3,
+  "average_shot_length": 16.967,
+  "median_shot_length": 10.75,
+  "shortest_shot": 9.025,
+  "longest_shot": 31.125,
+  "cuts_per_minute": 2.36,
+  "cut_times": [
+   31.125,
+   41.875
+  ],
+  "pacing_cuts_per_5s": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   0,
+   1,
+   0,
+   0
+  ]
+ },
+ "hook": {
+  "seconds": 3.0,
+  "cuts": 0,
+  "motion": 0.0518,
+  "text_ratio": 0.958
+ },
+ "camera_motion": {
+  "pan_speed": 0.0025,
+  "tilt_speed": 0.0014,
+  "zoom_speed": 0.0086,
+  "shake": 0.0151,
+  "unit": "fraction of frame width per second (zoom: radial, + = push in)"
+ },
+ "text": {
+  "frames_with_text_ratio": 0.953,
+  "median_center_y": 0.399,
+  "median_height": 0.037,
+  "zone": "middle"
+ },
+ "colour": {
+  "brightness": 0.525,
+  "contrast": 0.239,
+  "saturation": 0.2,
+  "brightness_range": [
+   0.151,
+   0.861
+  ],
+  "palette": [
+   {
+    "hex": "#2F3539",
+    "share": 0.306
+   },
+   {
+    "hex": "#68796B",
+    "share": 0.231
+   },
+   {
+    "hex": "#E4E6E3",
+    "share": 0.219
+   },
+   {
+    "hex": "#BCACA3",
+    "share": 0.157
+   },
+   {
+    "hex": "#57B3E8",
+    "share": 0.087
+   }
+  ]
+ },
+ "structure": {
+  "intro_shot": {
+   "start": 0.0,
+   "end": 31.125,
+   "duration": 31.125
+  },
+  "outro_shot": {
+   "start": 41.875,
+   "end": 50.9,
+   "duration": 9.025
+  },
+  "opens_dark": false,
+  "ends_dark": false,
+  "outro_has_text": true
+ },
+ "audio": {
+  "bpm": 80.7,
+  "onsets_per_sec": 3.28,
+  "rms_db": -14.7,
+  "integrated_lufs": -14.35,
+  "true_peak": 0.52
+ },
+ "keyframes": [
+  {
+   "t": 15.56,
+   "file": "DFCC_9Oct_JoshuaChin_SmartRental_keyframes/kf_0015.56s.jpg"
+  },
+  {
+   "t": 36.5,
+   "file": "DFCC_9Oct_JoshuaChin_SmartRental_keyframes/kf_0036.50s.jpg"
+  },
+  {
+   "t": 46.39,
+   "file": "DFCC_9Oct_JoshuaChin_SmartRental_keyframes/kf_0046.39s.jpg"
+  }
+ ]
+}
