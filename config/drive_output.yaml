@@ -1,0 +1,62 @@
+# Studio OUTPUT location on Google Drive (created 2026-10-19 by Claude via the official
+# Google Drive connector, account yukikimchi2@gmail.com). Reference footage is NOT here:
+# the three original DFCC folders stay read-only reference sources (see projects/*/project.yaml).
+#
+# Write paths, accepted separately (see SETUP_AUDIT.md):
+#   conversation MCP (Claude + connector, human in the loop)  -> PASS for folders, text/markdown reports,
+#                                                                 small binaries (79 B PNG, 825 B MP4)
+#   conversation MCP for production-size video (MB-scale)       -> NOT PASS: create_file only takes inline
+#                                                                 textContent/base64Content (no file path/URL/
+#                                                                 reference); content must pass through the model
+#   unattended pipeline (studio queue run --upload)            -> BLOCKED: no Google identity in the container
+owner: yukikimchi2@gmail.com
+created: 2026-10-19
+created_via: claude-official-google-drive-connector
+sharing: owner only (not yet shared with team — share from Drive or ask Claude with the connector)
+root:
+  name: Cloud Video Production Studio
+  id: 1Lk3HhFLwgQi30d-2lRDFvqn7gRckszmU
+  url: https://drive.google.com/drive/folders/1Lk3HhFLwgQi30d-2lRDFvqn7gRckszmU
+folders:
+  01_Brand_Library: 1B0UUDdVhrJ_yqET1nnQotp_MVCZV0BLg
+  01_Brand_Library/Brand_Guidelines: 1MouwozfLRXc0_JRTappJXJq8Ud9wkqTY
+  01_Brand_Library/Logos: 115SInMYNq3V4ez_paPTTlZRfIBygG7Ga
+  01_Brand_Library/Fonts: 12td4gSZCM49J8xsHPlISiErj6klHR6WZ
+  01_Brand_Library/Color_Palettes: 1990hf2fdjnZTsz2Ss5V93-WmfpTluADP
+  01_Brand_Library/Brand_Assets: 1fS_JSWwAgKx7txxJxunvr-G61VMarEbx
+  02_Source_Materials: 1h8ZgAqWwloQ1bUxuVSinMVxOSjnb3iLt
+  02_Source_Materials/Raw_Videos: 1c5IDQxCmhIk-257qNwym6rUbOELBQ338
+  02_Source_Materials/Interviews: 10Giw5KRe-Se3rvcv3Qh6wtry-4ghMLn2
+  02_Source_Materials/Photos: 13keyhYC649K40qw9JNqFDh1NAiWkc-PI
+  02_Source_Materials/Product_Images: 1HLC7goSmY3_zjUYc8BQTDiNF9RniiOaA
+  02_Source_Materials/Audio: 105PO37YH5znJbGUTTNP5_r744u1dajkI
+  02_Source_Materials/Music: 1JTnHtT3QsgHvhYnb31p2RMxkbm4smaRB
+  03_Style_References: 1BBN22NBUzovRetv4xyirho1xK58Dpr3z
+  03_Style_References/Previous_Edits: 1Owj5N-5Af4IcFQ0YFQqy7Fw9kdDdS8R9
+  03_Style_References/Approved_Videos: 1s5Q5R3tVUd_RxkNUCFsA94QaDxzBWk3D
+  03_Style_References/Motion_References: 1Ec1LncRYkDVwoWWToUNpBeWGCFVyFFyW
+  03_Style_References/Editing_References: 1QYD-2HpHtLAUX-d4ukkLNDYXtnTiVcul
+  03_Style_References/Visual_References: 1dvSg4NEg0pQb-TIpFokJI1l-JRB-6MP4
+  04_Motion_Graphics_Library: 1CsbDaSfREQmS7QN0HZXiArU-4jK2QFGs
+  04_Motion_Graphics_Library/Typography: 1udnKzRJ2WgXTOoQeWf0DSalnmk-w-Olm
+  04_Motion_Graphics_Library/Title_Cards: 1TYuOYNPj98JuNWirD0wlXBSENz24bWuy
+  04_Motion_Graphics_Library/Transitions: 1BeL2XnxyS38H_49OOBg5BnYFIP7MojXu
+  04_Motion_Graphics_Library/Stickers: 1jBalkDfubSq71905UtK3LlQ-gZeFVEqT
+  04_Motion_Graphics_Library/Particles: 1WbY3ozW79QUcgso3ph_LT3hF34o2XENj
+  04_Motion_Graphics_Library/Lower_Thirds: 1Msb6_jJaVmJfz5Ubu1mTrEYpceXlqnrp
+  04_Motion_Graphics_Library/Outro_Templates: 10pNqpHve6o0tiONoKsgSLRHTojxMKv7W
+  05_Active_Projects: 1ofedycS4gnFYfGdMdoZ-HG0zaBQnf0Ia
+  05_Active_Projects/dfsc-2027: 1WZ8GvoxLe-OJ1DFSTHfPtREU5PprEwP_
+  06_Project_Previews: 1_t0v3PJ9k95_2K-esmWXM2pU5KvsBuP0
+  06_Project_Previews/dfsc-2027: 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__
+  07_Approved_Final_Videos: 1q9ZHuccuKW0DNwR4MXORWPvMVtUOCRwU
+  08_QC_Reports: 1vf5ss2dlgMEMRrbM_mn_8LBBBe9xh1Ti
+  08_QC_Reports/dfsc-2027: 16bQMIanpzpv9hraJtqtdS3NWP_uo50uo
+  09_Archive: 1xhf7bp92mOeikB1zxub60OnW1kyWFb0b
+  10_Team_Documentation: 1WtrDZXcfPOxtobDD-X1QgcVN9LblIQOS
+setup_test_files:
+  - {name: CLAUDE_CONNECTOR_SETUP_TEST_20261019T100948Z.txt, id: 1X3xAlOEpnPiG7Vjo32NijxeayzvLeNTY, folder: 06_Project_Previews/dfsc-2027, bytes: 362, md5: a980068f0f7f8948adf7421fdeb3f51b}
+  - {name: TEST_binary_roundtrip_20261019T101541Z.png, id: 1iACP2yveTGD1WSIap1P64RgddnOxSik3, folder: 06_Project_Previews/dfsc-2027, bytes: 79, md5: 71ad0444861dba341f0092708c1229ec}
+  - {name: setup_check_v001_final_qc.md, id: 1TNQYzf6xcahAgTz9bJRw85j9UePy1s93, folder: 08_QC_Reports/dfsc-2027, bytes: 1485, md5: feb263eded2696853e8c291f43afe162}
+  - {name: TEST_tiny_16x16_1frame_20261019T1019Z.mp4, id: 1iiYpSaeHSJGNqYl-fqbZdvziGczls6-0, folder: 06_Project_Previews/dfsc-2027, bytes: 825, md5: e175b04c1d1075714f01b4abcf29175b, ffprobe: "h264 High 16x16 1 frame 0.1s, full decode OK"}
+  - {name: CLAUDE_CONNECTOR_DIAGNOSTIC_20261019T100948Z.txt, id: 1u8WdrXfTk5l4xG0e44AfapwC1Rn8TvMp, folder: My Drive root (diagnostic, outside studio tree), bytes: 362, md5: a980068f0f7f8948adf7421fdeb3f51b}

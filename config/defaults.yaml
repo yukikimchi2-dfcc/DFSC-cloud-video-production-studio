@@ -1,0 +1,63 @@
+# Studio-wide defaults. Every value here can be overridden per project in
+# projects/<id>/project.yaml (deep-merged: project wins).
+
+studio:
+  workspace_dir: workspace        # scratch area for downloads + renders (git-ignored)
+  renders_dir: renders
+  cache_dir: cache
+
+render:
+  preview:
+    width: 720
+    height: 1280
+    fps: source                   # "source" = keep the source frame rate
+    codec: libx264
+    preset: veryfast
+    crf: 26
+    audio_bitrate: 128k
+    max_size_mb: 30               # renderer raises CRF until it fits
+  final:
+    width: 1080
+    height: 1920
+    fps: source
+    codec: libx264
+    preset: slow
+    crf: 16
+    audio_bitrate: 256k
+    loudness_lufs: -14.0
+    true_peak_dbtp: -1.5
+  default_fps: 30                 # used when there is no source clip (pure motion graphics)
+  pix_fmt: yuv420p
+
+safe_area:                        # fraction of frame kept clear for platform UI (Reels/TikTok)
+  top: 0.10
+  bottom: 0.18
+  left: 0.06
+  right: 0.12
+
+transcription:
+  backend: auto                   # auto = groq when GROQ_API_KEY is set, else local | local | groq
+  groq_model: whisper-large-v3-turbo   # free hosted tier: ~8 h audio/day, 25 MB per request
+  model: large-v3-turbo           # local faster-whisper model
+  language: zh
+  device: auto                    # auto | cpu | cuda
+  compute_type: auto
+
+subtitles:
+  script: traditional             # traditional Chinese output
+  max_chars_per_line: 14
+  max_lines: 2
+
+qc:
+  black_frame_threshold: 0.03     # mean luma below this (0..1) counts as black
+  freeze_min_seconds: 0.5
+  peak_dbfs_max: -1.0
+  lufs_tolerance: 1.0
+
+gpu:
+  # Free-first policy: rendering runs on CPU; transcription uses Groq's free Whisper API or
+  # local CPU; Kaggle's free weekly GPU quota is the batch fallback. Paid providers need approval.
+  provider: none                  # none | kaggle (free) | runpod | gcp (paid)
+  require_approval: true
+  auto_stop_minutes: 15
+  max_hourly_usd: 1.00

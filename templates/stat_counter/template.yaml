@@ -1,0 +1,22 @@
+id: stat_counter
+name: 数字统计卡 Stat Counter
+version: 1.0.0
+category: data
+review_status: UNREVIEWED
+description: 卡片弹出后数字从 0 滚动到目标值（自动千分位），下方说明文字淡入。
+usage: 展示参赛人数、奖金、成长率等可信度数据（Credibility 段）。
+duration: 3.0
+preview: {project: null, background: synthetic, time: 2.2, fps: 20}
+parameters:
+  - {name: value, type: float, default: 1200, description: 目标数值}
+  - {name: label, type: str, default: 位創業者 已加入, description: 说明文字}
+  - {name: prefix, type: str, default: "", description: 前缀（如 NT$）}
+  - {name: suffix, type: str, default: "+", description: 后缀（如 + 或 %）}
+  - {name: decimals, type: int, default: 0, description: 小数位}
+  - {name: count_duration, type: float, default: 1.3, description: 滚动时长}
+  - {name: color, type: color, default: secondary, description: 卡片颜色}
+  - {name: panel_opacity, type: float, default: 0.92, description: 卡片不透明度}
+  - {name: text_color, type: color, default: auto, description: 文字颜色（auto = 按底色自动选可读色）}
+  - {name: y, type: float, default: 700, description: 卡片顶部 Y}
+  - {name: duration, type: float, default: 3.0, description: 总时长（秒）}
+test_record: test_record.json

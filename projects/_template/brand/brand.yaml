@@ -1,0 +1,17 @@
+# Fill in from the client's brand guidelines. Colours accept "#RRGGBB".
+name: CHANGE_ME
+colors:
+  primary: "#FFFFFF"
+  secondary: "#888888"
+  accent: "#FFD400"
+  background: "#000000"
+  text: "#FFFFFF"
+fonts:
+  # {system: cjk_black|cjk_bold|cjk_regular|cjk_thin} or {path: fonts/MyFont.otf, index: 0}
+  title: {system: cjk_black}
+  heading: {system: cjk_bold}
+  body: {system: cjk_regular}
+  subtitle: {system: cjk_bold}
+logos: {}                       # name: logos/<file>.json (extracted vector) or .png
+motion:
+  review_status: UNREVIEWED

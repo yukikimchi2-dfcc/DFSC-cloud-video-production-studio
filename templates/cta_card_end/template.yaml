@@ -1,0 +1,18 @@
+id: cta_card_end
+name: 行动呼吁结尾 CTA End Card
+version: 1.0.0
+category: cta
+review_status: UNREVIEWED
+description: 大标题砸入并扫光，下方胶囊按钮弹出并呼吸脉动，周围星芒闪烁。
+usage: 广告结尾（Meta Leads / Reels / TikTok），引导报名或点击。
+duration: 4.0
+preview: {project: null, background: synthetic, time: 2.6, fps: 20}
+parameters:
+  - {name: headline, type: str, default: 你的北極星 在哪裡？, description: 主标题}
+  - {name: button_text, type: str, default: 立即報名, description: 按钮文字}
+  - {name: sub, type: str, default: 名額有限・點擊下方連結, description: 按钮下方小字}
+  - {name: text_color, type: color, default: text, description: 标题颜色}
+  - {name: button_color, type: color, default: secondary, description: 按钮颜色}
+  - {name: button_text_color, type: color, default: auto, description: 按钮文字颜色（auto = 自动对比）}
+  - {name: duration, type: float, default: 4.0, description: 总时长（秒）}
+test_record: test_record.json

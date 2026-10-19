@@ -1,0 +1,19 @@
+id: brand_lockup_outro
+name: 品牌 Logo 结尾 Brand Lockup Outro
+version: 1.0.0
+category: outro
+review_status: UNREVIEWED
+description: 品牌 Logo（矢量）弹出，粒子从中心爆开，标语淡入，可选暗角。
+usage: 所有影片片尾。Logo 取自项目 brand.yaml 的 logos；无 Logo 时显示占位星形。
+duration: 3.5
+preview: {project: dfsc-2027, background: white, time: 2.4, fps: 20, params: {on_color: white}}
+parameters:
+  - {name: logo, type: str, default: dfsc_lockup, description: brand.yaml 中的 logo 键名}
+  - {name: logo_height, type: float, default: 300, description: Logo 高度}
+  - {name: tagline, type: str, default: Find Your North Star, description: 标语（留空不显示）}
+  - {name: text_color, type: color, default: auto, description: 标语颜色（auto = 按底色自动选）}
+  - {name: panel_color, type: color, default: null, description: 底板颜色（null = 无底板）}
+  - {name: on_color, type: color, default: background, description: 结尾所在的背景色（用于 auto 文字颜色）}
+  - {name: vignette, type: bool, default: false, description: 是否加暗角}
+  - {name: duration, type: float, default: 3.5, description: 总时长（秒）}
+test_record: test_record.json

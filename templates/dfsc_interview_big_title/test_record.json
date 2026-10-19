@@ -1,0 +1,16 @@
+{
+  "template": "dfsc_interview_big_title",
+  "version": "1.0.0",
+  "tested_at": "2026-10-19T10:53:36",
+  "brand": "DFSC 2027",
+  "frames_rendered": 25,
+  "render_seconds": 0.49,
+  "preview_png": "preview.png",
+  "preview_gif": "preview.gif",
+  "gif_bytes": 13399,
+  "checks": {
+    "nonblank_frame": true,
+    "gif_under_1_5mb": true
+  },
+  "passed": true
+}

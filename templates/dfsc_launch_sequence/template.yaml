@@ -1,0 +1,97 @@
+id: dfsc_launch_sequence
+name: DFSC 启航·完整结构
+version: 1.0.0
+category: dfsc_launch
+requires_project: dfsc-2027
+review_status: REFERENCE ONLY
+review_note: 以既有成片为风格基准（BASED_ON_REFERENCE）— 用户授权以既有成片为风格基准（2026-10-19）；非逐项审美批准
+description: 宣传片结构：网格 + 星 → 衬线标题 → 学长姐环绕 → 数据卡 → 片尾卡。
+usage: 启航/招生宣传。参考片为 16:9，本模板为 Reels 9:16 版式。
+duration: 16.0
+preview:
+  project: dfsc-2027
+  background: '#000000'
+  time: 5.0
+  fps: 15
+parameters:
+- name: segment_seconds
+  type: float
+  default: 3.0
+  description: ''
+- name: end_seconds
+  type: float
+  default: 7.0
+  description: 片尾卡时长（duration = 3×segment_seconds + end_seconds）
+- name: title
+  type: str
+  default: 示例
+  description: ''
+- name: lines
+  type: list
+  default:
+  - 示例敘述第一行，
+  - 示例敘述第二行。
+  description: ''
+- name: names
+  type: list
+  default:
+  - 學長姐 A
+  - 學長姐 B
+  - 學長姐 C
+  - 學長姐 D
+  - 學長姐 E
+  - 學長姐 F
+  description: ''
+- name: roles
+  type: list
+  default:
+  - 〔公司・屆別〕
+  - 〔公司・屆別〕
+  - 〔公司・屆別〕
+  - 〔公司・屆別〕
+  - 〔公司・屆別〕
+  - 〔公司・屆別〕
+  description: ''
+- name: items
+  type: list
+  default:
+  - value: 3,000[+]
+    label: 隊參賽
+  - value: 900[+]
+    label: 項目上線
+  - value: RM320萬[+]
+    label: 累計眾籌
+  description: ''
+- name: footer
+  type: str
+  default: 馬來西亞首個中文創業大賽
+  description: ''
+- name: edition
+  type: str
+  default: 第十一屆
+  description: 届别（来源：片尾 1:07）
+- name: theme_zh
+  type: str
+  default: 啟航北極星
+  description: 主题（来源：片尾 1:07 / 主视觉）
+- name: theme_en
+  type: str
+  default: Find Your North Star
+  description: 英文主题
+- name: name_en
+  type: str
+  default: Dream Factory Startup Contest
+  description: 英文赛名（蓝字）
+- name: cta_label
+  type: str
+  default: 預熱開放報名
+  description: CTA 文案（来源：ChiliAng 1:07；随档期修改）
+- name: cta_url
+  type: str
+  default: dreamfactory.my
+  description: CTA 网址（来源：ChiliAng 1:07）
+sources:
+- video: Facebook 1078068961776091（第11屆啟航宣傳片）
+  timecode: 0:00–0:59.5
+  note: 整体结构
+test_record: test_record.json

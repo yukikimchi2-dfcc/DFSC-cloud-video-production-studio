@@ -1,0 +1,124 @@
+name: DFSC_Interview_Reel
+description: DFSC 采访故事 Reel（创业者 / 导师 / 评审）。草稿：由剪辑 SOP + 3 支 Drive 采访成片的测量与关键帧观察综合而成，需 Reviewer 审核。
+review_status: REFERENCE_ONLY
+category_only: false
+source_videos:
+- title: Notion 剪辑 SOP
+  path: projects/dfsc-2027/references/notion/dreamfactory__剪辑_SOP.md
+  approved_version: null
+- title: DFCC_9Oct_ChiliAng_Eggteen.mp4
+  drive_id: 1fSAv9as6lfWbfKTszoL4GQgOtXcNUSby
+  approved_version: null
+- title: DFCC_9Oct_JoshuaChin_SmartRental.mov
+  drive_id: 1kX4-TvOTlwiAqc3d_eJzWRGds_peiVtd
+  approved_version: null
+- title: DFCC_YYLim_QJoyBalloon.mp4
+  drive_id: 1hFSjtJBugbXQH_wZ5pWVpxfletzaU-ke
+  approved_version: null
+reference_timecodes:
+- source: DFCC_YYLim_QJoyBalloon.mp4
+  t: 0.0
+  note: 开场金句钩子（先放最有力一句，再自我介绍）
+- source: DFCC_YYLim_QJoyBalloon.mp4
+  t: 43.5
+  note: CTA：欢迎参加第11届，2027年等你
+key_frames: []
+screenshots: []
+editing:
+  length_seconds:
+    sop:
+    - 30
+    - 90
+    measured:
+    - 50.9
+    - 57.9
+    - 69.7
+  average_shot_length_s:
+    measured:
+    - 16.97
+    - 3.86
+    - 7.74
+    note: talking head 为主；单机位时以字卡/推镜制造变化
+  cuts_per_minute:
+    measured:
+    - 2.4
+    - 14.5
+    - 6.9
+  structure_sop:
+  - Hook（Q1 招牌句 / 最有力一句，前 3 秒）
+  - 回答 Q2–Q4
+  - 最后一题
+  - 圆梦口号
+  - 活动邀请
+  one_point_per_video: true
+  hook_text_on_screen_ratio_first_3s:
+    measured:
+    - 0.92
+    - 0.96
+    - 1.0
+animation:
+  templates_candidate:
+  - lower_third_basic
+  - subtitle_word_highlight
+  - brand_lockup_outro
+  templates:
+  - dfsc_interview_top_label
+  - dfsc_interview_big_title
+  - dfsc_interview_name_tag
+  - dfsc_interview_subtitle
+  - dfsc_end_card
+  - dfsc_interview_reel
+visual:
+  aspect: 9:16 1080x1920
+  fps_source: 60
+  observed_unverified:
+  - 顶部绿色圆角标签标题（题目 / 段落标题），姓名标签带 emoji 贴纸
+  - 底部置中白字字幕，关键词绿色高亮（繁体）
+  - 片尾：圓夢工場·創業大賽 白底绿色云朵 end card
+  - 浅色室内背景，自然光人物中景
+  palette_measured:
+  - '#BAADA2'
+  - '#E4E6E3'
+  - '#2F3539'
+  brightness:
+  - 0.53
+  - 0.62
+  saturation:
+  - 0.2
+  - 0.23
+  subtitle_zone_measured: detector reported ~0.40 height — LOW CONFIDENCE; keyframes show subtitles ≈ 0.75–0.80 height
+  brand_green_accent: '#47B649 (key visual) — references use a similar green; exact hex unverified'
+audio:
+  integrated_lufs_measured:
+  - -14.1
+  - -14.35
+  - -13.8
+  true_peak_measured_dbtp:
+  - 0.05
+  - 0.52
+  - -0.06
+  note: 参考成片真峰值高于 -1.5 dBTP（可能削波）；系统 Final 默认更严格
+  music: 无版权或 Instagram 音乐，音量不盖过人声（SOP）
+use_cases:
+- 招生 Reel
+- 创业者故事
+- 导师 / 评审采访
+- Instagram / Facebook Reels
+related_code:
+- studio/edit/subtitles.py
+- studio/edit/segments.py
+- templates/lower_third_basic
+- templates/subtitle_word_highlight
+projects:
+- dfsc-2027
+history:
+- at: '2026-10-19T09:30:33Z'
+  status: UNREVIEWED
+  by: claude-setup
+  note: draft from SOP + 3 reference videos
+- at: '2026-10-19T11:00:34Z'
+  action: review
+  by: user (via claude-setup)
+  from: UNREVIEWED
+  status: REFERENCE_ONLY
+  note: 用户授权以既有成片为风格基准（2026-10-19）；非逐项审美批准。模板见 projects/dfsc-2027/references/TEMPLATE_SOURCES.md

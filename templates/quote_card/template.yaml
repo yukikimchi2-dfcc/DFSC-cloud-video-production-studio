@@ -1,0 +1,19 @@
+id: quote_card
+name: 金句卡 Quote Card
+version: 1.0.0
+category: cards
+review_status: UNREVIEWED
+description: 卡片滑入，「引号弹出，金句以打字机方式出现，最后显示署名。
+usage: 采访金句、评审评语、学员心得。建议 12–40 字。
+duration: 4.5
+preview: {project: null, background: synthetic, time: 3.6, fps: 20}
+parameters:
+  - {name: quote, type: str, default: 創業不是一個人的旅程，而是一群人的啟航。, description: 金句}
+  - {name: author, type: str, default: 第十屆 評審, description: 署名（留空不显示）}
+  - {name: color, type: color, default: "#FFFFFF", description: 卡片颜色}
+  - {name: text_color, type: color, default: auto, description: 文字颜色（auto = 按底色自动选可读色）}
+  - {name: accent, type: color, default: primary, description: 引号与署名颜色}
+  - {name: y, type: float, default: 720, description: 卡片顶部 Y}
+  - {name: height, type: float, default: 420, description: 卡片高度}
+  - {name: duration, type: float, default: 4.5, description: 总时长（秒）}
+test_record: test_record.json

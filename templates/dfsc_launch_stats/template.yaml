@@ -1,0 +1,39 @@
+id: dfsc_launch_stats
+name: DFSC 启航·数据卡
+version: 1.0.0
+category: dfsc_launch
+requires_project: dfsc-2027
+review_status: REFERENCE ONLY
+review_note: 以既有成片为风格基准（BASED_ON_REFERENCE）— 用户授权以既有成片为风格基准（2026-10-19）；非逐项审美批准
+description: 白色大数字 + 绿色 +、标签、绿色底线；下方衬线标语夹在蓝色横线中。
+usage: 成绩数据。默认值取自参考片，使用前请向主办方确认最新数字。
+duration: 4.0
+preview:
+  project: dfsc-2027
+  background: '#071C3C'
+  time: 1.5
+  fps: 20
+parameters:
+- name: items
+  type: list
+  default:
+  - value: 3,000[+]
+    label: 隊參賽
+  - value: 900[+]
+    label: 項目上線
+  - value: RM320萬[+]
+    label: 累計眾籌
+  description: 来源：FB 0:45–0:48
+- name: footer
+  type: str
+  default: 馬來西亞首個中文創業大賽
+  description: 来源：FB 0:48
+- name: duration
+  type: float
+  default: 4.0
+  description: 秒
+sources:
+- video: Facebook 1078068961776091（第11屆啟航宣傳片）
+  timecode: 0:45–0:48
+  note: 3,000+ 隊參賽 / 900+ 項目上線 / RM320萬+ 累計眾籌 / 馬來西亞首個中文創業大賽
+test_record: test_record.json

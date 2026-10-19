@@ -1,0 +1,20 @@
+id: CHANGE_ME
+name: CHANGE_ME
+client: null
+type: promo                    # promo | interview | meta_leads | reels | product_ad | event_teaser | event_recap | corporate
+status: Not Started
+owner: null
+style_profile: null            # must reference an APPROVED profile in style_profiles/ before final render
+created: null
+
+overrides: {}                  # per-project overrides of config/defaults.yaml (render sizes, LUFS, safe area ...)
+
+drive:
+  folder_id: null              # Drive folder under 05_Active_Projects/
+
+handover:
+  assets: []
+  templates: []
+  todo: []
+  known_issues: []
+  next_action: null

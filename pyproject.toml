@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cloud-video-studio"
+version = "0.1.0"
+description = "Cloud AI Video Production Studio — code-driven editing, motion graphics, QC and delivery"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=1.26",
+  "opencv-python-headless>=4.9,<5",  # 5.x dropped CascadeClassifier
+  "pillow>=10.0",
+  "scipy>=1.11",
+  "pyyaml>=6.0",
+  "jsonschema>=4.0",
+  "soundfile>=0.12",
+  "pyloudnorm>=0.1.1",
+  "pymupdf>=1.24",
+  "opencc-python-reimplemented>=0.1.7",
+]
+
+[project.optional-dependencies]
+ai = ["faster-whisper>=1.0", "requests>=2.31"]
+drive = ["google-api-python-client>=2.100", "google-auth>=2.20", "gdown>=5.2"]
+references = ["yt-dlp>=2025.1"]
+auth-bootstrap = ["google-auth-oauthlib>=1.2"]   # only on the computer that runs tools/drive_oauth_bootstrap.py
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+studio = "studio.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["studio*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+  "network: needs outbound access to Drive / model hosts",
+  "slow: renders real video",
+]

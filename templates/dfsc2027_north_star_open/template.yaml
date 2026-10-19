@@ -1,0 +1,21 @@
+id: dfsc2027_north_star_open
+name: DFSC 2027 北极星开场 North Star Opener
+version: 0.1.0
+category: brand_open
+project: dfsc-2027
+review_status: UNREVIEWED
+description: >
+  依据 DFSC_2027_Key_visual.ai 改编的三段式开场：①白底，三色北极星旋转落定成 45° X 形，蓝色星柄向下延伸，
+  细线参考框绘出，「啟航」字标由上而下显现，「北極星」直排淡入；②绿色面板左擦入，细体「27」飞入，
+  白色椭圆环绘出，黑色北极星在 0 中旋转，「2」飞入，「Find Your North Star」直排；③白色面板上擦，
+  「第十一屆」直排逐字落下，圆梦工场。创业大赛 Logo 放大出现。
+usage: 仅为提议的品牌动态方向，未经审核不得作为品牌标准；正式使用前需设计师/审核者确认。
+duration: 7.0
+preview: {project: dfsc-2027, background: white, time: 3.8, fps: 20}
+parameters:
+  - {name: green, type: color, default: green, description: 主绿色}
+  - {name: black, type: color, default: black, description: 黑色}
+  - {name: guide_color, type: color, default: "#231F20", description: 白底上的参考线颜色}
+  - {name: show_qihang, type: bool, default: true, description: 是否显示「啟航」字标}
+  - {name: duration, type: float, default: 7.0, description: 总时长（秒）}
+test_record: test_record.json

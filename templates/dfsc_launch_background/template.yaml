@@ -1,0 +1,44 @@
+id: dfsc_launch_background
+name: DFSC 启航·海军蓝网格 + 北极星
+version: 1.0.0
+category: dfsc_launch
+requires_project: dfsc-2027
+review_status: REFERENCE ONLY
+review_note: 以既有成片为风格基准（BASED_ON_REFERENCE）— 用户授权以既有成片为风格基准（2026-10-19）；非逐项审美批准
+description: 海军蓝径向渐层（#071C3C→#00050D）+ 淡网格 + 闪烁星点；品牌三色北极星 + 白色核心光与十字光芒。
+usage: 启航系列所有画面的底。stem=true 对应开场带杆的北极星。
+duration: 4.0
+preview:
+  project: dfsc-2027
+  background: '#000000'
+  time: 2.0
+  fps: 20
+parameters:
+- name: star_x
+  type: float
+  default: 760
+  description: ''
+- name: star_y
+  type: float
+  default: 420
+  description: ''
+- name: star_height
+  type: float
+  default: 300
+  description: ''
+- name: stem
+  type: bool
+  default: false
+  description: 带蓝色杆（0:02–0:05）
+- name: duration
+  type: float
+  default: 4.0
+  description: 秒
+sources:
+- video: Facebook 1078068961776091（第11屆啟航宣傳片）
+  timecode: 0:02–0:05
+  note: 带杆北极星，右上
+- video: Facebook 1078068961776091（第11屆啟航宣傳片）
+  timecode: 0:06–0:14
+  note: '网格 + 无杆星；中心 #071C3C、边缘 #00050D'
+test_record: test_record.json

@@ -1,0 +1,100 @@
+name: Ref_dfsc-2027_DFCC_9Oct_ChiliAng_Eggteen
+description: 'Auto-analysed reference: Drive: DFCC_9Oct_ChiliAng_Eggteen.mp4'
+review_status: UNREVIEWED
+category_only: false
+source_videos:
+- path: /home/user/DFSC-cloud-video-production-studio/workspace/references/drive/1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2/DFCC_9Oct_ChiliAng_Eggteen.mp4
+  duration: 69.675
+reference_timecodes:
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/drive/1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2/DFCC_9Oct_ChiliAng_Eggteen.mp4
+  t: 2.875
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/drive/1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2/DFCC_9Oct_ChiliAng_Eggteen.mp4
+  t: 4.375
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/drive/1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2/DFCC_9Oct_ChiliAng_Eggteen.mp4
+  t: 7.875
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/drive/1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2/DFCC_9Oct_ChiliAng_Eggteen.mp4
+  t: 18.75
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/drive/1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2/DFCC_9Oct_ChiliAng_Eggteen.mp4
+  t: 33.625
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/drive/1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2/DFCC_9Oct_ChiliAng_Eggteen.mp4
+  t: 43.125
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/drive/1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2/DFCC_9Oct_ChiliAng_Eggteen.mp4
+  t: 59.25
+  note: cut
+- source: /home/user/DFSC-cloud-video-production-studio/workspace/references/drive/1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2/DFCC_9Oct_ChiliAng_Eggteen.mp4
+  t: 60.625
+  note: cut
+key_frames: []
+screenshots: []
+editing:
+  average_shot_length: 7.742
+  median_shot_length: 9.05
+  cuts_per_minute: 6.89
+  pacing_cuts_per_5s:
+  - 2
+  - 1
+  - 0
+  - 1
+  - 0
+  - 0
+  - 1
+  - 0
+  - 1
+  - 0
+  - 0
+  - 1
+  - 1
+  - 0
+  hook:
+    seconds: 3.0
+    cuts: 1
+    motion: 0.0162
+    text_ratio: 0.917
+  camera_motion:
+    pan_speed: 0.0004
+    tilt_speed: 0.001
+    zoom_speed: -0.0006
+    shake: 0.0071
+    unit: 'fraction of frame width per second (zoom: radial, + = push in)'
+animation: {}
+visual:
+  palette:
+  - hex: '#BAADA2'
+    share: 0.404
+  - hex: '#957A6F'
+    share: 0.223
+  - hex: '#D0E2E9'
+    share: 0.171
+  - hex: '#343037'
+    share: 0.109
+  - hex: '#599290'
+    share: 0.094
+  brightness: 0.607
+  contrast: 0.178
+  saturation: 0.234
+  text:
+    frames_with_text_ratio: 0.955
+    median_center_y: 0.402
+    median_height: 0.0405
+    zone: middle
+audio:
+  bpm: 66.3
+  onsets_per_sec: 3.43
+  rms_db: -14.0
+  integrated_lufs: -14.1
+  true_peak: 0.05
+use_cases: []
+related_code:
+- studio/style/analyzer.py
+projects: []
+history:
+- at: '2026-10-19T09:24:04Z'
+  action: created_from_analysis
+  by: style-analyzer
+  status: UNREVIEWED

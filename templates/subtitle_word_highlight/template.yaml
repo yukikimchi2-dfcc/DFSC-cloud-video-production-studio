@@ -1,0 +1,19 @@
+id: subtitle_word_highlight
+name: 逐字高亮字幕 Word Highlight Subtitles
+version: 1.0.0
+category: subtitles
+review_status: UNREVIEWED
+description: 字幕整句显示，当前说到的词变色并轻微放大，可选胶囊底色。仅定义视觉样式，时间轴由转写引擎提供。
+usage: 采访 / 口播类竖屏影片。words 可传 [{text, start, end}] 列表，或用 | 分隔的示例字符串。
+duration: 3.2
+preview: {project: dfsc-2027, background: synthetic, time: 1.5, fps: 20}
+parameters:
+  - {name: words, type: list, default: "創業|不是|一個人的|旅程|而是|一群人的|啟航", description: 词与时间码}
+  - {name: y, type: float, default: 1320, description: 字幕顶部 Y}
+  - {name: size, type: float, default: 68, description: 字号}
+  - {name: text_color, type: color, default: "#FFFFFF", description: 普通文字颜色}
+  - {name: highlight_color, type: color, default: primary, description: 当前词颜色}
+  - {name: pill_color, type: color, default: null, description: 当前词底色（null = 无）}
+  - {name: stroke, type: float, default: 7, description: 描边宽度}
+  - {name: duration, type: float, default: 3.2, description: 总时长（秒）}
+test_record: test_record.json

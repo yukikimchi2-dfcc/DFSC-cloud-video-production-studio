@@ -1,0 +1,65 @@
+name: DFSC_Launch_Cinematic
+description: 第11届大赛启航宣传片风格（Facebook 1078068961776091，横屏 60s）。草稿，需审核。
+review_status: REFERENCE_ONLY
+category_only: false
+source_videos:
+- title: FB 第11届启航宣传片
+  url: https://www.facebook.com/share/v/1DSeQULbZm/
+  approved_version: null
+reference_timecodes: []
+key_frames: []
+screenshots: []
+editing:
+  duration_s: 60.0
+  shots: 15
+  average_shot_length_s: 4.0
+  cuts_per_minute: 14.0
+  intro_s: 17.9
+  outro_s: 17.8
+  opens_dark: true
+animation:
+  templates_candidate:
+  - dfsc2027_north_star_open
+  - title_card_impact
+  templates:
+  - dfsc_launch_background
+  - dfsc_launch_title
+  - dfsc_launch_alumni_orbit
+  - dfsc_launch_stats
+  - dfsc_end_card
+  - dfsc_launch_sequence
+visual:
+  aspect: 16:9 1920x1080
+  palette_measured:
+  - '#06101C'
+  - '#10223C'
+  - '#617958'
+  - '#E9EDE9'
+  brightness: 0.26
+  saturation: 0.63
+  observed_unverified:
+  - 深蓝网格背景 + 发光北极星（呼应 2027 主视觉）
+  - 粗体衬线繁体大标题：重來 / 曝光 / 人脈 / 1對1導師 / 演說指導
+  - 历届参赛者圆形头像环绕北极星
+  - 活动照片 + 暗部渐层 + 白色大字
+audio:
+  bpm_estimate: 123.0
+  integrated_lufs_measured: -14.0
+  true_peak_measured_dbtp: -0.25
+use_cases:
+- 大赛开场 / 启航宣传
+- 活动预告
+related_code: []
+projects:
+- dfsc-2027
+history:
+- at: '2026-10-19T09:30:33Z'
+  status: UNREVIEWED
+  by: claude-setup
+  note: draft from FB launch video
+- at: '2026-10-19T11:00:34Z'
+  action: review
+  by: user (via claude-setup)
+  from: UNREVIEWED
+  status: REFERENCE_ONLY
+  note: 用户授权以既有成片为风格基准（2026-10-19）；非逐项审美批准。模板见 projects/dfsc-2027/references/TEMPLATE_SOURCES.md

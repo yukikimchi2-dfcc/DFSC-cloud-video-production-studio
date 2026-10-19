@@ -1,0 +1,171 @@
+{
+ "source": "/home/user/DFSC-cloud-video-production-studio/workspace/references/facebook/1078068961776091.mp4",
+ "format": {
+  "width": 1920,
+  "height": 1080,
+  "fps": 30.0,
+  "duration": 60.012,
+  "aspect": 1.7778
+ },
+ "editing": {
+  "shots": 15,
+  "average_shot_length": 4.001,
+  "median_shot_length": 1.0,
+  "shortest_shot": 0.25,
+  "longest_shot": 17.875,
+  "cuts_per_minute": 14.0,
+  "cut_times": [
+   17.875,
+   18.125,
+   30.125,
+   33.0,
+   34.0,
+   35.0,
+   36.0,
+   37.0,
+   38.0,
+   39.0,
+   40.0,
+   41.0,
+   42.0,
+   42.25
+  ],
+  "pacing_cuts_per_5s": [
+   0,
+   0,
+   0,
+   2,
+   0,
+   0,
+   3,
+   5,
+   4,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "hook": {
+  "seconds": 3.0,
+  "cuts": 0,
+  "motion": 0.0,
+  "text_ratio": 0.125
+ },
+ "camera_motion": {
+  "pan_speed": 0.0006,
+  "tilt_speed": 0.0002,
+  "zoom_speed": -0.0061,
+  "shake": 0.0043,
+  "unit": "fraction of frame width per second (zoom: radial, + = push in)"
+ },
+ "text": {
+  "frames_with_text_ratio": 0.75,
+  "median_center_y": 0.539,
+  "median_height": 0.1056,
+  "zone": "middle"
+ },
+ "colour": {
+  "brightness": 0.263,
+  "contrast": 0.15,
+  "saturation": 0.63,
+  "brightness_range": [
+   0.071,
+   0.838
+  ],
+  "palette": [
+   {
+    "hex": "#06101C",
+    "share": 0.419
+   },
+   {
+    "hex": "#10223C",
+    "share": 0.274
+   },
+   {
+    "hex": "#617958",
+    "share": 0.112
+   },
+   {
+    "hex": "#E9EDE9",
+    "share": 0.109
+   },
+   {
+    "hex": "#A2A9AC",
+    "share": 0.085
+   }
+  ]
+ },
+ "structure": {
+  "intro_shot": {
+   "start": 0.0,
+   "end": 17.875,
+   "duration": 17.875
+  },
+  "outro_shot": {
+   "start": 42.25,
+   "end": 60.012,
+   "duration": 17.762
+  },
+  "opens_dark": true,
+  "ends_dark": false,
+  "outro_has_text": true
+ },
+ "audio": {
+  "bpm": 123.0,
+  "onsets_per_sec": 2.03,
+  "rms_db": -15.4,
+  "integrated_lufs": -14.0,
+  "true_peak": -0.25
+ },
+ "keyframes": [
+  {
+   "t": 8.94,
+   "file": "1078068961776091_keyframes/kf_0008.94s.jpg"
+  },
+  {
+   "t": 18.0,
+   "file": "1078068961776091_keyframes/kf_0018.00s.jpg"
+  },
+  {
+   "t": 24.12,
+   "file": "1078068961776091_keyframes/kf_0024.12s.jpg"
+  },
+  {
+   "t": 31.56,
+   "file": "1078068961776091_keyframes/kf_0031.56s.jpg"
+  },
+  {
+   "t": 34.5,
+   "file": "1078068961776091_keyframes/kf_0034.50s.jpg"
+  },
+  {
+   "t": 35.5,
+   "file": "1078068961776091_keyframes/kf_0035.50s.jpg"
+  },
+  {
+   "t": 36.5,
+   "file": "1078068961776091_keyframes/kf_0036.50s.jpg"
+  },
+  {
+   "t": 37.5,
+   "file": "1078068961776091_keyframes/kf_0037.50s.jpg"
+  },
+  {
+   "t": 39.5,
+   "file": "1078068961776091_keyframes/kf_0039.50s.jpg"
+  },
+  {
+   "t": 40.5,
+   "file": "1078068961776091_keyframes/kf_0040.50s.jpg"
+  },
+  {
+   "t": 41.5,
+   "file": "1078068961776091_keyframes/kf_0041.50s.jpg"
+  },
+  {
+   "t": 51.13,
+   "file": "1078068961776091_keyframes/kf_0051.13s.jpg"
+  }
+ ]
+}

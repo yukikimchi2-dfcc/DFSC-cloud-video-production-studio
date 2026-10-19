@@ -1,0 +1,78 @@
+id: dfsc-2027
+name: 第十一屆 圓夢工場。創業大賽 2027 — 啟航 北極星
+client: Dream Factory
+type: brand_setup
+status: Not Started
+owner: null
+style_profile: null
+created: 2026-10-19
+overrides:
+  render:
+    default_fps: 30
+drive:
+  folder_id: 1WZ8GvoxLe-OJ1DFSTHfPtREU5PprEwP_
+  reference_folders:
+  - https://drive.google.com/drive/folders/1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo
+  - https://drive.google.com/drive/folders/1x4YaQ1NOiW04Wnb_kM-N8N-1uT1sykG8
+  - https://drive.google.com/drive/folders/1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2
+  reference_folder_info:
+  - id: 1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo
+    name: DFCC_9Oct_JoshuaChin_SmartRental
+    permission: anyone:writer
+  - id: 1x4YaQ1NOiW04Wnb_kM-N8N-1uT1sykG8
+    name: DFCC_9Oct_YYLim_QJoyBalloon
+    permission: anyone:writer
+  - id: 1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2
+    name: DFCC_9Oct_ChiliAng_Eggteen_final(1)
+    permission: anyone:writer
+  cross_client_test_file:
+    id: 1IxNFMiIqOjUCycT_hv54nZAZ1eFnn5Sp
+    name: STUDIO_SETUP_WRITE_TEST_20261019.txt
+    uploaded_by: ChatGPT Google Drive connector (user, 2026-10-19)
+    readable_from_claude_runtime: true
+  connector_diagnostic_file:
+    id: 1u8WdrXfTk5l4xG0e44AfapwC1Rn8TvMp
+    owner: yukikimchi2@gmail.com
+    location: My Drive root
+    note: Claude official Drive connector upload+readback test; safe to delete
+  previews_folder_id: 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__
+  qc_reports_folder_id: 16bQMIanpzpv9hraJtqtdS3NWP_uo50uo
+  output_root: config/drive_output.yaml (Cloud Video Production Studio, owner yukikimchi2@gmail.com)
+  reference_folders_role: read-only reference sources (public link read in container;
+    never written by the studio)
+references:
+  notion: https://app.notion.com/p/Dreamfactory-3f14ddbea63a8022a1f1e3d4c4d1b038
+  facebook:
+  - https://www.facebook.com/share/r/1CL7DzWC9D/
+  - https://www.facebook.com/share/v/1DSeQULbZm/
+notes: 'Setup phase only. No production video is to be cut until the client confirms
+  setup is complete.
+
+  '
+handover:
+  assets:
+  - brand/source/DFSC_2027_Key_visual.ai（Illustrator 主视觉，已提取矢量 Logo）
+  - 参考：Drive 3 支采访 Reel（文件夹 anyone:writer；Claude 端以公开链接只读使用，未修改原片）、FB 启航宣传片 + 学长姐故事、Notion
+    工作区与 SOP（references/）
+  templates:
+  - dfsc2027_north_star_open@0.1.0（UNREVIEWED）
+  - 采访 Reel 家族：dfsc_interview_top_label / big_title / name_tag / subtitle / reel（REFERENCE
+    ONLY）
+  - 启航家族：dfsc_launch_background / title / alumni_orbit / stats / sequence（REFERENCE
+    ONLY）
+  - 共用：dfsc_end_card（REFERENCE ONLY）；来源 references/TEMPLATE_SOURCES.md
+  todo:
+  - 提供圆梦口号与活动资讯，填入模板参数 slogan / invite（目前为〔…〕占位）
+  - 确认用 Noto Sans CJK HK 替代 PingFang HK，或提供授权字体
+  - 无人值守大文件上传：按 docs/zh/04_Drive_OAuth_自动上传.md 完成 OAuth client 与一次浏览器授权，3 个值放进环境 secret，新会话执行
+    studio drive bigtest --folder 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__
+  - 把 setup 分支经 PR 合并到 main（需 Admin 审核；未合并前新会话必须手动选此分支）
+  known_issues:
+  - 主视觉使用 PingFang HK（无服务器授权），暂以 Noto Sans CJK HK 替代
+  - 参考成片音频真峰值约 0 dBTP（削波风险）、JoshuaChin 为 HEVC——仅记录，未修改原片
+  - Whisper 转写需人工校对（例：「創業之律」应为「創業自律」）
+  - Drive 输出：对话连接器可建目录、上传报告/小文件（825 B MP4 已验证）；正式体积影片经连接器 NOT PASS（只能内嵌 base64）
+  - 无人值守上传 BLOCKED：容器无 Google OAuth 凭证
+  - ChatCut：Claude 网页 Custom Connector（远程 MCP，云端宿主注入）只读连接 PASS（62 个工具、OAuth、list_projects 返回 0 项目）；剪辑 / 导入 / 生成 / 导出未测（UNVERIFIED）
+  - DFSC 模板与成片差异：Noto Emoji、数据卡数字字体、启航仅 9:16、片尾缺小 logo、网格非透视（TEMPLATE_SOURCES.md §E）
+  next_action: Setup 已可交接；正式剪辑须等用户提供具体剪辑 brief 与指定素材后才开始（见根目录 CLAUDE.md）
