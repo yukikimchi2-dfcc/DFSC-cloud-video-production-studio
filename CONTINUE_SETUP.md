@@ -50,9 +50,11 @@ python3 tools/notion_public.py "https://app.notion.com/p/Dreamfactory-3f14ddbea6
 | Drive **公开读取**（3 个文件夹，原公开链接） | ✅ 验收通过 |
 | Drive 文件夹写入权限 | ✅ anyone:writer；ChatGPT 端上传 + 回读成功（用户提供证据） |
 | ChatGPT 端上传文件在 Claude 端读回（3c） | ✅ |
-| 对话连接器（官方 Google Drive）认证 + 上传 + 读回（3d） | ✅ PASS（授权账号 My Drive，诊断文件 `1u8WdrXfTk5l4xG0e44AfapwC1Rn8TvMp`） |
-| 对话连接器写入原有文件夹 1（3e） | ⛔ BLOCKED：连接器身份看不到文件夹 1（not found） |
-| 无人值守上传（3b：`studio drive check` / `queue run --upload`） | ⛔ BLOCKED：容器无 Google 身份；未设 `drive.previews_folder_id` |
+| **Drive 输出目录** | `Cloud Video Production Studio`（yukikimchi2@gmail.com，ID 清单 `config/drive_output.yaml`）；Preview → `06_Project_Previews/dfsc-2027`，QC → `08_QC_Reports/dfsc-2027` |
+| 对话连接器：建目录 / 上传读回文本、报告、极小 PNG 与 825 B MP4（3d） | ✅ PASS |
+| 对话连接器：正式体积 MP4 交付（3f） | ❌ NOT PASS：只能内嵌 base64，不能引用容器文件 |
+| 原有三个 DFCC 文件夹 | 只读参考来源（容器公开链接读取）；不写入 |
+| 无人值守上传（3b：`studio queue run --upload`） | ⛔ BLOCKED：容器无 Google 身份（上传目标已设定） |
 | Docker 镜像（CI） | ✅ PASS：GitHub Actions `docker` job |
 | Facebook / Notion 参考导入 | ✅ |
 | 风格分析（5 支）+ 草稿档案 | ✅ 完成 · ⏳ 待 Reviewer 审核（全部 UNREVIEWED） |
@@ -66,12 +68,11 @@ python3 tools/notion_public.py "https://app.notion.com/p/Dreamfactory-3f14ddbea6
 
 1. 回答 `projects/dfsc-2027/references/STYLE_FINDINGS.md` 第 7 节的 4 个问题（繁/简字幕、圆梦口号、绿色标签与云朵片尾是否固定、3 支采访是否为已审核版本）。
 2. Reviewer 审核 `style_profiles/DFSC_Interview_Reel.yaml`、`templates/dfsc2027_north_star_open/preview.gif`。
-3. Drive 写入（链接已在首条 MASTER SETUP PROMPT 提供，无需重发）：
-   - 对话连接器已 connected、上传读回 PASS，但看不到文件夹 1：请文件夹拥有者把文件夹 1 直接共享给 yukikimchi2@gmail.com，然后在新/本会话用连接器 `create_file` 到 `1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo` 重测（新文件名，不覆盖）；
-   - 无人值守 pipeline 仍需容器可用的 Google 身份（下列二选一），并在 project.yaml 设 `drive.previews_folder_id`：
-   - 对话内：https://claude.ai/customize/connectors 完成「Google Drive」授权（现为 connect_incomplete），移除 URL 为 `https://drive.google.com` 的自订「drive」连接器，开新会话；
-   - 自动 pipeline：环境设定加入 `STUDIO_DRIVE_TOKEN` 或服务账号 JSON。
-   然后跑 Test 3b：`studio drive check --folder 1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo`（上传新测试文件、回读、MD5，不删除不覆盖）。
+3. 正式影片交付（链接已在首条 MASTER SETUP PROMPT 提供，无需重发）：
+   - 小文件（QC 报告、字幕、交接文件）：在会话中请 Claude 用官方 Google Drive 连接器上传到 `config/drive_output.yaml` 的目录（已验证）。
+   - 影片：连接器不能交付（只能内嵌 base64）。需在环境设定提供容器可用的 Google 身份：`STUDIO_DRIVE_TOKEN`（yukikimchi2@gmail.com 的 OAuth 授权文件）或服务账号 JSON（并把输出目录共享给该服务账号），然后：
+     `studio drive check --folder 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__`（3b） → `studio queue run --upload`。
+     在此之前，影片由人工从云端工作区下载后上传。
 4. 客户确认 Setup 完成 → 才开始第一支正式影片。
 
 ## 6. 给 Claude 的续接指令（贴到新会话）

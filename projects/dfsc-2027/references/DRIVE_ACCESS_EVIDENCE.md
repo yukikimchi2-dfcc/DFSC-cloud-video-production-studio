@@ -60,15 +60,51 @@
 1. 由文件夹拥有者把文件夹 1 **直接共享**给 `yukikimchi2@gmail.com`（Editor）后重测：若连接器授权是完整范围，文件夹会出现在「与我共享」并可写入；若仍 not found，即确认是受限范围。
 2. 若连接器只能操作自己建立的文件：改由连接器在 yukikimchi2@gmail.com 的 Drive 建立专用交付文件夹（例如 `Cloud Video Production Studio/06_Project_Previews`），再共享给团队；之后对话内上传都放在那里。（需你同意后才建立。）
 
+## 4.2 专用工作室输出目录（2026-10-19 10:13–10:19 UTC，连接器建立）
+
+- 先搜索连接器可见范围：无 `Cloud Video Production Studio` 或类似目录 → 在 yukikimchi2@gmail.com 下新建。
+- 建立 **37 个目录**（根 + 10 个一级 + 23 个二级 + 05/06/08 下的 `dfsc-2027`），全部 `canAddChildren: true`；ID 清单：`config/drive_output.yaml`。
+- 根目录：https://drive.google.com/drive/folders/1Lk3HhFLwgQi30d-2lRDFvqn7gRckszmU（仅拥有者可见，尚未共享给团队）
+- **没有复制或移动任何原素材**；原有三个 DFCC 文件夹保持为只读参考来源（容器以公开链接读取）。
+
+上传 + 读回 + 校验（连接器 `create_file` → `download_file_content` → 容器内 MD5 / ffprobe）：
+
+| 文件 | 位置 | 大小 | MD5 本地 = 读回 | 其他 |
+|---|---|---|---|---|
+| `CLAUDE_CONNECTOR_SETUP_TEST_20261019T100948Z.txt` | 06_Project_Previews/dfsc-2027 | 362 B | `a980068f…` ✅ | |
+| `setup_check_v001_final_qc.md`（真实 QC 报告） | 08_QC_Reports/dfsc-2027 | 1485 B | `feb263ed…` ✅ | |
+| `TEST_binary_roundtrip_20261019T101541Z.png` | 06_Project_Previews/dfsc-2027 | 79 B | `71ad0444…` ✅ | PNG 可解码 |
+| `TEST_tiny_16x16_1frame_20261019T1019Z.mp4` | 06_Project_Previews/dfsc-2027 | 825 B | `e175b04c…` ✅ 逐字节相同 | ffprobe：h264 High 16×16、1 帧、0.1 s；完整解码 OK |
+| （失败）`TEST_binary_roundtrip…mp4` 4.9 KB | — | — | — | ❌ 连接器回「not a valid base64 string」：6564 字符 base64 经模型逐字转录出错，未上传 |
+
+### 4.3 连接器的限制（实测 + 工具定义）
+
+- `create_file` 只接受**内嵌内容**：`textContent`（UTF-8）或 `base64Content`；**没有**本地文件路径、URL、容器文件引用参数 → 连接器**读不到云端容器里的渲染文件**。
+- 工具定义**未标示大小上限** → 最大可接受体积 **UNVERIFIED**；实际上内容必须由模型逐字输出，KB 级已出现转录错误。
+- `download_file_content` 回传 base64，同样经过模型上下文。
+- 连接器只看得到自己建立的文件（看不到原有 DFCC 文件夹）。
+
+### 4.4 验收结论
+
+| 项目 | 结论 |
+|---|---|
+| 连接器：建立目录 / 子目录 | ✅ PASS |
+| 连接器：上传 + 读回 文本 / Markdown 报告 | ✅ PASS |
+| 连接器：极小二进制（79 B PNG、825 B MP4）完整往返 | ✅ PASS |
+| **连接器：正式体积 MP4 交付（Preview ≤30 MB / Final）** | ❌ **NOT PASS** —— 只能内嵌 base64、不能引用容器文件；不可作为生产交付方案 |
+| 无人值守 `studio queue run --upload` | ⛔ BLOCKED（下节） |
+
+可用的人工参与流程：对话中由 Claude 用连接器建立目录、上传 QC 报告 / 交接文件 / 字幕等小文件。**正式影片**需走无人值守上传（补容器身份），或由人从云端工作区下载后手动上传。
+
 ## 5. 无人值守上传（`studio queue run --upload` / `studio drive check`）—— 与连接器分开验收
 
 | 检查 | 结果 |
 |---|---|
 | 容器内 Google 身份 | 无（`STUDIO_DRIVE_TOKEN` / `STUDIO_DRIVE_CREDENTIALS` 未设；`CLOUDSDK_AUTH_ACCESS_TOKEN` 为 14 字符无效占位值）。连接器的 OAuth **不会**出现在容器里，也未尝试提取浏览器 token |
 | `studio drive check --folder 1oBL…` | ⛔ exit 2：no Google identity |
-| `studio queue run --upload` 上传器 | ⛔ 另缺 `project.yaml drive.previews_folder_id`（尚未指定预览上传文件夹） |
+| `studio queue run --upload` 上传器 | 预览目标已设定：`drive.previews_folder_id = 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__`（06_Project_Previews/dfsc-2027）；仍因无 Google 身份而 BLOCKED |
 
-结论：**无人值守上传 BLOCKED**，需要在环境设定提供容器可用的 Google 身份（见下节），并指定预览上传文件夹。
+结论：**无人值守上传 BLOCKED**，只差容器可用的 Google 身份（见下节）。该身份需对输出目录有写入权限（输出目录由 yukikimchi2@gmail.com 拥有：用该账号的 OAuth token，或把输出目录共享给服务账号）。
 
 ## 6. 让 Claude 端可写的具体做法（择一；未代为执行，未建立任何密钥）
 
