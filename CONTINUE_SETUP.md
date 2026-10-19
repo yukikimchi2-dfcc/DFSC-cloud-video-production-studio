@@ -54,7 +54,8 @@ python3 tools/notion_public.py "https://app.notion.com/p/Dreamfactory-3f14ddbea6
 | 对话连接器：建目录 / 上传读回文本、报告、极小 PNG 与 825 B MP4（3d） | ✅ PASS |
 | 对话连接器：正式体积 MP4 交付（3f） | ❌ NOT PASS：只能内嵌 base64，不能引用容器文件 |
 | 原有三个 DFCC 文件夹 | 只读参考来源（容器公开链接读取）；不写入 |
-| 无人值守上传（3b：`studio queue run --upload`） | ⛔ BLOCKED：容器无 Google 身份（上传目标已设定） |
+| 无人值守上传（3b） | ⛔ BLOCKED：等待一次浏览器 OAuth 授权；代码与配置清单已就绪（`docs/zh/04_Drive_OAuth_自动上传.md`） |
+| 大文件上传器协议（3g，本地模拟端点） | ✅ 26 MB 中断续传 + MD5 + 解码（非 Google） |
 | Docker 镜像（CI） | ✅ PASS：GitHub Actions `docker` job |
 | Facebook / Notion 参考导入 | ✅ |
 | 风格分析（5 支）+ 草稿档案 | ✅ 完成 · ⏳ 待 Reviewer 审核（全部 UNREVIEWED） |
@@ -70,9 +71,9 @@ python3 tools/notion_public.py "https://app.notion.com/p/Dreamfactory-3f14ddbea6
 2. Reviewer 审核 `style_profiles/DFSC_Interview_Reel.yaml`、`templates/dfsc2027_north_star_open/preview.gif`。
 3. 正式影片交付（链接已在首条 MASTER SETUP PROMPT 提供，无需重发）：
    - 小文件（QC 报告、字幕、交接文件）：在会话中请 Claude 用官方 Google Drive 连接器上传到 `config/drive_output.yaml` 的目录（已验证）。
-   - 影片：连接器不能交付（只能内嵌 base64）。需在环境设定提供容器可用的 Google 身份：`STUDIO_DRIVE_TOKEN`（yukikimchi2@gmail.com 的 OAuth 授权文件）或服务账号 JSON（并把输出目录共享给该服务账号），然后：
-     `studio drive check --folder 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__`（3b） → `studio queue run --upload`。
-     在此之前，影片由人工从云端工作区下载后上传。
+   - 影片（无人值守）：按 `docs/zh/04_Drive_OAuth_自动上传.md` 完成一次浏览器授权，把 `STUDIO_DRIVE_OAUTH_CLIENT_ID / _CLIENT_SECRET / _REFRESH_TOKEN` 放进环境 secret，开新会话后：
+     `studio drive auth` → `studio drive bigtest --folder 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__`（26 MB 真实上传、断点续传、下载、MD5、解码）→ `studio queue run --upload`。
+     当前进度：yukikimchi2@gmail.com 的 Google Cloud 首次条款页未接受，尚未建立项目或 client。
 4. 客户确认 Setup 完成 → 才开始第一支正式影片。
 
 ## 6. 给 Claude 的续接指令（贴到新会话）

@@ -75,8 +75,8 @@ def test_drive_query_escaping():
 
 
 def test_drive_without_credentials_gives_actionable_error(monkeypatch):
-    from studio.storage.drive import DriveUnavailableError, _credentials
-    for k in ("STUDIO_DRIVE_CREDENTIALS", "GOOGLE_APPLICATION_CREDENTIALS", "STUDIO_DRIVE_TOKEN"):
+    from studio.storage.drive import OAUTH_ENV, DriveUnavailableError, _credentials
+    for k in ("STUDIO_DRIVE_CREDENTIALS", "GOOGLE_APPLICATION_CREDENTIALS", "STUDIO_DRIVE_TOKEN", *OAUTH_ENV):
         monkeypatch.delenv(k, raising=False)
-    with pytest.raises(DriveUnavailableError, match="service-account"):
+    with pytest.raises(DriveUnavailableError, match="STUDIO_DRIVE_OAUTH_REFRESH_TOKEN"):
         _credentials()

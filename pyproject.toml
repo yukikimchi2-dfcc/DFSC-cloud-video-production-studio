@@ -24,6 +24,7 @@ dependencies = [
 ai = ["faster-whisper>=1.0", "requests>=2.31"]
 drive = ["google-api-python-client>=2.100", "google-auth>=2.20", "gdown>=5.2"]
 references = ["yt-dlp>=2025.1"]
+auth-bootstrap = ["google-auth-oauthlib>=1.2"]   # only on the computer that runs tools/drive_oauth_bootstrap.py
 dev = ["pytest>=8.0"]
 
 [project.scripts]

@@ -25,6 +25,7 @@ studio references ingest dfsc-2027                      # 参考资料导入 + �
 | [docs/zh/00_系统架构.md](docs/zh/00_系统架构.md) | 架构、代码结构、持久化原则 |
 | [docs/zh/01_团队使用手册.md](docs/zh/01_团队使用手册.md) | 新项目、上传素材、模板、字幕、Motion Graphics、Preview、审核、版本、正式输出、交接 |
 | [docs/zh/03_Google_Drive_连接.md](docs/zh/03_Google_Drive_连接.md) | Drive 授权、文件夹结构、素材索引 |
+| [docs/zh/04_Drive_OAuth_自动上传.md](docs/zh/04_Drive_OAuth_自动上传.md) | 无人值守大文件上传：OAuth 配置清单、断点续传、验收 |
 | [docs/zh/08_云端GPU评估与成本.md](docs/zh/08_云端GPU评估与成本.md) | GPU 平台比较与成本控制 |
 | [templates/README.md](templates/README.md) | Motion Graphics 模板 |
 | [style_profiles/README.md](style_profiles/README.md) | 风格档案审核流程 |

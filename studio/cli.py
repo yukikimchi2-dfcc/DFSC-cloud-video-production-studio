@@ -165,6 +165,13 @@ def cmd_style(a):
 def cmd_drive(a):
     from .storage import ensure_structure, get_store
     from .storage.index import AssetIndex
+    if a.action == "auth":
+        _print(_drive_auth_status())
+        return
+    if a.action == "bigtest":
+        result = _drive_bigtest(a)
+        _print(result)
+        sys.exit(0 if result.get("passed") else 1)
     try:
         store = get_store(a.store)
     except Exception as e:  # noqa: BLE001 — missing auth is an expected state, not a crash
@@ -209,6 +216,98 @@ def _drive_check(store, folder_id: str | None) -> dict:
         back = store.download(up.id, Path(tmp) / "roundtrip.txt")
         result["write"] = {"id": up.id, "name": up.name, "md5": up.md5}
         result["download_verified"] = back.read_bytes() == probe.read_bytes()
+    return result
+
+
+def _drive_auth_status() -> dict:
+    """Which credential source is configured and whether it works — never prints secret values."""
+    from .storage.drive import OAUTH_ENV, credential_source
+    out = {"source": credential_source(), "env_present": {k: bool(os.environ.get(k)) for k in OAUTH_ENV}}
+    if not out["source"]:
+        out["status"] = "BLOCKED: no Google credentials in this runtime (see docs/zh/04_Drive_OAuth_自动上传.md)"
+        return out
+    try:
+        from google.auth.transport.requests import Request
+        from .storage.drive import DriveStore
+        store = DriveStore()
+        store.creds.refresh(Request())                       # proves the refresh token works
+        about = store.about()
+        out.update(status="OK", account=(about.get("user") or {}).get("emailAddress"),
+                   scopes=sorted(store.creds.scopes or []),
+                   storage_quota_bytes=(about.get("storageQuota") or {}).get("limit"))
+    except Exception as e:  # noqa: BLE001
+        out.update(status="FAILED", error=f"{type(e).__name__}: {str(e)[:200]}")
+    return out
+
+
+def _make_large_test_video(path: Path, seconds: int = 20) -> Path:
+    """~26 MB synthetic TEST clip (1080x1920, noise defeats compression)."""
+    import subprocess
+    font = "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", f"testsrc2=s=1080x1920:r=30:d={seconds}",
+                    "-f", "lavfi", "-i", f"sine=frequency=440:duration={seconds}", "-vf",
+                    f"noise=alls=12:allf=t,drawtext=fontfile={font}:text='TEST · 合成測試素材 · large upload':"
+                    "fontsize=54:fontcolor=white:box=1:boxcolor=black@0.6:x=(w-tw)/2:y=h*0.08",
+                    "-c:v", "libx264", "-preset", "veryfast", "-b:v", "10M", "-maxrate", "10M", "-bufsize", "20M",
+                    "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", str(path)],
+                   check=True)
+    return path
+
+
+def _drive_bigtest(a) -> dict:
+    """Large-file acceptance: upload (interrupted once, then resumed) -> download -> MD5 -> ffprobe + decode."""
+    import subprocess
+    import time
+    from datetime import datetime, timezone
+    from .core.io import probe
+    from .storage import md5_file
+    src = Path(a.path) if a.path else REPO_ROOT / "workspace" / "large_upload" / "TEST_large_upload_25MB.mp4"
+    if not src.exists():
+        _make_large_test_video(src)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    name = f"TEST_large_upload_{stamp}.mp4"            # always a new name: never overwrites
+    out_dir = REPO_ROOT / "workspace" / "large_upload"
+    result = {"mode": "fake (local protocol test, NOT Google)" if a.fake else "google_drive", "file": str(src),
+              "bytes": src.stat().st_size, "local_md5": md5_file(src), "remote_name": name}
+    t0 = time.time()
+    if a.fake:
+        import requests
+        sys.path.insert(0, str(REPO_ROOT / "tests"))
+        from fake_drive_upload import FakeDrive
+        from .storage.resumable import ResumableUploader, UploadError
+        fake = FakeDrive()
+        up = ResumableUploader(requests.Session(), out_dir / "state_fake", base_url=fake.base_url, backoff=0)
+        try:
+            up.upload(src, a.folder or "fake-folder", name, stop_after_chunks=1)
+        except UploadError as e:
+            result["interrupted"] = str(e)
+        md = ResumableUploader(requests.Session(), out_dir / "state_fake", base_url=fake.base_url).upload(
+            src, a.folder or "fake-folder", name)
+        back = out_dir / f"downloaded_{name}"
+        back.write_bytes(fake.files[md["id"]]["data"])
+        fake.close()
+        result.update(remote_id=md["id"], remote_md5=md["md5Checksum"], sessions_used=len(fake.sessions))
+    else:
+        from .storage.drive import DriveStore
+        from .storage.resumable import UploadError
+        store = DriveStore()
+        result["account"] = (store.about().get("user") or {}).get("emailAddress")
+        try:
+            store.upload(src, a.folder, name, stop_after_chunks=1, log=print)
+        except UploadError as e:
+            result["interrupted"] = str(e)
+        remote = store.upload(src, a.folder, name, log=print)
+        back = store.download(remote.id, out_dir / f"downloaded_{name}")
+        result.update(remote_id=remote.id, remote_md5=remote.md5, web_link=remote.web_link)
+    result["upload_seconds"] = round(time.time() - t0, 1)
+    result["downloaded_md5"] = md5_file(back)
+    info = probe(back)
+    result["ffprobe"] = f"{info.vcodec}/{info.acodec} {info.width}x{info.height} {info.duration:.1f}s"
+    dec = subprocess.run(["ffmpeg", "-v", "error", "-i", str(back), "-f", "null", "-"], capture_output=True, text=True)
+    result["full_decode"] = "OK" if dec.returncode == 0 and not dec.stderr.strip() else dec.stderr.strip()[:200]
+    result["passed"] = (result["local_md5"] == result["remote_md5"] == result["downloaded_md5"]
+                        and result["full_decode"] == "OK")
     return result
 
 
@@ -321,7 +420,8 @@ def build_parser() -> argparse.ArgumentParser:
     s.set_defaults(fn=lambda a: cmd_style(argparse.Namespace(**{**vars(a), "name": a.video})))
 
     s = sub.add_parser("drive", help="Google Drive asset system")
-    s.add_argument("action", choices=["check", "setup", "scan", "upload", "download"])
+    s.add_argument("action", choices=["auth", "check", "setup", "scan", "upload", "download", "bigtest"])
+    s.add_argument("--fake", action="store_true", help="bigtest against a local fake endpoint (protocol test, not Google)")
     s.add_argument("--store", choices=["gdrive", "local"])
     s.add_argument("--folder", help="folder id")
     s.add_argument("--parent", help="parent folder id for setup")

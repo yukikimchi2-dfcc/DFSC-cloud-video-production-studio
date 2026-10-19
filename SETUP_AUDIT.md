@@ -83,7 +83,8 @@ DFSC 2027 品牌包：`projects/dfsc-2027/brand/brand.yaml` —— 设计师确�
 | 1 | Test 1 — Cloud Environment | ✅ PASS | 新容器 09:20 启动，SessionStart hook 自动装好套件与繁中字体 |
 | 2 | Test 2 — GitHub 提交 / 读取 / 更新 / 恢复 | ✅ PASS | 测试 + 多次实际 push（最新 commit 见分支） |
 | 3a | Test 3a — Drive **公开读取** | ✅ PASS | 3 文件夹列出（4 个文件）；3 支影片下载 134–194 MB，ffprobe / 完整解码通过；`test_3a_drive_public_read…` 通过 |
-| 3b | **无人值守上传**（`studio drive check` / `studio queue run --upload`） | ⛔ **BLOCKED（容器无 Google 身份）** | 匿名上传 401；`studio drive check` exit 2。上传目标已设：`drive.previews_folder_id = 06_Project_Previews/dfsc-2027`。连接器授权不会进入容器；未提取 token、未建立密钥 |
+| 3b | **无人值守上传**（`studio queue run --upload` / `studio drive bigtest`） | ⛔ **BLOCKED（等待一次浏览器 OAuth 授权）** | 代码已就绪：OAuth 由环境 secret 读取（`STUDIO_DRIVE_OAUTH_*`），Drive resumable 协议上传器会话持久化、断点续传、流式；`studio drive auth` 显示 source=None。真实 Google 26 MB 上传**尚未执行**。配置清单：`docs/zh/04_Drive_OAuth_自动上传.md` |
+| 3g | 大文件上传器协议测试（**本地模拟端点，非 Google**） | ✅ PASS（仅协议） | 26 MB 合成 TEST 影片（1080×1920 20s）：第 1 块（8 MiB）后中断 → 同一会话续传 → 本地 / 上传 / 下载 MD5 `bb9e95ca…` 一致 → ffprobe + 完整解码 OK；6 个单元测试（分块、崩溃续传、503 重试、会话过期重开、区块大小、env 凭证） |
 | 3d | **对话连接器**：建立输出目录 + 上传 + 读回（文本 / 报告 / 极小二进制） | ✅ PASS | 建立 `Cloud Video Production Studio` 37 个目录（`config/drive_output.yaml`）；TXT 362 B、QC 报告 1485 B、PNG 79 B、**MP4 825 B（ffprobe h264 16×16 1 帧，逐字节相同）** 读回 MD5 全部一致 |
 | 3f | **对话连接器：正式体积 MP4 交付** | ❌ **NOT PASS** | `create_file` 只接受内嵌 textContent/base64Content，无文件路径/URL/引用参数，读不到容器文件；大小上限未标示（UNVERIFIED）；4.9 KB MP4 的 base64 转录即失败。不可作为生产交付方案 |
 | 3e | 对话连接器写入原有 DFCC 文件夹 | ⏸ 不需要 | 连接器只看得到自己建立的文件；原有三个文件夹改定位为**只读参考来源**，输出改用专用目录（3d） |
@@ -109,7 +110,7 @@ DFSC 2027 品牌包：`projects/dfsc-2027/brand/brand.yaml` —— 设计师确�
 
 | # | 项目 | 说明 |
 |---|---|---|
-| 1 | 正式影片交付 | 连接器无法交付 MB 级影片（3f）。择一：A）在环境设定提供容器 Google 身份（yukikimchi2@gmail.com 的 `STUDIO_DRIVE_TOKEN`，或服务账号并把输出目录共享给它）→ `studio queue run --upload` 自动上传到 `06_Project_Previews/dfsc-2027`；B）人工从云端工作区下载影片后上传。小文件（QC 报告、字幕、交接文件）可由 Claude 经连接器上传（3d） |
+| 1 | 正式影片自动上传 | 按 `docs/zh/04_Drive_OAuth_自动上传.md`：接受 Google Cloud 条款 → 建项目 → 启用 Drive API → Auth Platform（External，**In production** 避免 7 天失效）→ scope `drive` → 建 Desktop client（或 Web client + Playground）→ 一次浏览器授权 → 3 个值放进环境 secret → 新会话执行 `studio drive bigtest --folder 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__`。小文件可继续由 Claude 经连接器上传（3d） |
 | 2 | 风格决策 | 回答 `projects/dfsc-2027/references/STYLE_FINDINGS.md` 第 7 节（繁/简字幕、圆梦口号、固定品牌元素、3 支采访是否为已审核版本） |
 | 3 | 审核 | Reviewer 审核 `DFSC_Interview_Reel`、`DFSC_Launch_Cinematic`、`dfsc2027_north_star_open` |
 | 4 | Groq（可选） | 若要更快的免费转写：在环境设定加入 `GROQ_API_KEY`（音频会上传给 Groq 处理） |

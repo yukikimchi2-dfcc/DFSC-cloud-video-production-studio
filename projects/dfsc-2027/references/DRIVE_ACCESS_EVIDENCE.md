@@ -106,6 +106,13 @@
 
 结论：**无人值守上传 BLOCKED**，只差容器可用的 Google 身份（见下节）。该身份需对输出目录有写入权限（输出目录由 yukikimchi2@gmail.com 拥有：用该账号的 OAuth token，或把输出目录共享给服务账号）。
 
+## 5.1 无人值守上传：已就绪的部分（2026-10-19）
+
+- 凭证来源：`STUDIO_DRIVE_OAUTH_CLIENT_ID / _CLIENT_SECRET / _REFRESH_TOKEN`（环境 secret），`studio drive auth` 只显示来源与账号，不显示值。
+- 上传器：`studio/storage/resumable.py`（Drive resumable 协议、8 MiB 区块、会话 URI 持久化、崩溃 / 中断续传、5xx 退避、MD5 校验）。
+- 本地模拟端点（非 Google）26 MB 测试：中断续传 + MD5 + 解码 PASS。真实 Google：等待 OAuth。
+- 完整配置与 Google 官方依据：`docs/zh/04_Drive_OAuth_自动上传.md`。
+
 ## 6. 让 Claude 端可写的具体做法（择一；未代为执行，未建立任何密钥）
 
 **A. Claude 对话/会话内写入（使用连接器，不经 pipeline 代码）**
