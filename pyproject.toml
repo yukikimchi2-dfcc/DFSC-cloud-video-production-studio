@@ -9,7 +9,7 @@ description = "Cloud AI Video Production Studio — code-driven editing, motion 
 requires-python = ">=3.11"
 dependencies = [
   "numpy>=1.26",
-  "opencv-python-headless>=4.9",
+  "opencv-python-headless>=4.9,<5",  # 5.x dropped CascadeClassifier
   "pillow>=10.0",
   "scipy>=1.11",
   "pyyaml>=6.0",
@@ -33,6 +33,7 @@ include = ["studio*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 markers = [
   "network: needs outbound access to Drive / model hosts",
   "slow: renders real video",

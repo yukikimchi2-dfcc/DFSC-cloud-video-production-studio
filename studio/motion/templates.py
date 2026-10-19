@@ -27,7 +27,7 @@ from studio.core.canvas import Patch
 from studio.core.timeline import FuncLayer, Layer, SolidLayer, Timeline
 
 from . import cards, particles
-from ._util import readable_on
+from ._util import readable_on, resolve_hex
 from .camera import CameraShake, SlowPushIn
 from .typography import TextLayer, WordHighlightLayer
 
@@ -119,10 +119,11 @@ def synthetic_background(seed: int = 0) -> Layer:
 def preview_timeline(template_id: str, brand: BrandKit, params: dict | None = None,
                      width: int = 540, height: int = 960) -> Timeline:
     meta = get_template(template_id)
+    params = {**meta.get("preview", {}).get("params", {}), **(params or {})}
     dur = template_duration(template_id, params)
     bg = meta.get("preview", {}).get("background", "synthetic")
     tl = Timeline(1080, 1920, fps=meta.get("preview", {}).get("fps", 20), duration=dur, brand=brand,
-                  background=brand.color(bg) if bg not in ("synthetic",) else "#000000")
+                  background=resolve_hex(brand, bg) if bg != "synthetic" else "#000000")
     if bg == "synthetic":
         tl.add(synthetic_background())
     tl.add(*build_template(template_id, params, brand))
@@ -138,7 +139,6 @@ def render_template_preview(template_id: str, out_dir: str | Path | None = None,
     out.mkdir(parents=True, exist_ok=True)
     pid = project_id or meta.get("preview", {}).get("project")
     brand = load_brand(pid)
-    params = {**meta.get("preview", {}).get("params", {}), **(params or {})}
     tl = preview_timeline(template_id, brand, params, width, height)
     t0 = time.time()
     ctx = tl.context(width, height)
@@ -174,12 +174,12 @@ def _title_card_impact(p: dict, brand: BrandKit) -> list[Layer]:
     d = p["duration"]
     p["text_color"] = _auto(brand, p["text_color"], p["color"])
     layers: list[Layer] = [
-        cards.ImpactCard(p["text"], x=60, y=p["y"], w=960, h=p["height"], color=p["color"], text_color=p["text_color"],
+        cards.ImpactCard(p["text"], x=70, y=p["y"], w=870, h=p["height"], color=p["color"], text_color=p["text_color"],
                          size=p["size"], radius=p["radius"], duration=d, exit="scale", exit_duration=0.3, z=10),
         CameraShake(intensity=0.012, decay=7, start=0.12, duration=0.8, z=5),
     ]
     if p.get("subtitle"):
-        layers.append(TextLayer(p["subtitle"], y=p["y"] + p["height"] + 40, size=52, role="body", color="#FFFFFF",
+        layers.append(TextLayer(p["subtitle"], x=505, y=p["y"] + p["height"] + 40, size=52, role="body", color="#FFFFFF",
                                 shadow={"blur": 8, "opacity": 0.5},
                                 animation="fade", start=0.45, duration=d - 0.45, exit="fade", z=11))
     if p.get("sparkles"):
@@ -202,7 +202,7 @@ def _lower_third(p: dict, brand: BrandKit) -> list[Layer]:
                                          align="left", animation="fly_in", stagger=0.03, safe_clamp=False),
                                TextLayer(p["title"], x=x + 42, y=y + 106, size=36, role="body", color=p["text_color"],
                                          align="left", animation="fade", start=0.25, safe_clamp=False),
-                           ], z=10)
+                           ], clip_content=True, z=10)
     accent = cards.SolidPanel(x=x, y=y, w=14, h=170, color=p["accent"], radius=0, enter="slide_up",
                               enter_duration=0.3, exit="fade", duration=d, z=11, safe_clamp=True)
     return [bar, accent]
@@ -212,7 +212,7 @@ def _lower_third(p: dict, brand: BrandKit) -> list[Layer]:
 def _stat_counter(p: dict, brand: BrandKit) -> list[Layer]:
     p["text_color"] = _auto(brand, p["text_color"], p["color"])
     return [cards.StatCard(p["value"], label=p["label"], prefix=p["prefix"], suffix=p["suffix"],
-                           decimals=p["decimals"], count_duration=p["count_duration"], x=90, y=p["y"], w=900, h=420,
+                           decimals=p["decimals"], count_duration=p["count_duration"], x=75, y=p["y"], w=860, h=420,
                            color=p["color"], number_color=p["text_color"], label_color=p["text_color"],
                            panel_opacity=p["panel_opacity"], duration=p["duration"], enter="pop", z=10)]
 
@@ -221,7 +221,7 @@ def _stat_counter(p: dict, brand: BrandKit) -> list[Layer]:
 def _quote_card(p: dict, brand: BrandKit) -> list[Layer]:
     p["text_color"] = _auto(brand, p["text_color"], p["color"])
     p["accent"] = readable_on(brand, p["color"], p["accent"], 1.8)
-    return [cards.QuoteCard(p["quote"], author=p["author"], x=80, y=p["y"], w=920, h=p["height"], color=p["color"],
+    return [cards.QuoteCard(p["quote"], author=p["author"], x=75, y=p["y"], w=860, h=p["height"], color=p["color"],
                             text_color=p["text_color"], accent=p["accent"], duration=p["duration"],
                             shadow={"blur": 24, "opacity": 0.3}, z=10)]
 
@@ -231,9 +231,9 @@ def _cta_end(p: dict, brand: BrandKit) -> list[Layer]:
     d = p["duration"]
     p["button_text_color"] = _auto(brand, p["button_text_color"], p["button_color"])
     return [
-        TextLayer(p["headline"], y=620, size=96, role="title", color=p["text_color"], animation="slam", stagger=0.05,
+        TextLayer(p["headline"], x=505, y=620, size=96, role="title", color=p["text_color"], animation="slam", stagger=0.05,
                   duration=d, sweep={"start": 1.2}, z=10),
-        cards.CTACard(p["button_text"], sub=p["sub"], x=190, y=980, w=700, h=150, color=p["button_color"],
+        cards.CTACard(p["button_text"], sub=p["sub"], x=170, y=980, w=670, h=150, color=p["button_color"],
                       text_color=p["button_text_color"], start=0.6, duration=d - 0.6, exit=None, z=11),
         particles.StarSparkles(count=18, region=(60, 400, 1020, 1400), color=p["text_color"], start=0.4,
                                duration=d - 0.4, z=12),
@@ -246,9 +246,9 @@ def _brand_outro(p: dict, brand: BrandKit) -> list[Layer]:
     p["text_color"] = _auto(brand, p["text_color"], p["panel_color"] or p["on_color"])
     layers: list[Layer] = [
         cards.BrandLockupCard(logo=p["logo"], logo_height=p["logo_height"], tagline=p["tagline"],
-                              tagline_color=p["text_color"], x=90, y=720, w=900, h=480, color=p["panel_color"],
+                              tagline_color=p["text_color"], x=75, y=720, w=860, h=480, color=p["panel_color"],
                               panel=bool(p["panel_color"]), duration=d, exit=None, z=10),
-        particles.ParticleEmitter(origin=(540, 900), burst=50, rate=0, lifetime=1.6, gravity=120, speed=(200, 700),
+        particles.ParticleEmitter(origin=(505, 900), burst=50, rate=0, lifetime=1.6, gravity=120, speed=(200, 700),
                                   colors=[p["text_color"], "primary", "secondary"], start=0.35, duration=2.0, z=11),
     ]
     if p.get("vignette"):
@@ -263,7 +263,7 @@ def _subtitle_highlight(p: dict, brand: BrandKit) -> list[Layer]:
         parts = [w for w in words.split("|") if w]
         step = p["duration"] / max(len(parts), 1)
         words = [{"text": w, "start": i * step, "end": (i + 1) * step} for i, w in enumerate(parts)]
-    return [WordHighlightLayer(words, y=p["y"], size=p["size"], color=p["text_color"], highlight_color=p["highlight_color"],
+    return [WordHighlightLayer(words, x=505, max_width=820, y=p["y"], size=p["size"], color=p["text_color"], highlight_color=p["highlight_color"],
                                pill_color=p["pill_color"], stroke=p["stroke"], duration=p["duration"], z=30)]
 
 
@@ -323,8 +323,8 @@ class _NorthStarLayer(Layer):
 
 @register("dfsc2027_north_star_open")
 def _dfsc_open(p: dict, brand: BrandKit) -> list[Layer]:
-    green, black, white = p["green"], p["black"], "#FFFFFF"
-    line = p["guide_color"]
+    green, black, white = resolve_hex(brand, p["green"]), resolve_hex(brand, p["black"]), "#FFFFFF"
+    line = resolve_hex(brand, p["guide_color"])
     layers: list[Layer] = [
         # --- scene 1: white panel, tri-colour north star, 啟航 北極星
         SolidLayer(white, duration=2.6, z=-50),

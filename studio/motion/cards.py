@@ -15,7 +15,7 @@ from studio.core import canvas, easing, vector
 from studio.core.canvas import Patch
 from studio.core.timeline import Layer, RenderContext
 
-from ._util import (enter_exit_state, linear_gradient, offset, over, resolve_color, rounded_rect_mask,
+from ._util import (enter_exit_state, linear_gradient, offset, over, resolve_color, resolve_hex, rounded_rect_mask,
                     solid_patch, with_opacity)
 from .typography import TextLayer
 
@@ -23,30 +23,31 @@ from .typography import TextLayer
 class Card(Layer):
     """Base card: solid rounded panel + child layers. Subclasses override `panel()` / `children()`."""
 
-    def __init__(self, x: float = 90, y: float = 1200, w: float = 900, h: float = 300, color="primary",
+    def __init__(self, x: float = 80, y: float = 1200, w: float = 860, h: float = 300, color="primary",
                  radius: float = 28, panel_opacity: float = 1.0, border: dict | None = None,
                  enter: str = "slide_up", enter_duration: float = 0.5, exit: str | None = "fade",
                  exit_start: float | None = None, exit_duration: float = 0.35, ease: str | None = None,
-                 safe_clamp: bool = True, shadow: dict | None = None, content: list[Layer] | None = None, **kw):
+                 safe_clamp: bool = True, shadow: dict | None = None, content: list[Layer] | None = None,
+                 clip_content: bool = False, **kw):
         super().__init__(**kw)
         self.x, self.y, self.w, self.h = x, y, w, h
         self.color, self.radius, self.panel_opacity, self.border = color, radius, panel_opacity, border
         self.enter, self.enter_duration, self.exit, self.exit_duration, self.ease = enter, enter_duration, exit, exit_duration, ease
         self.exit_start = exit_start
         if exit and exit_start is None and self.duration is not None:
-            self.exit_start = max(self.duration - exit_duration, 0)
+            self.exit_start = max(self.duration - exit_duration - 1 / 30, 0)  # clear on the last frame
         self.safe_clamp, self.shadow = safe_clamp, shadow
         self.content = content or []
+        self.clip_content = clip_content  # hide child pixels outside the panel (e.g. text flying in)
 
     # rect in output px after safe-area clamping
     def rect(self, ctx: RenderContext) -> tuple[int, int, int, int]:
         x, y, w, h = ctx.px(self.x), ctx.px(self.y), max(ctx.px(self.w), 1), max(ctx.px(self.h), 1)
-        if self.safe_clamp:
+        if self.safe_clamp:  # shrink to fit, then shift inside the platform-safe area
             sx0, sy0, sx1, sy1 = ctx.safe_rect()
-            if w <= sx1 - sx0:
-                x = min(max(x, sx0), sx1 - w)
-            if h <= sy1 - sy0:
-                y = min(max(y, sy0), sy1 - h)
+            w, h = min(w, sx1 - sx0), min(h, sy1 - sy0)
+            x = min(max(x, sx0), sx1 - w)
+            y = min(max(y, sy0), sy1 - h)
         return x, y, w, h
 
     def state(self, t: float):
@@ -96,10 +97,14 @@ class Card(Layer):
                 cp = child.render(ctx, ct - child.start)
                 if cp is not None:
                     group = _union_over(group, cp, child.opacity)
-        if st.reveal < 1:  # expanding cards clip their content to the visible panel
+        if st.reveal < 1 or self.clip_content:  # clip content to the visible panel
             cx0 = (w - vis_w) // 2 + (x - group.x)
             group.rgba[:, :max(cx0, 0), 3] = 0
             group.rgba[:, cx0 + vis_w:, 3] = 0
+            if self.clip_content:
+                cy0 = y - group.y
+                group.rgba[:max(cy0, 0), :, 3] = 0
+                group.rgba[cy0 + h:, :, 3] = 0
         return group
 
     def render(self, ctx: RenderContext, t: float) -> Patch | None:
@@ -221,7 +226,7 @@ class ImpactCard(Card):
         super().__init__(**kw)
         self._kid = TextLayer(text, x=self.x + self.w / 2, y=self.y + self.h / 2, size=size, role="title",
                               color=text_color, valign="middle", animation="slam", stagger=0.05, stroke=stroke,
-                              max_width=self.w * 0.92, safe_clamp=False)
+                              fit_width=self.w * 0.88, safe_clamp=False)
 
     def _content_time(self, t):
         return t
@@ -323,10 +328,15 @@ class BrandLockupCard(Card):
         base = super().panel(ctx, t, w, h, reveal) if self.show_panel else Patch(np.zeros((h, w, 4), np.float32))
         key = (ctx.brand.project_id if ctx.brand else None, ctx.px(self.logo_height))
         if key not in self._shape_cache:
-            shape = ctx.brand.logo_shape(self.logo) if ctx.brand and self.logo in ctx.brand.logos else vector.star_shape()
-            lp = vector.render_shape(shape, ctx.px(self.logo_height), colors=self.logo_colors)
+            colors = self.logo_colors
+            if ctx.brand and self.logo in ctx.brand.logos:
+                shape = ctx.brand.logo_shape(self.logo)
+            else:  # placeholder star in the (readable) tagline colour
+                shape = vector.star_shape()
+                colors = {"#FFFFFF": resolve_hex(ctx.brand, self.tagline_color)}
+            lp = vector.render_shape(shape, ctx.px(self.logo_height), colors=colors)
             if lp.w > w * 0.92:  # wide lockups: fit width
-                lp = vector.render_shape(shape, max(int(ctx.px(self.logo_height) * w * 0.92 / lp.w), 1), colors=self.logo_colors)
+                lp = vector.render_shape(shape, max(int(ctx.px(self.logo_height) * w * 0.92 / lp.w), 1), colors=colors)
             self._shape_cache[key] = lp
         lp = self._shape_cache[key]
         lp = Patch(lp.rgba, (w - lp.w) // 2, int(h * (0.42 if self.tagline else 0.5)) - lp.h // 2)

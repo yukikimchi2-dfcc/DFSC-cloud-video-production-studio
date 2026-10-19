@@ -24,12 +24,13 @@ colors:
 fonts:
   # The key visual uses PingFang HK (Apple, not licensable for Linux servers) for CJK and
   # Noto Sans SC Thin for "2027 / Find Your North Star". Cloud substitutes below are the
-  # closest free equivalents; drop licensed .otf files into brand/fonts/ and point here to replace.
-  title: {system: cjk_black}
-  heading: {system: cjk_bold}
-  body: {system: cjk_regular}
-  subtitle: {system: cjk_bold}
-  numerals_thin: {system: cjk_thin}   # matches the thin "2027" numerals
+  # closest free equivalents (Noto Sans CJK **HK** face = Hong Kong glyph standard, like PingFang HK);
+  # drop licensed .otf files into brand/fonts/ and point here to replace.
+  title: {system: cjk_black_hk}
+  heading: {system: cjk_bold_hk}
+  body: {system: cjk_regular_hk}
+  subtitle: {system: cjk_bold_hk}
+  numerals_thin: {system: cjk_thin_hk}   # matches the thin "2027" numerals
 
 logos:
   north_star_tricolor: logos/north_star_tricolor.json

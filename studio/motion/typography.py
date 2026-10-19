@@ -22,7 +22,7 @@ from studio.core import canvas, easing
 from studio.core.canvas import Patch
 from studio.core.timeline import Layer, RenderContext
 
-from ._util import get_font, resolve_color
+from ._util import get_font, resolve_color, resolve_hex
 
 _NO_LINE_START = set("，。、！？：；」』）》〉】,.!?:;)]}%…")
 _CJK = re.compile(r"[⺀-鿿豈-﫿＀-￯　-〿]")
@@ -142,7 +142,8 @@ class TextLayer(Layer):
                  animation: str = "fade", stagger: float = 0.04, char_duration: float = 0.35, ease: str | None = None,
                  exit: str | None = None, exit_start: float | None = None, exit_duration: float = 0.3,
                  exit_stagger: float = 0.0, underline: dict | None = None, sweep: dict | None = None,
-                 mask_reveal: dict | None = None, safe_clamp: bool = True, rotation: float = 0.0, **kw):
+                 mask_reveal: dict | None = None, safe_clamp: bool = True, rotation: float = 0.0,
+                 fit_width: float | None = None, **kw):
         super().__init__(**kw)
         if animation not in CHAR_ANIMATIONS:
             raise ValueError(f"animation must be one of {CHAR_ANIMATIONS}")
@@ -155,8 +156,10 @@ class TextLayer(Layer):
         self.animation, self.stagger, self.char_duration, self.ease = animation, stagger, char_duration, ease
         self.exit, self.exit_start, self.exit_duration, self.exit_stagger = exit, exit_start, exit_duration, exit_stagger
         if self.exit and self.exit_start is None and self.duration is not None:
-            self.exit_start = max(self.duration - exit_duration - exit_stagger * max(len(text) - 1, 0), 0)
+            # finish one frame early so the last frame of the layer is already clear
+            self.exit_start = max(self.duration - exit_duration - exit_stagger * max(len(text) - 1, 0) - 1 / 30, 0)
         self.underline, self.sweep, self.mask_reveal, self.safe_clamp = underline, sweep, mask_reveal, safe_clamp
+        self.fit_width = fit_width  # shrink the font so each explicit line fits this width (design px) unwrapped
         self.rotation = rotation  # whole-block rotation (deg, CCW) about the anchor point, e.g. 90 for sideways English
         self._layout_cache: dict = {}
 
@@ -167,6 +170,11 @@ class TextLayer(Layer):
             return self._layout_cache[key]
         font = get_font(ctx.brand, self.role, ctx.px(self.size))
         tracking = self.tracking * ctx.scale
+        if self.fit_width and not self.vertical:
+            widest = max(_line_width(l, font, tracking) for l in self.text.split("\n"))
+            limit = self.fit_width * ctx.scale
+            if widest > limit:
+                font = get_font(ctx.brand, self.role, max(int(font.size * limit / widest), 1))
         stroke = int(round(self.stroke * ctx.scale))
         ascent, descent = font.getmetrics()
         line_h = (ascent + descent) * self.line_spacing
@@ -189,7 +197,9 @@ class TextLayer(Layer):
             height = max((len(c) for c in cols), default=0) * cell - tracking
         else:
             max_w = None
-            if self.max_width is not None:
+            if self.fit_width:
+                max_w = None  # already shrunk to fit; never wrap
+            elif self.max_width is not None:
                 max_w = self.max_width * ctx.scale
             elif self.safe_clamp:
                 sx0, _, sx1, _ = ctx.safe_rect()
@@ -414,11 +424,6 @@ class TextLayer(Layer):
             return np.clip((ys - edge) / soft, 0, 1)
         edge = sy0 + (sy1 - sy0 + soft) * p
         return np.clip((edge - ys) / soft, 0, 1)
-
-
-def resolve_hex(brand, color) -> str:
-    r, g, b = resolve_color(brand, color)
-    return "#%02X%02X%02X" % (round(r * 255), round(g * 255), round(b * 255))
 
 
 def text_patch(text: str, ctx: RenderContext, **kw) -> Patch | None:

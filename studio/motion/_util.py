@@ -18,7 +18,6 @@ _FALLBACK_SPECS = [
     {"path": "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc", "index": 3},
     {"path": "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc", "index": 3},
 ]
-_NOTO_CJK_TC_INDEX = 3  # inside NotoSansCJK-*.ttc: 0 JP, 1 KR, 2 SC, 3 TC, 4 HK
 
 
 @functools.lru_cache(maxsize=256)
@@ -29,8 +28,7 @@ def _truetype(path: str, index: int, size: int) -> ImageFont.FreeTypeFont:
 def get_font(brand, role: str, size: int) -> ImageFont.FreeTypeFont:
     """Resolve a brand font role, guaranteeing a Traditional-Chinese-capable face.
 
-    Noto CJK collections are remapped to the TC face (index 3) when a spec points at the SC
-    face (index 2), and missing files fall back to installed Noto Sans CJK TC weights.
+    Missing font files fall back to installed Noto Sans CJK TC weights.
     """
     size = max(int(size), 1)
     specs = []
@@ -42,11 +40,18 @@ def get_font(brand, role: str, size: int) -> ImageFont.FreeTypeFont:
     specs += _FALLBACK_SPECS
     for spec in specs:
         path, index = spec["path"], int(spec.get("index", 0))
-        if "NotoSansCJK" in Path(path).name and Path(path).suffix == ".ttc" and index == 2:
-            index = _NOTO_CJK_TC_INDEX
         if Path(path).exists():
             return _truetype(path, index, size)
     return ImageFont.load_default(size)
+
+
+NAMED_COLORS = {"white": "#FFFFFF", "black": "#000000", "green": "#2EAD4B", "blue": "#1E5FB4", "red": "#E53935",
+                "yellow": "#FFD400", "grey": "#888888", "gray": "#888888"}
+
+
+def resolve_hex(brand, color) -> str:
+    r, g, b = resolve_color(brand, color)
+    return "#%02X%02X%02X" % (round(r * 255), round(g * 255), round(b * 255))
 
 
 def resolve_color(brand, color) -> tuple[float, float, float]:
@@ -57,7 +62,7 @@ def resolve_color(brand, color) -> tuple[float, float, float]:
         except KeyError:
             pass
     if isinstance(color, str) and not color.startswith("#"):
-        color = {"white": "#FFFFFF", "black": "#000000"}.get(color, "#FFFFFF")
+        color = NAMED_COLORS.get(color.lower(), "#FFFFFF")
     return hex_to_rgb(color)
 
 

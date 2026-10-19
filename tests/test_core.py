@@ -104,3 +104,13 @@ def test_timeline_layer_order_and_local_time():
     for i in range(tl.n_frames):
         tl.render_frame(i / tl.fps)
     assert seen == [0.0, 0.1, 0.2]
+
+
+def test_cjk_fonts_use_traditional_faces_not_simplified():
+    # NotoSansCJK .ttc order is JP, KR, SC, TC, HK — a wrong index silently renders Simplified glyph forms
+    assert "TC" in BrandKit.neutral().font("body", 40).getname()[0]
+    dfsc = load_brand("dfsc-2027")
+    for role in ("title", "body", "subtitle", "numerals_thin"):
+        family, style = dfsc.font(role, 40).getname()
+        assert family.endswith("HK"), (role, family)
+    assert dfsc.font("title", 40).getname()[1] == "Black" and dfsc.font("numerals_thin", 40).getname()[1] == "Thin"

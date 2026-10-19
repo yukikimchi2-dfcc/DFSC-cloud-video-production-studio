@@ -72,7 +72,7 @@ def read_frames(path: str | Path, width: int | None = None, height: int | None =
     if vf:
         cmd += ["-vf", ",".join(vf)]
     cmd += ["-f", "rawvideo", "-pix_fmt", "rgb24", "-"]
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)  # early stop -> EPIPE noise
     frame_bytes = w * h * 3
     try:
         while True:

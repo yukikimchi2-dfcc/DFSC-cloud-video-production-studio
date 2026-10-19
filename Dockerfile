@@ -6,7 +6,7 @@ FROM ${BASE}
 
 ENV DEBIAN_FRONTEND=noninteractive PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        ffmpeg fonts-noto-cjk fonts-noto-color-emoji fontconfig git curl ca-certificates \
+        ffmpeg fonts-noto-cjk fonts-noto-cjk-extra fonts-noto-color-emoji fontconfig git curl ca-certificates \
         $(command -v python3 >/dev/null || echo python3 python3-pip) \
     && rm -rf /var/lib/apt/lists/* && fc-cache -f
 

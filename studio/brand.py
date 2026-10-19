@@ -13,15 +13,18 @@ from PIL import ImageFont
 from .config import PROJECTS_DIR, REPO_ROOT, load_yaml
 from .core import vector
 
-# Fallback fonts present in the studio image (Dockerfile installs fonts-noto-cjk).
+# Fallback fonts present in the studio image (Dockerfile installs fonts-noto-cjk + fonts-noto-cjk-extra).
+# Face index inside the NotoSansCJK-*.ttc collections: 0 JP, 1 KR, 2 SC, 3 TC, 4 HK.
+_NOTO = "/usr/share/fonts/opentype/noto/NotoSansCJK-{}.ttc"
+_TC, _HK, _SC = 3, 4, 2
 SYSTEM_FONTS = {
-    "cjk_regular": {"path": "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc", "index": 2},
-    "cjk_bold": {"path": "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc", "index": 2},
-    "cjk_black": {"path": "/usr/share/fonts/opentype/noto/NotoSansCJK-Black.ttc", "index": 2},
-    "cjk_thin": {"path": "/usr/share/fonts/opentype/noto/NotoSansCJK-Thin.ttc", "index": 2},
+    **{f"cjk_{w.lower()}": {"path": _NOTO.format(w), "index": _TC}
+       for w in ("Thin", "Light", "DemiLight", "Regular", "Medium", "Bold", "Black")},
+    **{f"cjk_{w.lower()}_hk": {"path": _NOTO.format(w), "index": _HK}
+       for w in ("Thin", "Light", "DemiLight", "Regular", "Medium", "Bold", "Black")},
+    **{f"cjk_{w.lower()}_sc": {"path": _NOTO.format(w), "index": _SC} for w in ("Regular", "Bold", "Black")},
     "emoji": {"path": "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf", "index": 0},
 }
-# index 2 inside the Noto CJK .ttc collections is the Traditional Chinese (TC) face.
 
 
 class FontMissingError(RuntimeError):

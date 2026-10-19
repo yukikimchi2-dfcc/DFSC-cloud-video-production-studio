@@ -1,13 +1,13 @@
 {
   "template": "title_card_impact",
   "version": "1.0.0",
-  "tested_at": "2026-10-19T08:35:41",
+  "tested_at": "2026-10-19T08:44:10",
   "brand": "Neutral",
   "frames_rendered": 21,
-  "render_seconds": 0.63,
+  "render_seconds": 0.62,
   "preview_png": "preview.png",
   "preview_gif": "preview.gif",
-  "gif_bytes": 403687,
+  "gif_bytes": 408444,
   "checks": {
     "nonblank_frame": true,
     "gif_under_1_5mb": true

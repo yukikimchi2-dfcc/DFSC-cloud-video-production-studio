@@ -82,7 +82,7 @@ class StickerLayer(Layer):
         self.enter, self.enter_duration = enter, enter_duration
         self.exit, self.exit_duration = exit, exit_duration
         self.exit_start = exit_start if exit_start is not None else (
-            self.duration - exit_duration if exit and self.duration is not None else None)
+            self.duration - exit_duration - 1 / 30 if exit and self.duration is not None else None)
         self.wobble, self.wobble_speed, self.float_amp = wobble, wobble_speed, float_amp
         self._cache: dict = {}
 

@@ -191,3 +191,23 @@ class SequenceLayer(Layer):
                 return blend(fa, fb, p, tr.kind, brand=ctx.brand, **tr.options).astype(np.float32)
             return render_layer(seg, frame, ctx, t - s)
         return frame
+
+
+class GroupLayer(Layer):
+    """A stack of layers treated as one (e.g. a sequence segment: footage + camera + graphics).
+    Children use times local to the group."""
+
+    def __init__(self, layers: list[Layer], background=None, **kw):
+        super().__init__(**kw)
+        self.layers = layers
+        self.background = background
+
+    def draw(self, frame, ctx, t):
+        if self.background is not None:
+            from studio.core.canvas import hex_to_rgb
+            frame = frame.copy()
+            frame[:] = hex_to_rgb(self.background) if isinstance(self.background, str) else self.background
+        for layer in sorted(self.layers, key=lambda l: l.z):
+            if layer.active(t):
+                frame = layer.draw(frame, ctx, t - layer.start)
+        return frame

@@ -121,6 +121,49 @@ def to_srt(cues: list[Cue]) -> str:
     return "\n".join(f"{i}\n{srt_time(c.start)} --> {srt_time(c.end)}\n{c.text}\n" for i, c in enumerate(cues, 1))
 
 
+_SRT_TIME = re.compile(r"(\d+):(\d+):(\d+)[,.](\d+)\s*-->\s*(\d+):(\d+):(\d+)[,.](\d+)")
+
+
+def _split_tokens(text: str) -> list[str]:
+    """CJK characters become one token each; ASCII words stay whole."""
+    return re.findall(r"[A-Za-z0-9'’\-]+|\S", text)
+
+
+def from_srt(text: str) -> list[Cue]:
+    """Parse an SRT edited by hand back into cues.
+
+    Word timings inside each cue are spread proportionally to visual length, so the
+    word-highlight layer keeps working after text edits. Re-run alignment
+    (transcribe + cues_from_transcript) when exact word timing matters.
+    """
+    cues = []
+    for block in re.split(r"\n\s*\n", text.replace("\r\n", "\n").strip()):
+        lines = block.strip().split("\n")
+        m = next((_SRT_TIME.search(l) for l in lines if _SRT_TIME.search(l)), None)
+        if not m:
+            continue
+        g = [int(x) for x in m.groups()]
+        start = g[0] * 3600 + g[1] * 60 + g[2] + g[3] / 1000
+        end = g[4] * 3600 + g[5] * 60 + g[6] + g[7] / 1000
+        body = lines[next(i for i, l in enumerate(lines) if _SRT_TIME.search(l)) + 1:]
+        tokens_per_line = [_split_tokens(l) for l in body if l.strip()]
+        total = sum(_len(t) for toks in tokens_per_line for t in toks) or 1.0
+        t, cue_lines = start, []
+        for toks in tokens_per_line:
+            words = []
+            for tok in toks:
+                d = (end - start) * _len(tok) / total
+                words.append(Word(t, t + d, tok))
+                t += d
+            cue_lines.append(words)
+        cues.append(Cue(start, end, cue_lines))
+    return cues
+
+
+def read_srt(path: str | Path) -> list[Cue]:
+    return from_srt(Path(path).read_text(encoding="utf-8-sig"))
+
+
 def _ass_time(t: float) -> str:
     cs = int(round(t * 100))
     return f"{cs // 360000}:{cs // 6000 % 60:02d}:{cs // 100 % 60:02d}.{cs % 100:02d}"

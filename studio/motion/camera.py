@@ -4,7 +4,8 @@ Put a camera layer *above* the footage it should move (higher z / later in the s
 graphics that should stay locked to the screen.
 
 Face helpers (`detect_faces`, `FaceTracker`, `face_track_path`, `ReframedClipLayer`) use the
-OpenCV Haar cascade bundled with opencv-python — no model downloads.
+Haar cascade bundled with opencv-python 4.x (no downloads); on OpenCV 5 (no Haar) they use YuNet
+when a model file is configured, otherwise detection returns no faces and tracking stays centred.
 """
 from __future__ import annotations
 
@@ -199,25 +200,63 @@ class Reframe(CameraLayer):
 
 # ---------------- faces ----------------
 
-_CASCADE: cv2.CascadeClassifier | None = None
+_DETECTOR = None
 
 
-def _cascade() -> cv2.CascadeClassifier:
-    global _CASCADE
-    if _CASCADE is None:
-        _CASCADE = cv2.CascadeClassifier(str(Path(cv2.data.haarcascades) / "haarcascade_frontalface_default.xml"))
-    return _CASCADE
+class FaceDetectionUnavailable(RuntimeError):
+    pass
 
 
-def detect_faces(frame_uint8: np.ndarray, min_size_frac: float = 0.06, max_width: int = 640) -> list[tuple[int, int, int, int]]:
-    """Return face boxes (x, y, w, h) in the input frame's pixel coords, largest first."""
+def face_backend() -> str:
+    """'haar' (OpenCV 4.x bundled cascades), 'yunet' (OpenCV 5 + model file) or 'none'.
+
+    OpenCV 5.0 removed Haar cascades; YuNet needs face_detection_yunet_2023mar.onnx, located via the
+    STUDIO_YUNET_MODEL env var or models/face_detection_yunet_2023mar.onnx (not downloaded automatically)."""
+    if hasattr(cv2, "CascadeClassifier") and hasattr(cv2, "data") and \
+            (Path(cv2.data.haarcascades) / "haarcascade_frontalface_default.xml").exists():
+        return "haar"
+    if hasattr(cv2, "FaceDetectorYN") and _yunet_model() is not None:
+        return "yunet"
+    return "none"
+
+
+def _yunet_model() -> Path | None:
+    import os
+    from studio.config import REPO_ROOT
+    for cand in (os.environ.get("STUDIO_YUNET_MODEL"), REPO_ROOT / "models" / "face_detection_yunet_2023mar.onnx"):
+        if cand and Path(cand).exists():
+            return Path(cand)
+    return None
+
+
+def detect_faces(frame_uint8: np.ndarray, min_size_frac: float = 0.06, max_width: int = 640,
+                 strict: bool = False) -> list[tuple[int, int, int, int]]:
+    """Return face boxes (x, y, w, h) in the input frame's pixel coords, largest first.
+
+    With no backend available returns [] (or raises FaceDetectionUnavailable when strict=True)."""
+    global _DETECTOR
+    backend = face_backend()
+    if backend == "none":
+        if strict:
+            raise FaceDetectionUnavailable(
+                "No face detector: OpenCV 5 has no Haar cascades. Pin opencv-python-headless<5 or provide a YuNet model.")
+        return []
     h, w = frame_uint8.shape[:2]
     s = min(1.0, max_width / w)
     small = cv2.resize(frame_uint8, (int(w * s), int(h * s))) if s < 1 else frame_uint8
-    gray = cv2.cvtColor(small, cv2.COLOR_RGB2GRAY)
-    gray = cv2.equalizeHist(gray)
     ms = max(int(min(small.shape[:2]) * min_size_frac), 20)
-    faces = _cascade().detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(ms, ms))
+    if backend == "haar":
+        if _DETECTOR is None or not isinstance(_DETECTOR, cv2.CascadeClassifier):
+            _DETECTOR = cv2.CascadeClassifier(str(Path(cv2.data.haarcascades) / "haarcascade_frontalface_default.xml"))
+        gray = cv2.equalizeHist(cv2.cvtColor(small, cv2.COLOR_RGB2GRAY))
+        faces = _DETECTOR.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(ms, ms))
+        faces = [tuple(f) for f in faces]
+    else:
+        if _DETECTOR is None or isinstance(_DETECTOR, getattr(cv2, "CascadeClassifier", ())):
+            _DETECTOR = cv2.FaceDetectorYN.create(str(_yunet_model()), "", (small.shape[1], small.shape[0]), 0.7)
+        _DETECTOR.setInputSize((small.shape[1], small.shape[0]))
+        _, res = _DETECTOR.detect(cv2.cvtColor(small, cv2.COLOR_RGB2BGR))
+        faces = [tuple(r[:4]) for r in (res if res is not None else []) if r[2] >= ms]
     boxes = [tuple(int(v / s) for v in f) for f in faces]
     return sorted(boxes, key=lambda b: -b[2] * b[3])
 

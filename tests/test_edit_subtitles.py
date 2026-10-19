@@ -76,3 +76,15 @@ def test_word_highlight_changes_over_time():
     late = tl.render_frame(words[-1].start + 0.01, ctx)
     red = lambda f: int(((f[..., 0] > 0.8) & (f[..., 1] < 0.3)).sum())  # noqa: E731
     assert red(late) > red(early) > 0
+
+
+def test_srt_roundtrip_after_manual_edit():
+    from studio.edit.subtitles import from_srt, to_srt
+    srt = "1\n00:00:01,000 --> 00:00:03,000\n創業不是一個人的旅程\n\n2\n00:00:03,200 --> 00:00:05,000\n而是 Find Your North Star\n"
+    cues = from_srt(srt)
+    assert [(c.start, c.end) for c in cues] == [(1.0, 3.0), (3.2, 5.0)]
+    assert cues[0].text == "創業不是一個人的旅程"
+    words = cues[1].lines[0]
+    assert [w.text for w in words][:2] == ["而", "是"] and "North" in [w.text for w in words]
+    assert words[0].start == 3.2 and abs(words[-1].end - 5.0) < 1e-6      # timings span the cue
+    assert from_srt(to_srt(cues))[1].start == 3.2

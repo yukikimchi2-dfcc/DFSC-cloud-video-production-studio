@@ -1,5 +1,5 @@
 numpy>=1.26
-opencv-python-headless>=4.9
+opencv-python-headless>=4.9,<5  # 5.x dropped CascadeClassifier (face detection)
 pillow>=10.0
 scipy>=1.11
 pyyaml>=6.0

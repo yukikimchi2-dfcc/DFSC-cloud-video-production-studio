@@ -84,8 +84,8 @@ def cmd_queue(a):
     if a.action == "add":
         kwargs = json.loads(a.kwargs) if a.kwargs else {}
         invalidate = [tuple(map(float, r.split("-"))) for r in (a.invalidate or [])]
-        job = Q.enqueue(a.builder, kwargs, a.mode, a.name, a.project, chunk_seconds=a.chunk,
-                        invalidate=invalidate, upload=a.upload)
+        job = Q.enqueue(a.builder, kwargs, a.mode, a.name, a.project, start=a.start, end=a.end,
+                        chunk_seconds=a.chunk, invalidate=invalidate, upload=a.upload)
         print(f"queued {job['id']}")
     elif a.action == "list":
         for j in Q.list_jobs(state=a.state):
@@ -259,6 +259,8 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--mode", default="preview")
     s.add_argument("--name")
     s.add_argument("--project")
+    s.add_argument("--start", type=float, default=0.0, help="render only from this second")
+    s.add_argument("--end", type=float, help="render only up to this second")
     s.add_argument("--chunk", type=float, help="chunk length in seconds (enables cache + partial re-render)")
     s.add_argument("--invalidate", action="append", help="re-render range, e.g. 2-4 (seconds)")
     s.add_argument("--upload", action="store_true", help="upload result to the project's Drive previews folder")
