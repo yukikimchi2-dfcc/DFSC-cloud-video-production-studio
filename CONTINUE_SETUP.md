@@ -34,12 +34,19 @@
 | Repository | `yukikimchi2-dfcc/DFSC-cloud-video-production-studio` |
 | Branch | `claude/cloud-ai-video-studio-setup-utp2z3`（PR 合并前**不要**选 `main`，`main` 里没有系统和规则） |
 | Environment | Default（Network access = Limited + Allowed domains；Drive OAuth secret 设定后也在这里） |
+| Connector | 确认会话工具中有 **ChatCut**（Claude 网页 Custom Connector，由宿主注入；不用装桌面插件、不提取 token）；如提示鉴权缺失，在 Claude 网页重新连接 ChatCut |
 
 第一条指令（贴进新会话）：
 
 > 先读 CLAUDE.md、CONTINUE_SETUP.md、SETUP_AUDIT.md 与 projects/dfsc-2027/HANDOVER.md，执行 `studio audit`，回报当前分支、最新 commit 与 BLOCKED 项目。没有我给的具体剪辑 brief 和指定素材，不开始正式剪辑。
 
-成员权限（GitHub 协作者、`config/team.yaml` 角色对应、Drive 输出目录共享）**目前都未设定**，由 Admin 决定。
+简短启动说明（同一 group 的新 Cloud 会话）：
+1. 选对 Repository、Branch（`claude/cloud-ai-video-studio-setup-utp2z3`）、Environment = Default。
+2. 确认 ChatCut connector 在工具列表中（可只读调用 `list_projects` 验证）。
+3. 先读 `CLAUDE.md`，再读本文件与 `SETUP_AUDIT.md`。
+4. 新 ChatCut 项目 / 正式剪辑仍须用户明确指定素材与剪辑 brief；不擅自创建项目、导入、生成或消耗积分。
+
+团队共用同一账号，用户不要求配置成员权限（GitHub 协作者、`config/team.yaml`、Drive 共享），**不作为阻碍**。
 
 ## 3b. 新容器开工（复制执行）
 
@@ -79,7 +86,8 @@ python3 tools/notion_public.py "https://app.notion.com/p/Dreamfactory-3f14ddbea6
 | DFSC 两套模板（采访 Reel / 启航宣传片，11 个） | ✅ 依成片建立 + 视觉比对 + 测试；REFERENCE ONLY；来源 `projects/dfsc-2027/references/TEMPLATE_SOURCES.md` |
 | 本地 Whisper CPU 真实转写 | ✅（57.9 s 音频 / 30.7 s，约 1.9× 实时） |
 | Groq 转写 | ⏸ UNVERIFIED：无 `GROQ_API_KEY`（可选） |
-| ChatCut 插件 | ⛔ 未安装：`chatcut.io` 不在本环境网络白名单（ENOTFOUND），未读取官方页面，插件目录也搜不到。据用户说明，官方插件需在受支持的桌面宿主安装，网页端可协作（本会话无法核实）。本仓库流程不依赖 ChatCut；不为此修改网络 |
+| ChatCut 远程连接（只读） | ✅ PASS：Claude 网页 Custom Connector（`https://api.chatcut.io/api/external-mcp/mcp`，OAuth 由 Claude 网页管理）由 Cloud 宿主注入；发现 62 个工具，OAuth 调用成功，`list_projects` 返回 0 项目；无自定义 header 也可调用。不是本机插件，不需要桌面。旧结论（白名单 / 需桌面）作废 |
+| ChatCut 剪辑 / 导入 / 生成 / 导出 | ⏸ UNVERIFIED：未测（须有具体 brief + 指定素材；不擅自创建项目或耗积分） |
 | 根目录 CLAUDE.md（持久规则） | ✅ 已建立（在本分支；合并到 main 前只对选此分支的会话生效） |
 | 金句卡引号重叠 | ✅ 已修复 + 回归测试 |
 | 全新环境交接测试 | 见 SETUP_AUDIT §3 |
@@ -95,8 +103,8 @@ python3 tools/notion_public.py "https://app.notion.com/p/Dreamfactory-3f14ddbea6
      `studio drive auth` → `studio drive bigtest --folder 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__`（26 MB 真实上传、断点续传、下载、MD5、解码）→ `studio queue run --upload`。
      当前进度：用户已接受 Google Cloud 条款，正在 Create project / OAuth client 表单，停在最终创建前（由用户操作）。
 4. 第一支正式影片：用户提供具体剪辑 brief（目的、长度、版式、受访者 / 素材文件、交付位置）后开始。
-5. Admin：审核并合并 draft PR 到 `main`（或维持手动选分支）；决定团队协作者与 Drive 共享。
+5. Admin：审核并合并 draft PR 到 `main`（或维持手动选分支）。团队共用账号，成员权限不需配置。
 
 ## 6. 给 Claude 的续接指令（贴到新会话）
 
-> 继续 DFSC Cloud Video Studio。仓库 yukikimchi2-dfcc/DFSC-cloud-video-production-studio，分支 claude/cloud-ai-video-studio-setup-utp2z3。先读 CLAUDE.md、CONTINUE_SETUP.md 与 SETUP_AUDIT.md，执行第 3b 节指令并回报实际日志；没有具体剪辑 brief 和指定素材不制作正式影片、不要覆盖旧素材、不要开付费 GPU、不要建立密钥或排程任务；未实测的项目标 BLOCKED / UNVERIFIED；链接已在首条 MASTER SETUP PROMPT 提供，不要要求重发；ChatGPT 端的 Drive 上传成功不等于 Claude pipeline 可上传。
+> 继续 DFSC Cloud Video Studio。仓库 yukikimchi2-dfcc/DFSC-cloud-video-production-studio，分支 claude/cloud-ai-video-studio-setup-utp2z3。先读 CLAUDE.md、CONTINUE_SETUP.md 与 SETUP_AUDIT.md，执行第 3b 节指令并回报实际日志；没有具体剪辑 brief 和指定素材不制作正式影片、不要覆盖旧素材、不要开付费 GPU、不要建立密钥或排程任务；未实测的项目标 BLOCKED / UNVERIFIED；链接已在首条 MASTER SETUP PROMPT 提供，不要要求重发；ChatGPT 端的 Drive 上传成功不等于 Claude pipeline 可上传；ChatCut 只读连接已 PASS，但剪辑 / 导入 / 生成 / 导出未测，新 ChatCut 项目须有明确素材与 brief。

@@ -5,7 +5,7 @@
 - 分支：`claude/cloud-ai-video-studio-setup-utp2z3`
 - 重新审计：`studio audit`（JSON 输出；`--offline` 跳过网络检查）
 
-> **结论：Setup 尚未全部完成。** 系统、渲染、QC、团队流程、Drive 公开读取、参考导入、风格分析、本地免费转写、Docker（CI）均已实测通过。Drive **输出目录**已由官方连接器建立于 yukikimchi2@gmail.com（`config/drive_output.yaml`），连接器上传读回文本 / 报告 / 825 B MP4 通过；但**正式体积影片经连接器交付 NOT PASS**（只能内嵌 base64），**无人值守上传 BLOCKED**（容器无 Google 身份）。Groq 转写 UNVERIFIED（可选）。风格档案全部待人工审核。原有三个 DFCC 文件夹为只读参考来源。ChatCut 未安装（网络白名单不含 chatcut.io）。正式剪辑须有用户的具体剪辑 brief 与指定素材才开始（根目录 `CLAUDE.md`）。
+> **结论：Setup 尚未全部完成。** 系统、渲染、QC、团队流程、Drive 公开读取、参考导入、风格分析、本地免费转写、Docker（CI）均已实测通过。Drive **输出目录**已由官方连接器建立于 yukikimchi2@gmail.com（`config/drive_output.yaml`），连接器上传读回文本 / 报告 / 825 B MP4 通过；但**正式体积影片经连接器交付 NOT PASS**（只能内嵌 base64），**无人值守上传 BLOCKED**（容器无 Google 身份）。Groq 转写 UNVERIFIED（可选）。风格档案全部待人工审核。原有三个 DFCC 文件夹为只读参考来源。ChatCut 远程连接**只读 PASS**（Claude 网页 Custom Connector，云端宿主注入，无需桌面 / 本机插件；剪辑、导入、生成、导出未测，UNVERIFIED，见 #19）。正式剪辑须有用户的具体剪辑 brief 与指定素材才开始（根目录 `CLAUDE.md`）。
 >
 > 续接方式见 **[CONTINUE_SETUP.md](CONTINUE_SETUP.md)**。
 
@@ -104,8 +104,9 @@ DFSC 2027 品牌包：`projects/dfsc-2027/brand/brand.yaml` —— 设计师确�
 | 14 | Groq 免费转写 | ⏸ **UNVERIFIED** | 网络可达，但无 `GROQ_API_KEY`（可选；模拟 API 测试通过） |
 | 15 | Docker 镜像构建 | ✅ PASS（GitHub Actions） | CI run #9（commit `fe099a4`）`docker` job：Build studio image ✅ + Run audit inside the image ✅；`test` job ✅。run #5–#9 全部 success（#1–#4 test job 失败，已修复） |
 | 17 | 持久规则 / 团队交接 | ✅ 文档（本分支） | 根目录 `CLAUDE.md` 已建立（新会话自动读取）；团队启动指令见 `CONTINUE_SETUP.md` §3。**默认分支 `main` 只有 Initial commit**：draft PR 合并前，新会话必须手动选 `claude/cloud-ai-video-studio-setup-utp2z3`。同一 group 不会继承对话或文件系统 |
-| 18 | 团队权限 | ⏸ 未设定 | GitHub 协作者只有 `yukikimchi2-dfcc`（admin）；`config/team.yaml` 不存在；Drive 输出目录只有拥有者可访问。由 Admin 决定，Claude 不自行添加或共享 |
-| 19 | ChatCut 插件 | ⛔ 未安装 | `chatcut.io` / `www.chatcut.io` 返回 ENOTFOUND（不在白名单），官方页面未读取，插件目录无此插件。用户说明官方需受支持的桌面宿主、网页可协作（未核实）。不为此修改网络；本系统流程不依赖它 |
+| 18 | 团队权限 | ➖ 不需要（非阻碍） | 团队共用同一账号，用户不要求配置成员权限。现况：GitHub 协作者只有 `yukikimchi2-dfcc`（admin）；`config/team.yaml` 不存在；Drive 输出目录只有拥有者可访问。Claude 不自行添加协作者或共享 |
+| 19 | ChatCut 远程连接（只读） | ✅ PASS（只读） | 2026-10-19 实测：Claude 网页账号新增自定义远程 MCP「ChatCut」（`https://api.chatcut.io/api/external-mcp/mcp`，OAuth 由 Claude 网页管理），由 **Cloud 宿主注入**本会话——不是本机插件安装，**不需要桌面**。官方两个 surface 请求头被 Anthropic 拒绝，当前连接**无自定义 header，仍可调用**。① 工具发现：62 个 ChatCut 工具（21 个随会话加载 + 41 个按需加载）；② OAuth / 调用：无鉴权错误，未接触任何 token；③ `list_projects` 返回 `{"projects":[]}`（0 项目，成功）；④ `manage_skill list source=preset` 返回 183 个预设 workflow skill（无「基础用法」类；内建 playbook 为另一系统）。无 MCP resources。旧结论「chatcut.io 不在白名单 → 未安装」作废：远程 MCP 由宿主调用，不经容器网络 |
+| 19b | ChatCut 剪辑 / 导入 / 生成 / 导出 | ⏸ UNVERIFIED（未测） | 本轮刻意未调用：未创建项目、未 `target_project`、未 `import_media`、未调用 `submit_*` / 导出 / 任何耗积分工具。须有具体剪辑 brief 与指定素材后才测 |
 | 20 | 容器重建 | ✅ 代码可恢复（见 #13） | 代码与文档在 Git；`workspace/`、`renders/`（参考影片、Whisper 模型、TEST 预览）不进 Git，新容器需重新取得或渲染 |
 | 16 | 自动测试总数 | ✅ 见下方最新执行 | 跳过：无人脸后端情境、卡通测试图、Claude 端 Drive 写入（BLOCKED） |
 

@@ -66,7 +66,6 @@ handover:
   - 确认用 Noto Sans CJK HK 替代 PingFang HK，或提供授权字体
   - 无人值守大文件上传：按 docs/zh/04_Drive_OAuth_自动上传.md 完成 OAuth client 与一次浏览器授权，3 个值放进环境 secret，新会话执行
     studio drive bigtest --folder 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__
-  - 团队：由 Admin 决定 GitHub 协作者、config/team.yaml 角色对应、Drive 输出目录共享（目前均未设定）
   - 把 setup 分支经 PR 合并到 main（需 Admin 审核；未合并前新会话必须手动选此分支）
   known_issues:
   - 主视觉使用 PingFang HK（无服务器授权），暂以 Noto Sans CJK HK 替代
@@ -74,6 +73,6 @@ handover:
   - Whisper 转写需人工校对（例：「創業之律」应为「創業自律」）
   - Drive 输出：对话连接器可建目录、上传报告/小文件（825 B MP4 已验证）；正式体积影片经连接器 NOT PASS（只能内嵌 base64）
   - 无人值守上传 BLOCKED：容器无 Google OAuth 凭证
-  - ChatCut 插件：未安装、未读取官方页面（chatcut.io 不在网络白名单）
+  - ChatCut：Claude 网页 Custom Connector（远程 MCP，云端宿主注入）只读连接 PASS（62 个工具、OAuth、list_projects 返回 0 项目）；剪辑 / 导入 / 生成 / 导出未测（UNVERIFIED）
   - DFSC 模板与成片差异：Noto Emoji、数据卡数字字体、启航仅 9:16、片尾缺小 logo、网格非透视（TEMPLATE_SOURCES.md §E）
   next_action: Setup 已可交接；正式剪辑须等用户提供具体剪辑 brief 与指定素材后才开始（见根目录 CLAUDE.md）
