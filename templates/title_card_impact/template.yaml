@@ -1,0 +1,21 @@
+id: title_card_impact
+name: 冲击力标题卡 Impact Title Card
+version: 1.0.0
+category: title_cards
+review_status: UNREVIEWED
+description: 大字标题从放大状态砸落到色块上，伴随一次轻微镜头震动，可选副标题与星芒。
+usage: 用于段落开头的关键词、Hook 前三秒、数字或口号强调。文字建议 2–8 个字。
+duration: 2.5
+preview: {project: null, background: synthetic, time: 1.2, fps: 20}
+parameters:
+  - {name: text, type: str, default: 創業就是現在, description: 主标题文字}
+  - {name: subtitle, type: str, default: "Find Your North Star", description: 副标题（留空则不显示）}
+  - {name: color, type: color, default: primary, description: 色块颜色（品牌色名或 HEX）}
+  - {name: text_color, type: color, default: auto, description: 文字颜色（auto = 按底色自动选可读色）}
+  - {name: size, type: float, default: 140, description: 字号（1080x1920 设计像素）}
+  - {name: y, type: float, default: 760, description: 色块顶部 Y}
+  - {name: height, type: float, default: 280, description: 色块高度}
+  - {name: radius, type: float, default: 20, description: 圆角}
+  - {name: sparkles, type: bool, default: true, description: 是否加星芒}
+  - {name: duration, type: float, default: 2.5, description: 总时长（秒）}
+test_record: test_record.json

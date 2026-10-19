@@ -1,0 +1,19 @@
+id: lower_third_basic
+name: 人名条 Lower Third
+version: 1.0.0
+category: lower_thirds
+review_status: UNREVIEWED
+description: 色条从左展开，姓名飞入、职称淡入，左侧强调色竖条。
+usage: 采访首次出现受访者时使用，显示 3–4 秒。姓名 ≤ 10 字，职称 ≤ 20 字。
+duration: 4.0
+preview: {project: null, background: synthetic, time: 2.0, fps: 20}
+parameters:
+  - {name: name, type: str, default: 王小明, description: 姓名}
+  - {name: title, type: str, default: 第十屆 創業大賽 冠軍團隊 創辦人, description: 职称 / 身份}
+  - {name: color, type: color, default: primary, description: 色条颜色}
+  - {name: accent, type: color, default: secondary, description: 强调竖条颜色}
+  - {name: text_color, type: color, default: auto, description: 文字颜色（auto = 按底色自动选可读色）}
+  - {name: width, type: float, default: 760, description: 色条宽度}
+  - {name: y, type: float, default: 1300, description: 色条顶部 Y（会自动限制在安全区）}
+  - {name: duration, type: float, default: 4.0, description: 总时长（秒）}
+test_record: test_record.json

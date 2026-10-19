@@ -1,0 +1,16 @@
+{
+  "template": "brand_lockup_outro",
+  "version": "1.0.0",
+  "tested_at": "2026-10-19T08:35:35",
+  "brand": "DFSC 2027",
+  "frames_rendered": 29,
+  "render_seconds": 0.56,
+  "preview_png": "preview.png",
+  "preview_gif": "preview.gif",
+  "gif_bytes": 39545,
+  "checks": {
+    "nonblank_frame": true,
+    "gif_under_1_5mb": true
+  },
+  "passed": true
+}
