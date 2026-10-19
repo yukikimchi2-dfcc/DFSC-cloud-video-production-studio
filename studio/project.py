@@ -114,6 +114,8 @@ def write_handover(project_id: str, renders_dir: Path | None = None) -> Path:
     renders = render_history(renders_dir or REPO_ROOT / cfg["studio"]["renders_dir"] / project_id)
     last_render = renders[-1] if renders else None
     recent = activity(project_id, last=8)
+    out = load_yaml(CONFIG_DIR / "drive_output.yaml") if (CONFIG_DIR / "drive_output.yaml").exists() else {}
+    out_folders = out.get("folders", {})
 
     def bullets(items, empty="（无）"):
         return "\n".join(f"- {i}" for i in items) if items else f"- {empty}"
@@ -128,8 +130,11 @@ def write_handover(project_id: str, renders_dir: Path | None = None) -> Path:
         f"| 当前状态 | **{meta.get('status')}** |",
         f"| 负责人 | {meta.get('owner') or '未指定'} |",
         f"| 风格档案 | {meta.get('style_profile') or '未指定（尚无 APPROVED 风格）'} |",
-        f"| 代码版本 | `{git_commit() or 'unknown'}` |",
-        f"| Drive 文件夹 | {meta.get('drive', {}).get('folder_id') or '未连接'} |",
+        f"| 生成时代码版本 | `{git_commit() or 'unknown'}`（最新以分支 HEAD 为准） |",
+        f"| Drive 输出根目录 | {out.get('root', {}).get('id') or '未建立'}（`config/drive_output.yaml`） |",
+        f"| Drive 项目文件夹 | {meta.get('drive', {}).get('folder_id') or '未连接'} |",
+        f"| Drive 预览目录 | {out_folders.get(f'06_Project_Previews/{project_id}') or '未建立'} |",
+        f"| Drive QC 目录 | {out_folders.get(f'08_QC_Reports/{project_id}') or '未建立'} |",
         "",
         "## 最近一次渲染",
         (f"- `{Path(last_render['path']).name}` · {last_render['mode']} · {last_render['width']}x{last_render['height']}"

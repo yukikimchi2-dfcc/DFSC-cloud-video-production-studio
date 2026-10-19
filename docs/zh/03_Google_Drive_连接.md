@@ -23,11 +23,11 @@ python3 -m pytest -q tests/test_setup_acceptance.py -k "3a or 3c"
 ## 2. 让 Claude 运行环境可写
 
 - **对话内上传（连接器）**：官方「Google Drive」已授权并在会话中启用（2026-10-19 实测上传读回 PASS）。连接器只看得到自己建立的文件，所以输出一律放在它建立的专用目录；原有 DFCC 文件夹仅作只读参考。自订「drive」连接器的 URL `https://drive.google.com` 不是 MCP 服务器，建议移除。
-- **自动 pipeline 上传**：在环境设定提供 `STUDIO_DRIVE_TOKEN`（团队成员 OAuth 授权文件）或服务账号 JSON（下节）。参考文件夹已是 anyone:writer，**不需再共享**。
+- **自动 pipeline 上传（推荐）**：OAuth（`STUDIO_DRIVE_OAUTH_CLIENT_ID / _CLIENT_SECRET / _REFRESH_TOKEN` 环境 secret），步骤见 [04_Drive_OAuth_自动上传.md](04_Drive_OAuth_自动上传.md)。代码也接受 `STUDIO_DRIVE_TOKEN`（授权文件路径）。参考文件夹只读，不写入。
 
-## 3. 服务账号步骤（由 Admin 决定是否建立）
+## 3. 服务账号步骤（仅适用 Google Workspace 共享云端硬盘）
 
-推荐使用 **Service Account（服务账号）**：不依赖任何人的个人 Google 账号，人员离职也不影响系统。
+> ⚠ **个人 Gmail（yukikimchi2@gmail.com）不适用**：服务账号没有存储配额、不能拥有文件，只能写进 Workspace 的共享云端硬盘（见 04 文档第 1 节）。目前采用 OAuth，本节仅留作日后迁移到 Workspace 时参考。
 
 1. 打开 Google Cloud Console → 建立（或选用）一个项目 → 启用 **Google Drive API**。
 2. IAM → Service Accounts → 建立服务账号，例如 `video-studio@<项目>.iam.gserviceaccount.com`。

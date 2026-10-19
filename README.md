@@ -2,7 +2,7 @@
 
 Dream Factory 的云端 AI 视频制作系统：以代码为核心的剪辑、Motion Graphics、AI 转写与选段、字幕、音频、质量检测、版本管理与团队交接。不依赖 CapCut / Premiere 或任何个人电脑。
 
-> **目前阶段：Setup。** 在客户确认 Setup 完成前，不制作正式影片。所有测试影片均为合成素材，并标记为「TEST · 合成測試素材」。
+> **目前阶段：Setup 可交接（仍有 BLOCKED 项）。** 正式剪辑须有用户的具体剪辑 brief 与指定素材；持久规则见 **[CLAUDE.md](CLAUDE.md)**。测试影片均为合成素材，标记「TEST · 合成測試素材」。
 > 当前状态与验收矩阵见 **[SETUP_AUDIT.md](SETUP_AUDIT.md)**；新会话 / 新成员续接见 **[CONTINUE_SETUP.md](CONTINUE_SETUP.md)**。
 
 ## 快速开始
