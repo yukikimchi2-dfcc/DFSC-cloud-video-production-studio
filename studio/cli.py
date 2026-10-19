@@ -9,6 +9,7 @@
     studio style analyze VIDEO | list | review NAME STATUS
     studio drive check|setup|scan|upload|download
     studio brand extract SOURCE.ai OUT --groups groups.yaml
+    studio references ingest PROJECT      reference Drive folders + Facebook videos -> style reports
     studio gpu estimate --seconds 60
 Run `studio <command> -h` for options.
 """
@@ -205,6 +206,13 @@ def cmd_brand(a):
                               "--groups", a.groups]))
 
 
+def cmd_references(a):
+    import subprocess
+    extra = (["--list-only"] if a.list_only else []) + (["--no-analyze"] if a.no_analyze else [])
+    sys.exit(subprocess.call([sys.executable, str(REPO_ROOT / "tools" / "ingest_references.py"), a.project,
+                              "--max-videos", str(a.max_videos), *extra]))
+
+
 def cmd_gpu(a):
     from .gpu.guard import GpuPlan, estimate_render_hours
     hours = estimate_render_hours(a.seconds, a.renders, transcribe_minutes=a.transcribe_minutes)
@@ -309,6 +317,14 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("out")
     s.add_argument("--groups", required=True)
     s.set_defaults(fn=cmd_brand)
+
+    s = sub.add_parser("references", help="ingest a project's reference Drive folders + Facebook videos, analyse style")
+    s.add_argument("action", choices=["ingest"])
+    s.add_argument("project")
+    s.add_argument("--max-videos", type=int, default=20)
+    s.add_argument("--list-only", action="store_true")
+    s.add_argument("--no-analyze", action="store_true")
+    s.set_defaults(fn=cmd_references)
 
     s = sub.add_parser("gpu", help="GPU cost estimate (never starts anything)")
     s.add_argument("action", choices=["estimate"])

@@ -11,4 +11,7 @@ opencc-python-reimplemented>=0.1.7
 faster-whisper>=1.0
 google-api-python-client>=2.100
 google-auth>=2.20
+gdown>=5.2          # public Drive folders (reference ingest)
+yt-dlp>=2025.1      # public Facebook reference videos
+requests>=2.31
 pytest>=8.0

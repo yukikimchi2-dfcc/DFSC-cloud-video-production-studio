@@ -54,3 +54,54 @@ def test_whisper_transcription_or_clear_error(tmp_path):
         assert "STUDIO_WHISPER_MODEL_DIR" in str(e)
         pytest.skip(f"Whisper weights unavailable (huggingface.co blocked or no local model): {str(e).splitlines()[0]}")
     assert isinstance(result, tr.Transcript)
+
+
+# ---- Groq (free hosted Whisper) backend -------------------------------------------------
+def test_backend_auto_prefers_groq_only_with_key(monkeypatch):
+    from studio.edit.transcribe import _backend
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)
+    assert _backend({"transcription": {"backend": "auto"}}) == "local"
+    monkeypatch.setenv("GROQ_API_KEY", "x")
+    assert _backend({"transcription": {"backend": "auto"}}) == "groq"
+    assert _backend({"transcription": {"backend": "local"}}) == "local"
+
+
+def test_parse_groq_response_offsets_and_assigns_words():
+    from studio.edit.transcribe import parse_groq_response, to_traditional
+    data = {"text": "创业不是一个人", "segments": [{"start": 0.0, "end": 1.0, "text": "创业", "avg_logprob": -0.1},
+                                             {"start": 1.0, "end": 2.0, "text": "不是一个人", "avg_logprob": -0.2}],
+            "words": [{"word": "创业", "start": 0.1, "end": 0.8}, {"word": "不是", "start": 1.1, "end": 1.4},
+                      {"word": "一个人", "start": 1.4, "end": 1.9}]}
+    segs = parse_groq_response(data, offset=600.0, conv=to_traditional)
+    assert [s.start for s in segs] == [600.0, 601.0]
+    assert [w.text for w in segs[1].words] == ["不是", "一個人"]      # Traditional conversion applied
+    assert segs[0].words[0].start == 600.1
+
+
+def test_groq_backend_end_to_end_with_mocked_api(monkeypatch, tmp_path):
+    import requests
+
+    from studio.edit import transcribe as T
+    from studio.render.demo import make_test_tone
+    audio = make_test_tone(tmp_path / "a.wav", duration=3.0)
+    calls = []
+
+    class Resp:
+        status_code = 200
+        headers = {}
+
+        def json(self):
+            return {"text": "大家好", "segments": [{"start": 0.0, "end": 2.0, "text": "大家好"}],
+                    "words": [{"word": "大家", "start": 0.2, "end": 0.9}, {"word": "好", "start": 0.9, "end": 1.4}]}
+
+    def fake_post(url, headers, files, data, timeout):
+        calls.append((url, dict(data), headers["Authorization"]))
+        return Resp()
+
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setattr(requests, "post", fake_post)
+    tr = T.transcribe(audio, {"transcription": {"backend": "auto", "language": "zh"}}, speakers=False)
+    assert tr.model == "groq:whisper-large-v3-turbo"
+    assert [w.text for w in tr.words] == ["大家", "好"]
+    url, data, auth = calls[0]
+    assert url == T.GROQ_URL and data["model"] == "whisper-large-v3-turbo" and auth == "Bearer test-key"

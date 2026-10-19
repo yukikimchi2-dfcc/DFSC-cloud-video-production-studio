@@ -5,7 +5,7 @@
 - 分支：`claude/cloud-ai-video-studio-setup-utp2z3`
 - 重新审计：`studio audit`（JSON 输出；`--offline` 跳过网络检查）
 
-> **结论：Setup 尚未全部完成。** 代码系统、渲染、测试、团队流程已可用；**Google Drive、Whisper 模型、参考资料（Notion / Facebook / Drive 链接）因授权或网络策略被阻挡**，需要你处理（见第 4 节）。在你确认之前，不会制作任何正式影片。
+> **结论：Setup 尚未全部完成。** 代码系统、渲染、测试、团队流程已可用。你已允许所需网域，但需在**新会话**中生效；Drive 写入、Groq 转写还需要凭证（见第 4 节）。在你确认之前，不会制作任何正式影片。
 
 ---
 
@@ -17,7 +17,7 @@
 | 2 | 是否真正持久化 | **否**。云端容器是临时的，会话结束即回收。持久化改由 GitHub（代码/状态）+ Google Drive（影片）承担；环境可由 Dockerfile / devcontainer / SessionStart hook 重建 | 需要重新配置 → **已处理** |
 | 3 | GitHub 连接 | 仓库可读写；已多次实际 push 到远端分支 | 已存在 · 可以继续使用 |
 | 4 | Google Drive 连接 | 无凭证、无 Drive 连接器。Drive **API**（googleapis.com）网络可达；`drive.google.com` 网页链接被网络策略阻挡 | **无法访问**（需授权） |
-| 5 | 云端 GPU | 无 GPU；未开通任何付费 GPU（按要求） | 尚未安装 · 已完成成本评估 |
+| 5 | 云端 GPU | 无 GPU；未开通任何付费资源。改采免费优先：CPU 渲染 + Groq 免费 Whisper API + 本地 CPU + Kaggle 免费 GPU | 尚未安装 · **免费方案已接入** |
 | 6 | Python | 3.13.16 | 已存在 · 可以继续使用 |
 | 7 | FFmpeg / FFprobe | 6.1.1 | 已存在 · 可以继续使用 |
 | 8 | Docker | 有 CLI，无常驻 daemon；本环境内无法解析 deb.debian.org，镜像构建改由 GitHub Actions `docker` job 验证 | 已存在 · 需要重新配置 → CI 验证 |
@@ -64,7 +64,7 @@
 | 六 · AI 剪辑引擎 | 转写（Whisper large-v3-turbo、逐字时间码、语气词、说话者分段）、目标导向选段 → EDL（保留原片时间码）、删停顿/语气词 + 误删验证、自动竖屏、字幕（逐字高亮、SRT/ASS、可人工修改后读回）、音频（降噪/EQ/压缩/LUFS/Ducking/交叉淡化）、QC | ✅ 完成 · ⛔ 转写需模型权重 |
 | 七 · 自动渲染 | Preview（720×1280、≤30 MB 自动调整）/ Final（1080×1920、CRF 16、AAC 256k、-14 LUFS / -1.5 dBTP 两段式），队列 + 重试 + 日志 + 分段缓存 + 局部重渲 + 版本记录，**永不覆盖** | ✅ 完成 |
 | 八 · 团队协作 | 角色权限与状态流程（`config/roles.yaml`，系统强制）、`activity.jsonl`、自动 `HANDOVER.md`、中文文档 | ✅ 完成 |
-| 九 · 自动测试 | 198 个测试 | ✅ 见第 3 节 |
+| 九 · 自动测试 | 201 个测试 | ✅ 见第 3 节 |
 
 DFSC 2027 品牌包：`projects/dfsc-2027/brand/brand.yaml` —— 设计师确认色 green `#47B649`、blue `#1C61AE`、black K100（导出为 `#231F20`）；字体以 Noto Sans CJK **HK** 替代 PingFang HK；Motion 规则为**提议、未审核**。
 
@@ -72,7 +72,7 @@ DFSC 2027 品牌包：`projects/dfsc-2027/brand/brand.yaml` —— 设计师确�
 
 ## 3. 测试结果（`python3 -m pytest -m "not network"`）
 
-**194 passed · 2 skipped · 2 deselected（network）**，约 20 秒。
+**197 passed · 2 skipped · 2 deselected（network）**，约 20 秒。
 
 | 测试 | 结果 |
 |---|---|
@@ -89,18 +89,46 @@ DFSC 2027 品牌包：`projects/dfsc-2027/brand/brand.yaml` —— 设计师确�
 
 ---
 
-## 4. 阻碍与需要你做的事
+## 4. 阻碍与需要你做的事（2026-10-19 更新）
 
-| # | 阻碍 | 你需要做什么 | 解除后我会做 |
+你已在环境设定中允许 Google Drive、Notion、Facebook、huggingface.co。**但本会话的容器是在修改前启动的**，代理仍然拒绝这些网域（实测 403 policy denial）。网络设定在新会话启动时读取，所以下列工作要在**新会话**中完成。
+
+### 4.1 新会话需要允许的完整网域清单
+
+| 用途 | 网域 |
+|---|---|
+| Google Drive 公开文件夹读取 / 下载 | `drive.google.com`、`drive.usercontent.google.com`、`docs.google.com` |
+| Whisper 模型权重 | `huggingface.co`、`*.hf.co`（如 `cdn-lfs.hf.co`） |
+| Notion | `app.notion.com`、`www.notion.so`、`api.notion.com` |
+| Facebook 影片 | `www.facebook.com`、`facebook.com`、`*.fbcdn.net` |
+| 免费 Whisper API | `api.groq.com` |
+| 免费 GPU（大批量时） | `www.kaggle.com` |
+
+### 4.2 新会话的执行清单（交给 Claude 执行即可）
+
+```bash
+studio audit                                   # 确认上述网域都 reachable
+studio references ingest dfsc-2027             # 读取三个 Drive 文件夹 + 两支 Facebook 影片 → 风格报告 + UNREVIEWED 风格档案
+python3 -m pytest -q                           # 含转写真实模型测试
+```
+并读取 Notion 页面，把品牌 / 大赛资料整理进 `projects/dfsc-2027/`。
+
+### 4.3 仍需你提供的东西
+
+| # | 项目 | 为什么 | 怎么做 |
 |---|---|---|---|
-| 1 | **Google Drive 无凭证** | 建立 Google 服务账号 JSON 金钥，把三个参考文件夹与目标上层文件夹共享给它，放进环境密钥 `STUDIO_DRIVE_CREDENTIALS_JSON`。步骤：`docs/zh/03_Google_Drive_连接.md`。或：在 https://claude.ai/customize/connectors 连接 Google Drive 连接器并开新会话 | Test 3、扫描三个文件夹建立索引、整合文件夹结构（不移动/不删除）、上传测试成品 |
-| 2 | **huggingface.co 被网络策略阻挡** → Whisper 模型无法下载 | 云端环境设定 → Network access → 把 `huggingface.co` 及其下载 CDN（`*.hf.co`）加入 Allowed domains（https://code.claude.com/docs/en/cloud-environments#network-access）；或把 `Systran/faster-whisper-large-v3-turbo` 放到 Drive，我设定 `STUDIO_WHISPER_MODEL_DIR` | 真实中文转写测试、字词对齐、剪辑后重新转写验证 |
-| 3 | **Notion、Facebook 被阻挡**，无 Notion 连接器 | 加入 Allowed domains（`app.notion.com`、`www.facebook.com`），或连接 Notion 连接器；Facebook 影片也可直接放进 Drive `03_Style_References/` | 读取参考文件、分析两支 Facebook 影片的风格 |
-| 4 | **GPU 预算决策** | 选择：A) 维持 CPU + 需要时 RunPod Serverless（推荐）；B) GCP L4 spot。并给出每月上限。见 `docs/zh/08_云端GPU评估与成本.md` | 设定 provider 与自动停机 |
-| 5 | **风格与模板审核** | 审核 `templates/dfsc2027_north_star_open/preview.gif` 与 `brand.yaml` 的 motion 提议；指定 Reviewer 人选 | 标记 APPROVED，成为 DFSC 2027 标准 |
-| 6 | 字体授权 | 确认用 Noto Sans CJK HK 替代 PingFang HK，或提供可在服务器使用的授权字体 | 放入 `brand/fonts/` |
+| 1 | Drive 文件夹共享方式 | 「允许网域」只解决网络。**公开**（知道链接者可查看）的文件夹可直接读取；私人文件夹或要**写入/上传**成品，需要凭证 | 读取：把三个文件夹设为「知道链接的任何人可查看」。写入：建立服务账号金钥放进 `STUDIO_DRIVE_CREDENTIALS_JSON`（`docs/zh/03_Google_Drive_连接.md`），或在 https://claude.ai/customize/connectors 连接 Google Drive |
+| 2 | Notion 页面权限 | 私人页面需要授权 | 页面「Share → Publish to web」，或连接 Notion 连接器，或建立 Notion integration 并把 token 放进 `NOTION_TOKEN` |
+| 3 | Facebook 影片 | 须为公开贴文 | 若为私人/社团内容，请把影片文件直接放进 Drive `03_Style_References/` |
+| 4 | Groq 免费 API key（推荐） | 免费转写主力，不需要 GPU | https://console.groq.com/keys 免费注册 → 环境密钥 `GROQ_API_KEY` |
+| 5 | 风格与模板审核 | 风格档案必须人工批准 | 审核 `templates/dfsc2027_north_star_open/preview.gif` 与 `brand.yaml` 的 motion 提议；指定 Reviewer |
+| 6 | 字体授权 | PingFang HK 无服务器授权 | 确认用 Noto Sans CJK HK，或提供授权字体 |
 
----
+### 4.4 GPU：已改为免费优先方案
+
+不再建议任何付费 GPU。渲染、Motion Graphics、QC 全部在 CPU 上免费运行；只有转写受益于 GPU，改用：
+① **Groq 免费 Whisper API**（已接入代码，`transcription.backend: auto`，每天约 8 小时音频免费）→ ② **本地 CPU**（机密素材）→ ③ **Kaggle 免费 GPU**（每周约 30 小时，大批量时）。
+详见 `docs/zh/08_云端GPU评估与成本.md`。付费 GPU 守门机制保留，`gpu.provider: none`。
 
 ## 5. 已知限制
 

@@ -1,62 +1,65 @@
-# 云端 GPU 评估与成本估算
+# 云端 GPU 评估：免费优先方案
 
-> **状态：仅评估，未开通任何付费资源。** 开通前需要你书面批准（预算、平台、上限）。
+> **政策：免费优先。** 系统默认不使用任何付费资源；付费 GPU 仍保留守门机制（须书面批准），但不在推荐方案内。
 
-## 1. 现在需要 GPU 吗？
+## 1. 先看清楚：哪里真的需要 GPU？
 
-| 工作 | CPU（目前环境：4 核 / 16 GB） | GPU 的好处 |
+| 工作 | 需要 GPU？ | 免费做法 |
 |---|---|---|
-| Motion Graphics / 合成渲染（本系统的 NumPy+OpenCV 引擎） | 可以，CPU 计算为主 | 很小 —— 引擎目前不使用 CUDA |
-| H.264 编码 | 可以（libx264 质量最好） | NVENC 更快但同码率画质较差，CRF 16 正式输出建议仍用 libx264 |
-| Whisper large-v3-turbo 转写 | 可以但慢（约 1–3× 实时） | **明显**（约 20× 实时以上） |
-| 人脸追踪（Haar） | 可以 | 无 |
+| Motion Graphics / 合成渲染 | **不需要**（引擎是 NumPy + OpenCV，CPU 计算） | 云端开发环境的 CPU |
+| H.264 编码（CRF 16 正式输出） | 不需要（libx264 画质最好，本来就是 CPU） | CPU |
+| 人脸追踪、风格分析、QC | 不需要 | CPU |
+| **Whisper large-v3-turbo 转写** | 唯一受益于 GPU 的环节 | ① Groq 免费 API ② 本地 CPU ③ Kaggle 免费 GPU |
 
-**建议**：先全部用 CPU（免费、零维护）。等开始处理大量采访素材时，只把 **Whisper 转写** 放到按需 GPU。
+结论：**只有转写需要考虑 GPU，而转写有完全免费的做法。**
 
-## 2. 平台比较（价格来自第三方汇总网站，2026-10 查询，开通前须以官方页面为准）
+## 2. 推荐方案（三层，全部免费）
 
-| 平台 | 机型 | 约略单价 | 特点 |
-|---|---|---|---|
-| RunPod Community Cloud | RTX 4090 24GB | ≈ US$0.34 /小时 | 最便宜；个人主机提供，可靠性较低 |
-| RunPod Secure Cloud | RTX 4090 / L4 | ≈ US$0.59–0.89 / ≈ US$0.39–0.49 /小时 | 数据中心；价格各来源不一致 |
-| RunPod Serverless | 4090 worker | ≈ US$1.10 /小时（按秒计费） | 不用时 0 费用、自动缩放；最适合「偶尔转写」 |
-| Google Cloud g2-standard-4 | 1× L4 | ≈ US$0.71 /小时 on-demand；≈ US$0.40 spot | 与 Google Drive 同生态、帐单/权限统一；spot 可能被回收 |
+### 方案 ① Groq 免费 Whisper API —— 主要方案（已接入代码）
+- 跑的是同一个 `whisper-large-v3-turbo` 模型，由 Groq 托管；我们这边不需要 GPU。
+- 免费额度（第三方整理，以 Groq 控制台为准）：每分钟 20 次请求、每天 2,000 次请求，**每天约 8 小时音频**（28,800 秒），单个文件 25 MB。
+- 系统处理方式：音频自动转为 16 kHz Opus，按约 10 分钟、在静音处切段（每段远小于 25 MB），遇到限流（429）自动等待重试，时间码自动接回原片。
+- 设定：在环境密钥加入 `GROQ_API_KEY`（免费注册 https://console.groq.com/keys），`config/defaults.yaml` 的 `transcription.backend: auto` 有金钥时就自动使用 Groq。
+- 需要允许网域：`api.groq.com`。
+- 注意：音频会上传到 Groq 处理。若某些采访内容不可外传，对该项目设定 `transcription.backend: local`。
 
-## 3. 成本估算
+### 方案 ② 本地 CPU 转写 —— 备用 / 机密素材
+- faster-whisper（int8）在现有 4 核 CPU 上运行，速度约为实时的 1–3 倍（新会话下载模型后会实测并更新此处）。
+- 完全免费、音频不离开环境；适合少量或机密素材。
+- 需要允许网域：`huggingface.co`、`*.hf.co`（首次下载模型权重）。
 
-指令：`studio gpu estimate --seconds 60 --renders 3 --transcribe-minutes 30 --hourly-usd 0.40`
+### 方案 ③ Kaggle Notebooks 免费 GPU —— 大批量时
+- 免费额度约每周 30 小时 GPU（P100 或 2×T4），单次最长 12 小时。
+- 适合一次转写大量采访（例如数十小时素材）；可用 Kaggle API 推送 notebook 并取回结果。
+- 需要：Kaggle 帐号 API Token（`KAGGLE_API_TOKEN`）、允许 `www.kaggle.com`。等真的有大批量需求时再接上。
 
-假设一支 60 秒广告：30 分钟采访素材转写 + 3 次渲染，加上 15 分钟自动停止前的闲置：
-
-| 方案 | 估算 |
+### 其他免费选项（评估过，不推荐为主力）
+| 选项 | 原因 |
 |---|---|
-| 全部 CPU（现况） | US$0 额外费用 |
-| GCP L4 spot（$0.40/h） | 约 US$0.17 / 支 |
-| RunPod 4090 community（$0.34/h） | 约 US$0.14 / 支 |
-| 每月 20 支影片 | 约 US$3–4 / 月（只用于转写，含每次 15 分钟闲置） |
+| Google Colab 免费版 | 额度不固定、需要浏览器互动，无法自动化 |
+| Lightning AI 免费额度（约每月 15 credits） | 额度小、月底失效 |
+| Modal（约每月 US$30 免费额度） | 需要绑卡，超额会自动扣款，违反「免付费」原则 |
+| Google Cloud US$300 试用金 | 试用帐号通常要升级为付费帐号才能用 GPU；90 天后失效 |
+| Hugging Face ZeroGPU | 共享资源、额度有限，适合 demo 而非生产 |
 
-真正的成本风险是**忘记关机**：L4 on-demand 24 小时不关 ≈ US$17 / 天。
+## 3. 成本
 
-## 4. 成本控制（已写入代码）
+| 项目 | 费用 |
+|---|---|
+| 渲染、Motion Graphics、QC、风格分析（CPU） | US$0 |
+| 转写：Groq 免费层（每天约 8 小时音频以内） | US$0 |
+| 转写：本地 CPU | US$0 |
+| 大批量转写：Kaggle（每周约 30 小时 GPU 以内） | US$0 |
 
-`studio/gpu/guard.py`：除非同时满足以下条件，系统**拒绝**启动付费 GPU：
-1. `config/defaults.yaml` 的 `gpu.provider` 不是 `none`（目前是 `none`）
-2. 环境变量 `STUDIO_GPU_APPROVAL` 写明批准人 / 日期 / 预算
-3. 单价不超过 `gpu.max_hourly_usd`（目前 US$1.00）
+一支 60 秒广告通常只需转写 10–60 分钟采访素材，远低于每日免费额度。
 
-每次判断（允许或拒绝）都记录在 `workspace/gpu_decisions.jsonl`。其他保护：`auto_stop_minutes: 15` 自动停止、渲染队列失败重试上限 3 次、每次渲染记录耗时。
+## 4. 成本保护（代码）
 
-## 5. 建议的下一步（需要你决定）
+- `config/defaults.yaml` → `gpu.provider: none`；付费平台（runpod / gcp）必须同时有 `STUDIO_GPU_APPROVAL` 才能启动（`studio/gpu/guard.py`），每次判断记录在 `workspace/gpu_decisions.jsonl`。
+- 本仓库**不包含**任何会自动开通付费资源的代码。
 
-- **方案 A（推荐）**：继续 CPU；需要大量转写时开 **RunPod Serverless**（按秒计费、不用不收费）。
-- **方案 B**：若希望帐单与 Google Drive 统一，使用 **GCP L4 spot** + 15 分钟自动关机。
-
-两者都需要：(1) 你批准预算上限；(2) 提供 API 金钥（`RUNPOD_API_KEY` 或 GCP 服务账号），放在环境密钥中。
-
-## 资料来源
-- https://northflank.com/blog/runpod-gpu-pricing
-- https://www.hivenet.com/post/runpod-pricing-complete-guide-to-gpu-cloud-costs
-- https://www.synpixcloud.com/blog/rtx-4090-cloud-rental-worth-it
-- https://computeprices.com/providers/google/gpus/l4
-- https://www.thundercompute.com/blog/google-cloud-gpu-instances
-- https://www.economize.cloud/resources/gcp/pricing/compute-engine/g2-standard-4/
+## 资料来源（第三方整理，开通前以官方页面为准）
+- Groq 免费层：https://www.free-model.com/models/groq/whisper-large-v3-turbo/ ，https://spokenly.app/blog/free-speech-to-text-apis ，https://www.eesel.ai/blog/groq-pricing
+- Kaggle：https://agentdeals.dev/vendor/kaggle
+- 免费 GPU 比较：https://www.spheron.network/blog/free-gpu-cloud-credits-2026/ ，https://aimultiple.com/free-cloud-gpu ，https://www.spheron.network/blog/google-colab-alternatives-8-gpu-clouds-compared-2026/
+- GCP 试用：https://www.gmicloud.ai/blog/where-can-i-get-free-gpu-cloud-trials-in-2026-a-complete-guide

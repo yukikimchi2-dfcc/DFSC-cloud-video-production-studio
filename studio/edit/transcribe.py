@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
@@ -188,21 +189,115 @@ def _has_cuda() -> bool:
         return False
 
 
-def transcribe(path: str | Path, cfg: dict | None = None, traditional: bool = True,
-               fillers: list[str] | None = None, speakers: bool = True) -> Transcript:
-    """Word-timestamped transcript of `path` (any audio/video ffmpeg can read)."""
-    cfg = cfg or load_config()
+PROMPT_TC = "以下是繁體中文的訪談內容。"
+
+
+def _backend(cfg: dict) -> str:
+    backend = get(cfg, "transcription.backend", "auto")
+    if backend == "auto":
+        return "groq" if os.environ.get("GROQ_API_KEY") else "local"
+    return backend
+
+
+def _transcribe_local(path, cfg, lang, traditional, conv) -> tuple[list[Segment], str, str]:
     model, model_name = _load_model(cfg)
-    lang = get(cfg, "transcription.language", "zh")
     raw_segments, info = model.transcribe(str(path), language=lang, word_timestamps=True, vad_filter=True,
-                                          initial_prompt="以下是繁體中文的訪談內容。" if traditional else None)
-    conv = to_traditional if traditional else (lambda s: s)
+                                          initial_prompt=PROMPT_TC if traditional else None)
     segs = []
     for rs in raw_segments:
         words = [Word(w.start, w.end, conv(w.word), float(w.probability)) for w in (rs.words or [])]
         segs.append(Segment(rs.start, rs.end, conv(rs.text.strip()), words,
                             confidence=float(np.exp(rs.avg_logprob)) if rs.avg_logprob is not None else 1.0))
-    tr = Transcript(str(path), info.language or lang, segs, model=str(model_name))
+    return segs, info.language or lang, str(model_name)
+
+
+# Groq hosts the same Whisper large-v3-turbo model behind an OpenAI-compatible API with a free
+# tier (no GPU needed here). Uploads are capped at 25 MB, so audio is sent as ~10-minute Opus
+# chunks cut at silences; timestamps are shifted back by each chunk's offset.
+GROQ_URL = "https://api.groq.com/openai/v1/audio/transcriptions"
+
+
+def _chunk_bounds(path, total: float, target: float = 600.0, search: float = 30.0) -> list[tuple[float, float]]:
+    if total <= target + search:
+        return [(0.0, total)]
+    from .speech_clean import detect_silences
+    mids = [(s + e) / 2 for s, e in detect_silences(path, min_silence=0.3)]
+    bounds, start = [], 0.0
+    while total - start > target + search:
+        mark = start + target
+        near = [m for m in mids if abs(m - mark) <= search]
+        cut = min(near, key=lambda m: abs(m - mark)) if near else mark
+        bounds.append((start, cut))
+        start = cut
+    bounds.append((start, total))
+    return bounds
+
+
+def parse_groq_response(data: dict, offset: float, conv) -> list[Segment]:
+    """verbose_json (segments + words) -> Segments with absolute times; words are assigned by time."""
+    words = [Word(w["start"] + offset, w["end"] + offset, conv(w["word"])) for w in data.get("words", [])]
+    segs = []
+    for s in data.get("segments", []):
+        start, end = s["start"] + offset, s["end"] + offset
+        seg_words = [w for w in words if start - 0.05 <= (w.start + w.end) / 2 < end + 0.05]
+        lp = s.get("avg_logprob")
+        segs.append(Segment(start, end, conv(s["text"].strip()), seg_words,
+                            confidence=float(np.exp(lp)) if lp is not None else 1.0))
+    if not segs and words:
+        segs = [Segment(words[0].start, words[-1].end, conv(data.get("text", "")).strip(), words)]
+    return segs
+
+
+def _transcribe_groq(path, cfg, lang, traditional, conv) -> tuple[list[Segment], str, str]:
+    import tempfile
+
+    import requests
+
+    from ..core.io import probe, run_ffmpeg
+    key = os.environ.get("GROQ_API_KEY")
+    if not key:
+        raise ModelUnavailableError("transcription.backend is 'groq' but GROQ_API_KEY is not set "
+                                    "(free key: https://console.groq.com/keys)")
+    model = get(cfg, "transcription.groq_model", "whisper-large-v3-turbo")
+    segs: list[Segment] = []
+    with tempfile.TemporaryDirectory(prefix="studio-groq-") as tmp:
+        for i, (c0, c1) in enumerate(_chunk_bounds(path, probe(path).duration)):
+            chunk = Path(tmp) / f"chunk{i:03d}.ogg"
+            run_ffmpeg(["-ss", f"{c0:.3f}", "-t", f"{c1 - c0:.3f}", "-i", str(path), "-vn", "-ac", "1",
+                        "-ar", "16000", "-c:a", "libopus", "-b:a", "48k", str(chunk)])
+            for attempt in range(5):
+                with open(chunk, "rb") as f:
+                    r = requests.post(GROQ_URL, headers={"Authorization": f"Bearer {key}"}, timeout=300,
+                                      files={"file": (chunk.name, f, "audio/ogg")},
+                                      data=[("model", model), ("language", lang), ("response_format", "verbose_json"),
+                                            ("timestamp_granularities[]", "word"),
+                                            ("timestamp_granularities[]", "segment"),
+                                            ("prompt", PROMPT_TC if traditional else "")])
+                if r.status_code == 429 or r.status_code >= 500:  # free-tier rate limit / transient
+                    time.sleep(float(r.headers.get("retry-after", 2 ** (attempt + 1))))
+                    continue
+                if r.status_code != 200:
+                    raise ModelUnavailableError(f"Groq transcription failed ({r.status_code}): {r.text[:300]}")
+                segs += parse_groq_response(r.json(), c0, conv)
+                break
+            else:
+                raise ModelUnavailableError("Groq rate limit persisted after 5 retries; try later or use backend 'local'")
+    return segs, lang, f"groq:{model}"
+
+
+def transcribe(path: str | Path, cfg: dict | None = None, traditional: bool = True,
+               fillers: list[str] | None = None, speakers: bool = True, backend: str | None = None) -> Transcript:
+    """Word-timestamped transcript of `path` (any audio/video ffmpeg can read).
+
+    backend: "local" (faster-whisper on this machine), "groq" (free hosted Whisper API, needs
+    GROQ_API_KEY) or "auto" (groq when a key is set, else local). Default from config.
+    """
+    cfg = cfg or load_config()
+    lang = get(cfg, "transcription.language", "zh")
+    conv = to_traditional if traditional else (lambda s: s)
+    run = _transcribe_groq if (backend or _backend(cfg)) == "groq" else _transcribe_local
+    segs, language, model_name = run(path, cfg, lang, traditional, conv)
+    tr = Transcript(str(path), language, segs, model=model_name)
     mark_fillers(tr, fillers or get(cfg, "transcription.fillers"))
     if speakers:
         assign_speakers(tr, path)

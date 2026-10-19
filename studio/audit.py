@@ -20,10 +20,15 @@ HOSTS = {
     "pypi.org": "https://pypi.org/simple/",
     "www.googleapis.com (Drive API)": "https://www.googleapis.com/drive/v3/about",
     "drive.google.com": "https://drive.google.com",
+    "drive.usercontent.google.com (Drive downloads)": "https://drive.usercontent.google.com",
     "huggingface.co (Whisper weights)": "https://huggingface.co",
-    "api.runpod.io": "https://api.runpod.io/graphql",
+    "cdn-lfs.hf.co (Whisper weight CDN)": "https://cdn-lfs.hf.co",
+    "api.groq.com (free Whisper API)": "https://api.groq.com/openai/v1/models",
+    "www.kaggle.com (free GPU)": "https://www.kaggle.com",
     "app.notion.com": "https://app.notion.com",
+    "api.notion.com": "https://api.notion.com/v1/users",
     "www.facebook.com": "https://www.facebook.com",
+    "api.runpod.io (paid GPU)": "https://api.runpod.io/graphql",
 }
 
 
@@ -95,6 +100,9 @@ def run_audit(check_network: bool = True) -> dict:
                              or os.environ.get("STUDIO_DRIVE_TOKEN")),
         "gcloud_account": "credentialed" if "No credentialed" not in _run(["gcloud", "auth", "list"])[1] else None,
         "runpod_api_key": bool(os.environ.get("RUNPOD_API_KEY")),
+        "groq_api_key": bool(os.environ.get("GROQ_API_KEY")),
+        "kaggle_token": bool(os.environ.get("KAGGLE_API_TOKEN") or os.environ.get("KAGGLE_KEY")),
+        "notion_token": bool(os.environ.get("NOTION_TOKEN")),
         "anthropic_api_key": bool(os.environ.get("ANTHROPIC_API_KEY")),
         "whisper_local_model": bool(os.environ.get("STUDIO_WHISPER_MODEL_DIR")),
     }

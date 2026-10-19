@@ -36,7 +36,9 @@ safe_area:                        # fraction of frame kept clear for platform UI
   right: 0.12
 
 transcription:
-  model: large-v3-turbo
+  backend: auto                   # auto = groq when GROQ_API_KEY is set, else local | local | groq
+  groq_model: whisper-large-v3-turbo   # free hosted tier: ~8 h audio/day, 25 MB per request
+  model: large-v3-turbo           # local faster-whisper model
   language: zh
   device: auto                    # auto | cpu | cuda
   compute_type: auto
@@ -53,7 +55,9 @@ qc:
   lufs_tolerance: 1.0
 
 gpu:
-  provider: none                  # none | runpod | gcp — paid providers need explicit approval
+  # Free-first policy: rendering runs on CPU; transcription uses Groq's free Whisper API or
+  # local CPU; Kaggle's free weekly GPU quota is the batch fallback. Paid providers need approval.
+  provider: none                  # none | kaggle (free) | runpod | gcp (paid)
   require_approval: true
   auto_stop_minutes: 15
   max_hourly_usd: 1.00
