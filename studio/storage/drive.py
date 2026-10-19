@@ -42,8 +42,9 @@ def _credentials():
     if token and Path(token).exists():
         return user_creds.Credentials.from_authorized_user_file(token, SCOPES)
     raise DriveUnavailableError(
-        "No Google Drive credentials. Set STUDIO_DRIVE_CREDENTIALS to a service-account JSON path "
-        "(and share the Drive folders with that account) or STUDIO_DRIVE_TOKEN to an OAuth token file. "
+        "No Google Drive credentials in this runtime. Set STUDIO_DRIVE_TOKEN to an OAuth token file or "
+        "STUDIO_DRIVE_CREDENTIALS to a service-account JSON path (folders shared as anyone:writer need no "
+        "extra sharing; private folders must be shared with that identity). "
         "See docs/zh/03_Google_Drive_连接.md")
 
 

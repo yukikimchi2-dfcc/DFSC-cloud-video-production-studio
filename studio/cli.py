@@ -165,7 +165,16 @@ def cmd_style(a):
 def cmd_drive(a):
     from .storage import ensure_structure, get_store
     from .storage.index import AssetIndex
-    store = get_store(a.store)
+    try:
+        store = get_store(a.store)
+    except Exception as e:  # noqa: BLE001 — missing auth is an expected state, not a crash
+        from .storage.drive import DriveUnavailableError
+        if not isinstance(e, DriveUnavailableError):
+            raise
+        print(f"Drive write path unavailable in this runtime: {e}\n"
+              "Note: public 'anyone with the link' folders can still be READ with `studio references ingest`; "
+              "Google never accepts anonymous writes, even on folders shared as anyone:writer.", file=sys.stderr)
+        sys.exit(2)
     if a.action == "check":
         _print(_drive_check(store, a.folder))
     elif a.action == "setup":

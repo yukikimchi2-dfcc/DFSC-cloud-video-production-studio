@@ -4,21 +4,27 @@ Google Drive 是团队的素材平台；GitHub 只放代码与配置，**不放�
 
 ## 1. 现状（2026-10-19 实测）
 
-Drive 分成两种能力，**分开验收**：
+三件事分开看（详细证据：`projects/dfsc-2027/references/DRIVE_ACCESS_EVIDENCE.md`）：
 
-| 能力 | 需要什么 | 状态 |
-|---|---|---|
-| **公开读取**：「知道链接的任何人可查看」的文件夹 | 只需网络放行 `drive.google.com`、`drive.usercontent.google.com`，**不需要 OAuth / 服务账号** | ✅ 已验证：3 个参考文件夹列出 + 下载 + 完整解码（Test 3a） |
-| **持久化写入**：建立文件夹结构、上传 Preview / 成品 / QC 报告、读取私人文件夹 | 服务账号金钥或可用的 Drive 连接器 | ⛔ BLOCKED（未提供凭证；自订 drive connector 显示 Connection issue，不能使用） |
+| 项目 | 状态 |
+|---|---|
+| **文件夹权限** | ✅ 三个参考文件夹均含 `anyone:writer`（ChatGPT 端连接器查得）——**可写，不是阻碍** |
+| **公开读取（Claude 运行环境）** | ✅ 无需凭证：列出、下载、完整解码（Test 3a）；ChatGPT 端上传的测试文件可在 Claude 端读回（Test 3c） |
+| **写入（Claude 运行环境）** | ⛔ BLOCKED：此环境**没有任何 Google 身份**；Google 对匿名写入回 401（即使文件夹为 anyone:writer）。官方 Google Drive 连接器 `connect_incomplete`、自订 drive 连接器 `needs_reconnect`，均未启用 |
 
-公开读取的做法：
+公开读取：
 ```bash
-studio references ingest dfsc-2027          # 读取 project.yaml 里 drive.reference_folders 的公开链接
-python3 -m pytest -q tests/test_setup_acceptance.py -k 3a
+studio references ingest dfsc-2027
+python3 -m pytest -q tests/test_setup_acceptance.py -k "3a or 3c"
 ```
 公开读取不提供 MD5，系统改以 ffprobe 完整解码确认文件完整。
 
-## 2. 写入授权步骤（由 Admin 执行一次，需要时）
+## 2. 让 Claude 运行环境可写
+
+- **对话内上传（连接器）**：https://claude.ai/customize/connectors → 完成「Google Drive」授权（目前 connect_incomplete）→ 开新会话并确认已启用。自订「drive」连接器的 URL `https://drive.google.com` 不是 MCP 服务器，建议移除。
+- **自动 pipeline 上传**：在环境设定提供 `STUDIO_DRIVE_TOKEN`（团队成员 OAuth 授权文件）或服务账号 JSON（下节）。参考文件夹已是 anyone:writer，**不需再共享**。
+
+## 3. 服务账号步骤（由 Admin 决定是否建立）
 
 推荐使用 **Service Account（服务账号）**：不依赖任何人的个人 Google 账号，人员离职也不影响系统。
 
@@ -35,7 +41,7 @@ python3 -m pytest -q tests/test_setup_acceptance.py -k 3a
 
 > 服务账号只能看到**被共享给它**的文件夹，看不到任何人的其他文件。
 
-## 3. 验证（Test 3）
+## 4. 验证（Test 3b）
 
 ```bash
 source secrets/env.sh
@@ -44,7 +50,7 @@ studio drive check --folder <测试文件夹ID>
 会实际执行：列出文件（读）→ 上传一个 `studio_access_check_*.txt`（写）→ 下载回来并比对 MD5（完整性）。
 测试文件**不会被删除**（系统政策：不删除任何 Drive 文件），可自行归档。
 
-## 4. 建立 / 整合文件夹结构
+## 5. 建立 / 整合文件夹结构
 
 ```bash
 studio drive setup --parent <上层文件夹ID>
@@ -68,7 +74,7 @@ Cloud Video Production Studio/
 └── 10_Team_Documentation/
 ```
 
-## 5. 素材索引（不复制旧素材）
+## 6. 素材索引（不复制旧素材）
 
 ```bash
 studio drive scan --folder <文件夹ID> --label "参考A" --brand dfsc-2027 --batch 500
@@ -80,7 +86,7 @@ studio drive scan --folder <文件夹ID> --label "参考A" --brand dfsc-2027 --b
 - 再次扫描时自动识别新增 / 变更（保留旧版本记录），团队的标注不会被覆盖。
 - 新素材默认 `review_status = UNREVIEWED` —— **存在于 Drive 不代表是认可的作品**。
 
-## 6. 渲染时的下载 / 上传
+## 7. 渲染时的下载 / 上传
 
 - 渲染需要的素材下载到云端临时工作区 `workspace/`（git-ignored），使用 HTTP Range **断点续传**，完成后比对 MD5，失败的文件改名为 `.corrupt` 不会被使用。
 - 上传使用 Drive resumable upload，完成后比对 MD5。

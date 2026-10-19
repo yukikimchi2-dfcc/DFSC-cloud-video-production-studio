@@ -15,6 +15,21 @@ drive:
   - https://drive.google.com/drive/folders/1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo
   - https://drive.google.com/drive/folders/1x4YaQ1NOiW04Wnb_kM-N8N-1uT1sykG8
   - https://drive.google.com/drive/folders/1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2
+  reference_folder_info:
+  - id: 1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo
+    name: DFCC_9Oct_JoshuaChin_SmartRental
+    permission: anyone:writer
+  - id: 1x4YaQ1NOiW04Wnb_kM-N8N-1uT1sykG8
+    name: DFCC_9Oct_YYLim_QJoyBalloon
+    permission: anyone:writer
+  - id: 1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2
+    name: DFCC_9Oct_ChiliAng_Eggteen_final(1)
+    permission: anyone:writer
+  cross_client_test_file:
+    id: 1IxNFMiIqOjUCycT_hv54nZAZ1eFnn5Sp
+    name: STUDIO_SETUP_WRITE_TEST_20261019.txt
+    uploaded_by: ChatGPT Google Drive connector (user, 2026-10-19)
+    readable_from_claude_runtime: true
 references:
   notion: https://app.notion.com/p/Dreamfactory-3f14ddbea63a8022a1f1e3d4c4d1b038
   facebook:
@@ -27,18 +42,20 @@ notes: 'Setup phase only. No production video is to be cut until the client conf
 handover:
   assets:
   - brand/source/DFSC_2027_Key_visual.ai（Illustrator 主视觉，已提取矢量 Logo）
-  - 参考：Drive 3 支采访 Reel（公开链接，只读）、FB 启航宣传片 + 学长姐故事、Notion 工作区与 SOP（references/）
+  - 参考：Drive 3 支采访 Reel（文件夹 anyone:writer；Claude 端以公开链接只读使用，未修改原片）、FB 启航宣传片 + 学长姐故事、Notion
+    工作区与 SOP（references/）
   templates:
   - dfsc2027_north_star_open@0.1.0（UNREVIEWED）
   todo:
   - 回答 references/STYLE_FINDINGS.md 第 7 节 4 个问题（繁/简字幕、圆梦口号、固定品牌元素、采访是否已审核）
   - Reviewer 审核 style_profiles/DFSC_Interview_Reel、DFSC_Launch_Cinematic 与 north star
     开场模板
-  - 决定 Drive 写入方式后执行 Test 3b（studio drive check --folder <ID>）
+  - 为 Claude 运行环境提供 Google 身份（完成 Google Drive 连接器授权，或 STUDIO_DRIVE_TOKEN），之后执行 Test
+    3b（studio drive check --folder 1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo）
   - 确认用 Noto Sans CJK HK 替代 PingFang HK，或提供授权字体
   known_issues:
   - 主视觉使用 PingFang HK（无服务器授权），暂以 Noto Sans CJK HK 替代
-  - Drive 持久化写入 BLOCKED（无凭证）；公开读取正常
+  - Claude 运行环境写入 Drive BLOCKED：缺少 Google 认证（文件夹本身 anyone:writer，ChatGPT 端已上传回读成功）
   - 参考成片音频真峰值约 0 dBTP（削波风险）、JoshuaChin 为 HEVC——仅记录，未修改原片
   - Whisper 转写需人工校对（例：「創業之律」应为「創業自律」）
   next_action: Reviewer 审核 STYLE_FINDINGS 与 DFSC_Interview_Reel 草稿；客户确认 Setup 完成前不制作正式影片

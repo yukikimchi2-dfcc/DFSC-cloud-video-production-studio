@@ -5,7 +5,7 @@
 - 分支：`claude/cloud-ai-video-studio-setup-utp2z3`
 - 重新审计：`studio audit`（JSON 输出；`--offline` 跳过网络检查）
 
-> **结论：Setup 尚未全部完成。** 系统、渲染、QC、团队流程、Drive 公开读取、参考导入、风格分析、本地免费转写均已实测通过。仍 **BLOCKED**：Drive 持久化写入（无凭证）。仍 **UNVERIFIED**：Groq 转写（无 key，可选）、Docker 镜像构建（待 CI）。风格档案全部待人工审核。在你确认之前，不会制作任何正式影片。
+> **结论：Setup 尚未全部完成。** 系统、渲染、QC、团队流程、Drive 公开读取、参考导入、风格分析、本地免费转写均已实测通过。仍 **BLOCKED**：**Claude 运行环境**写入 Drive——原因是此环境缺少 Google 认证；三个参考文件夹本身为 anyone:writer、可写，且 ChatGPT 端已上传并回读成功（见 `projects/dfsc-2027/references/DRIVE_ACCESS_EVIDENCE.md`）。仍 **UNVERIFIED**：Groq 转写（无 key，可选）、Docker 镜像构建（待 CI）。风格档案全部待人工审核。在你确认之前，不会制作任何正式影片。
 >
 > 续接方式见 **[CONTINUE_SETUP.md](CONTINUE_SETUP.md)**。
 
@@ -18,7 +18,7 @@
 | 1 | Claude Code 运行环境 | 云端会话，Python 3.13、4 CPU、16 GB | 已存在 · 可以继续使用 |
 | 2 | 是否真正持久化 | **否**。云端容器是临时的，会话结束即回收。持久化改由 GitHub（代码/状态）+ Google Drive（影片）承担；环境可由 Dockerfile / devcontainer / SessionStart hook 重建 | 需要重新配置 → **已处理** |
 | 3 | GitHub 连接 | 仓库可读写；已多次实际 push 到远端分支 | 已存在 · 可以继续使用 |
-| 4 | Google Drive 连接 | **公开读取 ✅**（原公开链接，无需 OAuth）；**写入 ⛔**（无服务账号；自订 drive connector 显示 Connection issue，不可用） | 读取可用 · 写入 BLOCKED |
+| 4 | Google Drive 连接 | **文件夹权限**：3 个均 anyone:writer（可写）。**Claude 端读取 ✅**（公开链接）。**Claude 端写入 ⛔**：无 Google 身份——官方 Google Drive 连接器 connect_incomplete、自订 drive 连接器 needs_reconnect、`CLOUDSDK_AUTH_ACCESS_TOKEN` 为无效占位值 | 读取可用 · Claude 端写入 BLOCKED（认证，非权限） |
 | 5 | 云端 GPU | 无 GPU；未开通任何付费资源。改采免费优先：CPU 渲染 + Groq 免费 Whisper API + 本地 CPU + Kaggle 免费 GPU | 尚未安装 · **免费方案已接入** |
 | 6 | Python | 3.13.16 | 已存在 · 可以继续使用 |
 | 7 | FFmpeg / FFprobe | 6.1.1 | 已存在 · 可以继续使用 |
@@ -83,7 +83,9 @@ DFSC 2027 品牌包：`projects/dfsc-2027/brand/brand.yaml` —— 设计师确�
 | 1 | Test 1 — Cloud Environment | ✅ PASS | 新容器 09:20 启动，SessionStart hook 自动装好套件与繁中字体 |
 | 2 | Test 2 — GitHub 提交 / 读取 / 更新 / 恢复 | ✅ PASS | 测试 + 多次实际 push（最新 commit 见分支） |
 | 3a | Test 3a — Drive **公开读取** | ✅ PASS | 3 文件夹列出（4 个文件）；3 支影片下载 134–194 MB，ffprobe / 完整解码通过；`test_3a_drive_public_read…` 通过 |
-| 3b | Test 3b — Drive **持久化写入** | ⛔ **BLOCKED** | 无服务账号 / 可用连接器；按指示未建立任何密钥 |
+| 3b | Test 3b — **Claude 运行环境**写入 Drive | ⛔ **BLOCKED（缺 Claude 端认证）** | 匿名 Drive API 上传回 HTTP 401 Login Required；`studio drive check` 无身份退出。文件夹权限 anyone:writer 不是阻碍；未建立任何密钥 |
+| 3c | 跨端上传可在 Claude 端读回 | ✅ PASS | ChatGPT 端连接器上传 `STUDIO_SETUP_WRITE_TEST_20261019.txt`（`1IxNFMiI…`）→ Claude 端列出并下载，198 bytes，MD5 `68a8b6de…`。**仅证明跨端可见，不代表 Claude pipeline 可上传** |
+| — | 文件夹写入权限（ChatGPT 端实测） | ✅ 可写 | 3 个文件夹 permissions 含 `{type:anyone, role:writer}`；ChatGPT 端上传并回读成功（用户提供） |
 | 4 | Facebook 参考 | ✅ PASS | 2 支下载（40.9s 竖屏、60s 横屏）+ 元数据 |
 | 5 | Notion 参考 | ✅ PASS | 总页 + 4 个子页面导出（`references/notion/`） |
 | 6 | 风格分析 | ✅ PASS（数据） · ⏳ 待审核 | 5 份报告、5 个 Ref 档案、2 个草稿档案，全部 UNREVIEWED；`STYLE_FINDINGS.md` |
@@ -96,7 +98,7 @@ DFSC 2027 品牌包：`projects/dfsc-2027/brand/brand.yaml` —— 设计师确�
 | 13 | 全新环境交接 | ✅ PASS | 从 GitHub 重新 clone + 全新 venv 安装 → 199 passed / 2 skipped，CLI / 渲染 / QC 正常 |
 | 14 | Groq 免费转写 | ⏸ **UNVERIFIED** | 网络可达，但无 `GROQ_API_KEY`（可选；模拟 API 测试通过） |
 | 15 | Docker 镜像构建 | ⏸ **UNVERIFIED** | 本容器内 apt 无法解析 Debian 镜像；交由 GitHub Actions `docker` job |
-| 16 | 自动测试总数 | ✅ 200 passed · 3 skipped（含 network） | 跳过：无人脸后端情境、卡通测试图、Drive 写入（BLOCKED） |
+| 16 | 自动测试总数 | ✅ 见下方最新执行 | 跳过：无人脸后端情境、卡通测试图、Claude 端 Drive 写入（BLOCKED） |
 
 未执行：正式影片（按指示）、付费 GPU、排程任务、任何 Drive 写入或删除。
 
@@ -104,7 +106,7 @@ DFSC 2027 品牌包：`projects/dfsc-2027/brand/brand.yaml` —— 设计师确�
 
 | # | 项目 | 说明 |
 |---|---|---|
-| 1 | Drive 持久化写入 | 决定方式：服务账号金钥（`STUDIO_DRIVE_CREDENTIALS_JSON`）或可用的 Drive 连接器。之后跑 `studio drive check --folder <ID>`（Test 3b）与 `studio drive setup --parent <ID>` |
+| 1 | Claude 端 Drive 认证 | 文件夹已可写，只缺 Claude 端身份。A）对话内上传：https://claude.ai/customize/connectors 完成「Google Drive」授权（目前 connect_incomplete），移除/停用 URL 为 https://drive.google.com 的自订「drive」连接器（needs_reconnect），开新会话。B）自动 pipeline：环境设定提供 `STUDIO_DRIVE_TOKEN` 或服务账号 JSON。完成后跑 `studio drive check --folder 1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo`（Test 3b）。不需再共享文件夹、不需重发链接 |
 | 2 | 风格决策 | 回答 `projects/dfsc-2027/references/STYLE_FINDINGS.md` 第 7 节（繁/简字幕、圆梦口号、固定品牌元素、3 支采访是否为已审核版本） |
 | 3 | 审核 | Reviewer 审核 `DFSC_Interview_Reel`、`DFSC_Launch_Cinematic`、`dfsc2027_north_star_open` |
 | 4 | Groq（可选） | 若要更快的免费转写：在环境设定加入 `GROQ_API_KEY`（音频会上传给 Groq 处理） |

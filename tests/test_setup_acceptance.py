@@ -52,8 +52,14 @@ def test_2_remote_is_configured():
 
 
 # ---- Test 3 — Google Drive ---------------------------------------------------------
-# 3a (public read) and 3b (authenticated write) are accepted separately: "anyone with the link"
-# folders need no credentials to read, but uploading results back to Drive does.
+# Accepted separately:
+#   3a  public read from this runtime (no credentials)
+#   3b  write from THIS runtime — needs a Google identity here (OAuth token / service account /
+#       connected Drive connector). The folders themselves are shared anyone:writer, so folder
+#       permission is not the blocker; Google rejects anonymous writes with 401.
+#   3c  a file uploaded from another client (ChatGPT Drive connector, 2026-10-19) is visible and
+#       readable from this runtime — proves cross-client round trip, NOT this runtime's write path.
+CROSS_CLIENT_TEST_FILE = "1IxNFMiIqOjUCycT_hv54nZAZ1eFnn5Sp"
 @pytest.mark.network
 def test_3a_drive_public_read_lists_reference_folders():
     import gdown
@@ -67,10 +73,21 @@ def test_3a_drive_public_read_lists_reference_folders():
 
 
 @pytest.mark.network
+def test_3c_cross_client_upload_is_readable_here(tmp_path):
+    import gdown
+    try:
+        path = gdown.download(id=CROSS_CLIENT_TEST_FILE, output=str(tmp_path / "x.txt"), quiet=True)
+    except Exception as e:  # noqa: BLE001
+        pytest.skip(f"BLOCKED: Drive not reachable from this environment ({type(e).__name__})")
+    assert path and "Cloud Video Production Studio" in open(path, encoding="utf-8").read()
+
+
+@pytest.mark.network
 def test_3_drive_read_write_verify(tmp_path):
     folder = os.environ.get("STUDIO_DRIVE_TEST_FOLDER")
     if not (os.environ.get("STUDIO_DRIVE_CREDENTIALS") or os.environ.get("STUDIO_DRIVE_TOKEN")) or not folder:
-        pytest.skip("BLOCKED (3b write): no Drive credentials / STUDIO_DRIVE_TEST_FOLDER — see docs/zh/03_Google_Drive_连接.md")
+        pytest.skip("BLOCKED (3b write from this runtime): no Google identity in this runtime "
+                    "(STUDIO_DRIVE_TOKEN / STUDIO_DRIVE_CREDENTIALS) — folder permission is anyone:writer; see docs/zh/03_Google_Drive_连接.md")
     from studio.cli import _drive_check
     from studio.storage.drive import DriveStore
     result = _drive_check(DriveStore(), folder)
