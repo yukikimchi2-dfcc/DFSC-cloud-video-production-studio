@@ -1,0 +1,7 @@
+# Drawing indices inside DFSC_2027_Key_visual.ai (see: python tools/extract_ai_assets.py SOURCE --list)
+north_star_tricolor: [28, 29, 30, 31]   # blue/black/green star with blue stem (top-left panel)
+north_star_black: [21]                  # large black 4-point star (bottom-right panel)
+qihang_wordmark: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]   # 啟航 lettering (green)
+dfsc_lockup: [32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]   # paper plane + 圓夢工場。創業大賽 + English line
+paper_plane: [66, 67, 68, 69, 70]
+# (drawing 72 is an Illustrator bounding rectangle over the 。 ring — excluded on purpose)

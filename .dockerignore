@@ -1,0 +1,7 @@
+.git
+workspace/
+renders/
+cache/
+secrets/
+**/__pycache__
+*.egg-info

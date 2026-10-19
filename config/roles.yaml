@@ -1,0 +1,39 @@
+# Team roles and what each may do. Enforced by `studio project status` (studio/project.py).
+# Map real people to roles in config/team.yaml (kept out of git if it contains personal data).
+roles:
+  Admin:
+    description: 管理系统、权限、云端费用与品牌标准
+    can: ["*"]
+  Editor:
+    description: 剪辑、字幕、选段、生成 Preview、提交审核
+    can: [start, submit_review, render_preview, edit_project, handover]
+  Motion Designer:
+    description: 制作与维护 Motion Graphics 模板、品牌动画
+    can: [start, submit_review, render_preview, edit_templates, handover]
+  Reviewer:
+    description: 审核影片、批准或退回修改、批准风格档案
+    can: [approve, request_revision, approve_style, render_final]
+  Viewer:
+    description: 只读查看进度与成品
+    can: []
+
+statuses:
+  - Not Started
+  - In Progress
+  - Awaiting Review
+  - Revision Required
+  - Approved
+  - Rendering
+  - Completed
+  - Archived
+
+# from-status -> {to-status: permission needed}
+transitions:
+  Not Started: {In Progress: start}
+  In Progress: {Awaiting Review: submit_review, Rendering: render_preview}
+  Rendering: {In Progress: render_preview, Awaiting Review: submit_review, Completed: render_final}
+  Awaiting Review: {Approved: approve, Revision Required: request_revision}
+  Revision Required: {In Progress: start}
+  Approved: {Rendering: render_final, Completed: render_final}
+  Completed: {Archived: "*"}
+  Archived: {}

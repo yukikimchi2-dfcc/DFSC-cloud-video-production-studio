@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: System packages
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg fonts-noto-cjk fonts-noto-color-emoji
+      - name: Python packages
+        run: pip install -r requirements.txt && pip install -e .
+      - name: Environment audit
+        run: studio audit --offline
+      - name: Tests
+        run: pytest -q -m "not network" --junitxml=test-results.xml
+      - name: Render system check (synthetic test card + QC)
+        run: |
+          studio render test-card --mode preview --duration 3 --name ci_check
+          studio qc "$(ls renders/dfsc-2027/ci_check_v*_preview.mp4 | tail -1)" --out qc-report || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ci-outputs
+          path: |
+            test-results.xml
+            renders/**/*.mp4
+            renders/**/*.json
+            qc-report/
+          retention-days: 14
+
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build studio image (reproducible environment check)
+        run: docker build -t video-studio:ci .
+      - name: Run audit inside the image
+        run: docker run --rm video-studio:ci studio audit --offline

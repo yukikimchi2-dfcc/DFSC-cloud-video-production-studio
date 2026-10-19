@@ -218,3 +218,20 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- Cloud Video Production Studio ---
+# Working/render output never goes in git: it lives in the cloud workspace and Drive.
+/workspace/
+/renders/
+/cache/
+*.mp4
+*.mov
+*.wav
+*.m4a
+!tests/fixtures/**
+# Credentials must never be committed
+secrets/
+*.service-account.json
+credentials*.json
+token*.json
+.env

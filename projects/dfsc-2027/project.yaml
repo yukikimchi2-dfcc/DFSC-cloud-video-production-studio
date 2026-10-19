@@ -1,0 +1,37 @@
+id: dfsc-2027
+name: 第十一屆 圓夢工場。創業大賽 2027 — 啟航 北極星
+client: Dream Factory
+type: brand_setup
+status: Not Started
+owner: null
+style_profile: null
+created: 2026-10-19
+overrides:
+  render:
+    default_fps: 30
+drive:
+  folder_id: null
+  reference_folders:
+  - https://drive.google.com/drive/folders/1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo
+  - https://drive.google.com/drive/folders/1x4YaQ1NOiW04Wnb_kM-N8N-1uT1sykG8
+  - https://drive.google.com/drive/folders/1kTg7UlLSuAaACuja_tVFHJ-uF571bYJ2
+references:
+  notion: https://app.notion.com/p/Dreamfactory-3f14ddbea63a8022a1f1e3d4c4d1b038
+  facebook:
+  - https://www.facebook.com/share/r/1CL7DzWC9D/
+  - https://www.facebook.com/share/v/1DSeQULbZm/
+notes: 'Setup phase only. No production video is to be cut until the client confirms
+  setup is complete.
+
+  '
+handover:
+  assets:
+  - brand/source/DFSC_2027_Key_visual.ai（Illustrator 主视觉，已提取矢量 Logo）
+  templates: []
+  todo:
+  - 取得 Google Drive 访问权限后扫描三个参考文件夹
+  - 审核 brand.yaml 中提议的 motion 规则（目前 UNREVIEWED）
+  - 提供 PingFang HK 替代字体的授权版本或确认使用 Noto Sans CJK TC
+  known_issues:
+  - 主视觉使用 PingFang HK（Apple 字体，云端 Linux 无授权），暂以 Noto Sans CJK TC 替代
+  next_action: 等待客户确认 Setup 完成；之后才开始第一支正式影片
