@@ -8,8 +8,11 @@
 | 当前状态 | **Not Started** |
 | 负责人 | 未指定 |
 | 风格档案 | 未指定（尚无 APPROVED 风格） |
-| 代码版本 | `a0ee1f2-dirty` |
-| Drive 文件夹 | 1WZ8GvoxLe-OJ1DFSTHfPtREU5PprEwP_ |
+| 生成时代码版本 | `185fe9b`（最新以分支 HEAD 为准） |
+| Drive 输出根目录 | 1Lk3HhFLwgQi30d-2lRDFvqn7gRckszmU（`config/drive_output.yaml`） |
+| Drive 项目文件夹 | 1WZ8GvoxLe-OJ1DFSTHfPtREU5PprEwP_ |
+| Drive 预览目录 | 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__ |
+| Drive QC 目录 | 16bQMIanpzpv9hraJtqtdS3NWP_uo50uo |
 
 ## 最近一次渲染
 - `setup_check_v001_final.mp4` · final · 1080x1920 · 6.1s · 0.989 MB · commit `25d498f-dirty` · 2026-10-19T09:31:49+00:00
@@ -20,23 +23,28 @@
 
 ## 使用模板
 - dfsc2027_north_star_open@0.1.0（UNREVIEWED）
+- 采访 Reel 家族：dfsc_interview_top_label / big_title / name_tag / subtitle / reel（REFERENCE ONLY）
+- 启航家族：dfsc_launch_background / title / alumni_orbit / stats / sequence（REFERENCE ONLY）
+- 共用：dfsc_end_card（REFERENCE ONLY）；来源 references/TEMPLATE_SOURCES.md
 
 ## 待完成事项
-- 回答 references/STYLE_FINDINGS.md 第 7 节 4 个问题（繁/简字幕、圆梦口号、固定品牌元素、采访是否已审核）
-- Reviewer 审核 style_profiles/DFSC_Interview_Reel、DFSC_Launch_Cinematic 与 north star 开场模板
+- 提供圆梦口号与活动资讯，填入模板参数 slogan / invite（目前为〔…〕占位）
 - 确认用 Noto Sans CJK HK 替代 PingFang HK，或提供授权字体
-- 决定正式影片交付方式：为容器提供 Google 身份（STUDIO_DRIVE_TOKEN 或服务账号）以启用 studio queue run --upload；或由人手从云端工作区下载后上传
-- 视需要把输出目录 Cloud Video Production Studio 共享给团队成员
+- 无人值守大文件上传：按 docs/zh/04_Drive_OAuth_自动上传.md 完成 OAuth client 与一次浏览器授权，3 个值放进环境 secret，新会话执行 studio drive bigtest --folder 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__
+- 团队：由 Admin 决定 GitHub 协作者、config/team.yaml 角色对应、Drive 输出目录共享（目前均未设定）
+- 把 setup 分支经 PR 合并到 main（需 Admin 审核；未合并前新会话必须手动选此分支）
 
 ## 已知问题
 - 主视觉使用 PingFang HK（无服务器授权），暂以 Noto Sans CJK HK 替代
 - 参考成片音频真峰值约 0 dBTP（削波风险）、JoshuaChin 为 HEVC——仅记录，未修改原片
 - Whisper 转写需人工校对（例：「創業之律」应为「創業自律」）
-- Drive 输出：对话连接器可建目录、上传报告/小文件（≤1 KB MP4 已验证）；正式体积影片无法经连接器交付（只能内嵌 base64，不能引用容器文件）
-- 无人值守上传 BLOCKED：容器无 Google 身份
+- Drive 输出：对话连接器可建目录、上传报告/小文件（825 B MP4 已验证）；正式体积影片经连接器 NOT PASS（只能内嵌 base64）
+- 无人值守上传 BLOCKED：容器无 Google OAuth 凭证
+- ChatCut 插件：未安装、未读取官方页面（chatcut.io 不在网络白名单）
+- DFSC 模板与成片差异：Noto Emoji、数据卡数字字体、启航仅 9:16、片尾缺小 logo、网格非透视（TEMPLATE_SOURCES.md §E）
 
 ## 下一步行动
-- Reviewer 审核 STYLE_FINDINGS 与 DFSC_Interview_Reel 草稿；客户确认 Setup 完成前不制作正式影片
+- Setup 已可交接；正式剪辑须等用户提供具体剪辑 brief 与指定素材后才开始（见根目录 CLAUDE.md）
 
 ## 最近修改
 - 2026-10-19T10:20:50+00:00 · drive_output_dir_created · claude-setup · {"root": "1Lk3HhFLwgQi30d-2lRDFvqn7gRckszmU", "folders": 37, "connector_roundtrip": "txt/md/png/825B mp4 PASS", "production_mp4_via_connector": "NOT PASS (inline base64 only)", "unattended_upload": "BLOCKED no identity"}
