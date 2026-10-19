@@ -7,6 +7,7 @@ jsonschema>=4.0
 soundfile>=0.12
 pyloudnorm>=0.1.1
 pymupdf>=1.24
+opencc-python-reimplemented>=0.1.7
 faster-whisper>=1.0
 google-api-python-client>=2.100
 google-auth>=2.20

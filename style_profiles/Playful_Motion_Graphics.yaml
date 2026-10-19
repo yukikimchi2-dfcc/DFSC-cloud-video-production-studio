@@ -1,0 +1,23 @@
+# 初始分類 STARTER CATEGORY ONLY — not an analysed style.
+# Fill this from real, approved reference videos (studio style analyze) and get it reviewed
+# before any project uses it as a standard. category_only must become false first.
+name: Playful_Motion_Graphics
+description: 活潑動態圖像 — playful motion graphics
+review_status: UNREVIEWED
+category_only: true
+source_videos: []
+reference_timecodes: []
+key_frames: []
+screenshots: []
+editing: {}
+animation: {}
+visual: {}
+audio: {}
+use_cases: []
+related_code: []
+projects: []
+history:
+- at: '2026-10-19T00:00:00Z'
+  action: seeded_category
+  by: setup
+  status: UNREVIEWED

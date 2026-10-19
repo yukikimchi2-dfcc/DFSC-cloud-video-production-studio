@@ -17,6 +17,7 @@ dependencies = [
   "soundfile>=0.12",
   "pyloudnorm>=0.1.1",
   "pymupdf>=1.24",
+  "opencc-python-reimplemented>=0.1.7",
 ]
 
 [project.optional-dependencies]
