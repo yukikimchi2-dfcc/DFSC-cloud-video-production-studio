@@ -10,7 +10,8 @@ Google Drive 是团队的素材平台；GitHub 只放代码与配置，**不放�
 |---|---|
 | **文件夹权限** | ✅ 三个参考文件夹均含 `anyone:writer`（ChatGPT 端连接器查得）——**可写，不是阻碍** |
 | **公开读取（Claude 运行环境）** | ✅ 无需凭证：列出、下载、完整解码（Test 3a）；ChatGPT 端上传的测试文件可在 Claude 端读回（Test 3c） |
-| **写入（Claude 运行环境）** | ⛔ BLOCKED：此环境**没有任何 Google 身份**；Google 对匿名写入回 401（即使文件夹为 anyone:writer）。官方 Google Drive 连接器 `connect_incomplete`、自订 drive 连接器 `needs_reconnect`，均未启用 |
+| **写入：对话连接器**（官方 Google Drive） | ✅ 已 connected，上传 + 读回 PASS（授权账号 My Drive）；⛔ 看不到原有文件夹 1（not found）→ 待文件夹共享给 yukikimchi2@gmail.com 后重测 |
+| **写入：无人值守 pipeline**（`studio queue run --upload`） | ⛔ BLOCKED：容器内无 Google 身份（连接器授权不会进入容器）；且需设定 `drive.previews_folder_id` |
 
 公开读取：
 ```bash
@@ -21,7 +22,7 @@ python3 -m pytest -q tests/test_setup_acceptance.py -k "3a or 3c"
 
 ## 2. 让 Claude 运行环境可写
 
-- **对话内上传（连接器）**：https://claude.ai/customize/connectors → 完成「Google Drive」授权（目前 connect_incomplete）→ 开新会话并确认已启用。自订「drive」连接器的 URL `https://drive.google.com` 不是 MCP 服务器，建议移除。
+- **对话内上传（连接器）**：官方「Google Drive」已授权并在会话中启用（2026-10-19 实测上传读回 PASS）。要写入原有文件夹，需该文件夹对授权账号可见（直接共享给 yukikimchi2@gmail.com）。自订「drive」连接器的 URL `https://drive.google.com` 不是 MCP 服务器，建议移除。
 - **自动 pipeline 上传**：在环境设定提供 `STUDIO_DRIVE_TOKEN`（团队成员 OAuth 授权文件）或服务账号 JSON（下节）。参考文件夹已是 anyone:writer，**不需再共享**。
 
 ## 3. 服务账号步骤（由 Admin 决定是否建立）

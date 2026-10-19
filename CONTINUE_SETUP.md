@@ -50,7 +50,10 @@ python3 tools/notion_public.py "https://app.notion.com/p/Dreamfactory-3f14ddbea6
 | Drive **公开读取**（3 个文件夹，原公开链接） | ✅ 验收通过 |
 | Drive 文件夹写入权限 | ✅ anyone:writer；ChatGPT 端上传 + 回读成功（用户提供证据） |
 | ChatGPT 端上传文件在 Claude 端读回（3c） | ✅ |
-| **Claude 运行环境**写入 Drive（3b：pipeline 上传 / 建立结构） | ⛔ BLOCKED：**缺 Claude 端 Google 认证**（非权限问题）；匿名上传 401；未建立任何密钥 |
+| 对话连接器（官方 Google Drive）认证 + 上传 + 读回（3d） | ✅ PASS（授权账号 My Drive，诊断文件 `1u8WdrXfTk5l4xG0e44AfapwC1Rn8TvMp`） |
+| 对话连接器写入原有文件夹 1（3e） | ⛔ BLOCKED：连接器身份看不到文件夹 1（not found） |
+| 无人值守上传（3b：`studio drive check` / `queue run --upload`） | ⛔ BLOCKED：容器无 Google 身份；未设 `drive.previews_folder_id` |
+| Docker 镜像（CI） | ✅ PASS：GitHub Actions `docker` job |
 | Facebook / Notion 参考导入 | ✅ |
 | 风格分析（5 支）+ 草稿档案 | ✅ 完成 · ⏳ 待 Reviewer 审核（全部 UNREVIEWED） |
 | 本地 Whisper CPU 真实转写 | ✅（57.9 s 音频 / 30.7 s，约 1.9× 实时） |
@@ -63,7 +66,9 @@ python3 tools/notion_public.py "https://app.notion.com/p/Dreamfactory-3f14ddbea6
 
 1. 回答 `projects/dfsc-2027/references/STYLE_FINDINGS.md` 第 7 节的 4 个问题（繁/简字幕、圆梦口号、绿色标签与云朵片尾是否固定、3 支采访是否为已审核版本）。
 2. Reviewer 审核 `style_profiles/DFSC_Interview_Reel.yaml`、`templates/dfsc2027_north_star_open/preview.gif`。
-3. 为 Claude 运行环境提供 Google 身份（文件夹已可写、链接已在首条 MASTER SETUP PROMPT 提供，无需重发）：
+3. Drive 写入（链接已在首条 MASTER SETUP PROMPT 提供，无需重发）：
+   - 对话连接器已 connected、上传读回 PASS，但看不到文件夹 1：请文件夹拥有者把文件夹 1 直接共享给 yukikimchi2@gmail.com，然后在新/本会话用连接器 `create_file` 到 `1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo` 重测（新文件名，不覆盖）；
+   - 无人值守 pipeline 仍需容器可用的 Google 身份（下列二选一），并在 project.yaml 设 `drive.previews_folder_id`：
    - 对话内：https://claude.ai/customize/connectors 完成「Google Drive」授权（现为 connect_incomplete），移除 URL 为 `https://drive.google.com` 的自订「drive」连接器，开新会话；
    - 自动 pipeline：环境设定加入 `STUDIO_DRIVE_TOKEN` 或服务账号 JSON。
    然后跑 Test 3b：`studio drive check --folder 1oBLTdKEbSDsTX1ozQten90vS0M3rkMdo`（上传新测试文件、回读、MD5，不删除不覆盖）。
