@@ -163,7 +163,11 @@ def _load_model(cfg: dict):
         from faster_whisper import WhisperModel
     except ImportError as e:
         raise ModelUnavailableError("faster-whisper is not installed: pip install faster-whisper") from e
-    model_name = os.environ.get("STUDIO_WHISPER_MODEL_DIR") or get(cfg, "transcription.model", "large-v3-turbo")
+    from ..config import REPO_ROOT
+    local = REPO_ROOT / "workspace" / "models" / "faster-whisper-large-v3-turbo"   # `studio models fetch`
+    model_name = (os.environ.get("STUDIO_WHISPER_MODEL_DIR")
+                  or (str(local) if (local / "model.bin").exists() else None)
+                  or get(cfg, "transcription.model", "large-v3-turbo"))
     device = get(cfg, "transcription.device", "auto")
     compute = get(cfg, "transcription.compute_type", "auto")
     if device == "auto":

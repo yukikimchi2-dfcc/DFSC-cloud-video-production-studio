@@ -10,6 +10,7 @@
     studio drive check|setup|scan|upload|download
     studio brand extract SOURCE.ai OUT --groups groups.yaml
     studio references ingest PROJECT      reference Drive folders + Facebook videos -> style reports
+    studio models fetch                   local Whisper large-v3-turbo (free CPU transcription)
     studio gpu estimate --seconds 60
 Run `studio <command> -h` for options.
 """
@@ -216,6 +217,15 @@ def cmd_references(a):
                               "--max-videos", str(a.max_videos), *extra]))
 
 
+def cmd_models(a):
+    import time
+    from huggingface_hub import snapshot_download
+    dest = REPO_ROOT / "workspace" / "models" / "faster-whisper-large-v3-turbo"
+    t = time.time()
+    path = snapshot_download(a.repo, local_dir=str(dest))
+    print(f"Whisper model ready at {path} ({time.time() - t:.0f}s). Transcription uses it automatically.")
+
+
 def cmd_gpu(a):
     from .gpu.guard import GpuPlan, estimate_render_hours
     hours = estimate_render_hours(a.seconds, a.renders, transcribe_minutes=a.transcribe_minutes)
@@ -330,6 +340,11 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--no-analyze", action="store_true")
     s.set_defaults(fn=cmd_references)
 
+    s = sub.add_parser("models", help="download the local Whisper model into workspace/models (needs huggingface.co)")
+    s.add_argument("action", choices=["fetch"])
+    s.add_argument("--repo", default="mobiuslabsgmbh/faster-whisper-large-v3-turbo")
+    s.set_defaults(fn=cmd_models)
+
     s = sub.add_parser("gpu", help="GPU cost estimate (never starts anything)")
     s.add_argument("action", choices=["estimate"])
     s.add_argument("--seconds", type=float, required=True, help="finished video length")
@@ -343,6 +358,9 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> None:
+    import signal
+    if hasattr(signal, "SIGPIPE"):  # `studio ... | head` should end quietly, not with a traceback
+        signal.signal(signal.SIGPIPE, signal.SIG_DFL)
     args = build_parser().parse_args(argv)
     args.fn(args)
 

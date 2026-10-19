@@ -3,7 +3,7 @@
 Dream Factory 的云端 AI 视频制作系统：以代码为核心的剪辑、Motion Graphics、AI 转写与选段、字幕、音频、质量检测、版本管理与团队交接。不依赖 CapCut / Premiere 或任何个人电脑。
 
 > **目前阶段：Setup。** 在客户确认 Setup 完成前，不制作正式影片。所有测试影片均为合成素材，并标记为「TEST · 合成測試素材」。
-> 当前状态与阻碍见 **[SETUP_AUDIT.md](SETUP_AUDIT.md)**。
+> 当前状态与验收矩阵见 **[SETUP_AUDIT.md](SETUP_AUDIT.md)**；新会话 / 新成员续接见 **[CONTINUE_SETUP.md](CONTINUE_SETUP.md)**。
 
 ## 快速开始
 
@@ -14,6 +14,8 @@ pytest -q -m "not network"                              # 自动测试
 studio render test-card --mode preview                  # 合成测试渲染 → renders/dfsc-2027/test_card_v001_preview.mp4
 studio templates list                                   # Motion Graphics 模板
 studio project list                                     # 项目与状态
+studio models fetch                                     # 本地 Whisper 模型（免费 CPU 转写）
+studio references ingest dfsc-2027                      # 参考资料导入 + 风格分析
 ```
 
 ## 文档（中文）

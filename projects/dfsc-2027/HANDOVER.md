@@ -8,28 +8,35 @@
 | 当前状态 | **Not Started** |
 | 负责人 | 未指定 |
 | 风格档案 | 未指定（尚无 APPROVED 风格） |
-| 代码版本 | `910ba62-dirty` |
+| 代码版本 | `9ac85d8-dirty` |
 | Drive 文件夹 | 未连接 |
 
 ## 最近一次渲染
-- `cli_check_v001_preview.mp4` · preview · 720x1280 · 1.5s · 0.054 MB · commit `910ba62-dirty` · 2026-10-19T08:46:03+00:00
+- `setup_check_v001_final.mp4` · final · 1080x1920 · 6.1s · 0.989 MB · commit `25d498f-dirty` · 2026-10-19T09:31:49+00:00
 
 ## 使用素材
 - brand/source/DFSC_2027_Key_visual.ai（Illustrator 主视觉，已提取矢量 Logo）
+- 参考：Drive 3 支采访 Reel（公开链接，只读）、FB 启航宣传片 + 学长姐故事、Notion 工作区与 SOP（references/）
 
 ## 使用模板
-- （无）
+- dfsc2027_north_star_open@0.1.0（UNREVIEWED）
 
 ## 待完成事项
-- 取得 Google Drive 访问权限后扫描三个参考文件夹
-- 审核 brand.yaml 中提议的 motion 规则（目前 UNREVIEWED）
-- 提供 PingFang HK 替代字体的授权版本或确认使用 Noto Sans CJK TC
+- 回答 references/STYLE_FINDINGS.md 第 7 节 4 个问题（繁/简字幕、圆梦口号、固定品牌元素、采访是否已审核）
+- Reviewer 审核 style_profiles/DFSC_Interview_Reel、DFSC_Launch_Cinematic 与 north star 开场模板
+- 决定 Drive 写入方式后执行 Test 3b（studio drive check --folder <ID>）
+- 确认用 Noto Sans CJK HK 替代 PingFang HK，或提供授权字体
 
 ## 已知问题
-- 主视觉使用 PingFang HK（Apple 字体，云端 Linux 无授权），暂以 Noto Sans CJK TC 替代
+- 主视觉使用 PingFang HK（无服务器授权），暂以 Noto Sans CJK HK 替代
+- Drive 持久化写入 BLOCKED（无凭证）；公开读取正常
+- 参考成片音频真峰值约 0 dBTP（削波风险）、JoshuaChin 为 HEVC——仅记录，未修改原片
+- Whisper 转写需人工校对（例：「創業之律」应为「創業自律」）
 
 ## 下一步行动
-- 等待客户确认 Setup 完成；之后才开始第一支正式影片
+- Reviewer 审核 STYLE_FINDINGS 与 DFSC_Interview_Reel 草稿；客户确认 Setup 完成前不制作正式影片
 
 ## 最近修改
-- （无）
+- 2026-10-19T09:35:10+00:00 · setup_transcription_verified · claude-setup · {"backend": "local CPU large-v3-turbo", "realtime_factor": 1.89}
+- 2026-10-19T09:35:10+00:00 · setup_style_analysis · claude-setup · {"reports": 5, "draft_profiles": ["DFSC_Interview_Reel", "DFSC_Launch_Cinematic"], "review_status": "UNREVIEWED"}
+- 2026-10-19T09:35:10+00:00 · setup_references_ingested · claude-setup · {"drive_public_read": "3 folders / 3 videos", "facebook": 2, "notion_pages": 5}

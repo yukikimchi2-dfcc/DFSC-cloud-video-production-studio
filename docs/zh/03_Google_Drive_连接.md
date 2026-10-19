@@ -2,16 +2,23 @@
 
 Google Drive 是团队的素材平台；GitHub 只放代码与配置，**不放影片**。
 
-## 1. 现状（2026-10-19）
+## 1. 现状（2026-10-19 实测）
 
-| 项目 | 状态 |
-|---|---|
-| Drive API（`www.googleapis.com`） | 云端环境**可以连到**（HTTP 401 = 需要凭证） |
-| `drive.google.com` 网页链接 | 被当前云端环境的网络策略阻挡（只影响浏览器链接，不影响 API） |
-| 凭证 | **尚未提供** —— 这是唯一的阻碍 |
-| 三个参考文件夹 | 尚未扫描（需要凭证） |
+Drive 分成两种能力，**分开验收**：
 
-## 2. 授权步骤（由 Admin 执行一次）
+| 能力 | 需要什么 | 状态 |
+|---|---|---|
+| **公开读取**：「知道链接的任何人可查看」的文件夹 | 只需网络放行 `drive.google.com`、`drive.usercontent.google.com`，**不需要 OAuth / 服务账号** | ✅ 已验证：3 个参考文件夹列出 + 下载 + 完整解码（Test 3a） |
+| **持久化写入**：建立文件夹结构、上传 Preview / 成品 / QC 报告、读取私人文件夹 | 服务账号金钥或可用的 Drive 连接器 | ⛔ BLOCKED（未提供凭证；自订 drive connector 显示 Connection issue，不能使用） |
+
+公开读取的做法：
+```bash
+studio references ingest dfsc-2027          # 读取 project.yaml 里 drive.reference_folders 的公开链接
+python3 -m pytest -q tests/test_setup_acceptance.py -k 3a
+```
+公开读取不提供 MD5，系统改以 ffprobe 完整解码确认文件完整。
+
+## 2. 写入授权步骤（由 Admin 执行一次，需要时）
 
 推荐使用 **Service Account（服务账号）**：不依赖任何人的个人 Google 账号，人员离职也不影响系统。
 

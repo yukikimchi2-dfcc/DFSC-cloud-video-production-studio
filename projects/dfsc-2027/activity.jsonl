@@ -1,0 +1,3 @@
+{"at": "2026-10-19T09:35:10+00:00", "event": "setup_references_ingested", "user": "claude-setup", "commit": "9ac85d8-dirty", "detail": {"drive_public_read": "3 folders / 3 videos", "facebook": 2, "notion_pages": 5}}
+{"at": "2026-10-19T09:35:10+00:00", "event": "setup_style_analysis", "user": "claude-setup", "commit": "9ac85d8-dirty", "detail": {"reports": 5, "draft_profiles": ["DFSC_Interview_Reel", "DFSC_Launch_Cinematic"], "review_status": "UNREVIEWED"}}
+{"at": "2026-10-19T09:35:10+00:00", "event": "setup_transcription_verified", "user": "claude-setup", "commit": "9ac85d8-dirty", "detail": {"backend": "local CPU large-v3-turbo", "realtime_factor": 1.89}}
