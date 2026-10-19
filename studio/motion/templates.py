@@ -126,6 +126,8 @@ def preview_timeline(template_id: str, brand: BrandKit, params: dict | None = No
                   background=resolve_hex(brand, bg) if bg != "synthetic" else "#000000")
     if bg == "synthetic":
         tl.add(synthetic_background())
+    elif bg == "synthetic_room":
+        tl.add(dfsc_room_background())
     tl.add(*build_template(template_id, params, brand))
     return tl
 
@@ -394,3 +396,122 @@ class _WordmarkLayer(Layer):
         ys = np.arange(h, dtype=np.float32)[:, None]
         rgba[..., 3] *= np.clip((edge - ys) / 10, 0, 1)
         return Patch(rgba, ctx.px(self.x), ctx.px(self.y))
+
+
+# ---------------------------------------------------------------- DFSC reference-based families
+# Rebuilt from the edited reference videos (user-authorised style baseline, 2026-10-19).
+# Sources per template: templates/<id>/template.yaml `sources` + projects/dfsc-2027/references/TEMPLATE_SOURCES.md
+
+from . import dfsc as _d  # noqa: E402
+
+
+def _cues(lines: list[str], start: float, per_line: float) -> list[tuple[float, float, str]]:
+    return [(start + i * per_line, start + (i + 1) * per_line, ln) for i, ln in enumerate(lines)]
+
+
+def dfsc_room_background() -> Layer:
+    """Synthetic stand-in for an interview room (warm wall, darker floor) — never real footage."""
+    def fn(frame, ctx, t):
+        h = frame.shape[0]
+        y = np.linspace(0, 1, h, dtype=np.float32)[:, None, None]
+        frame[:] = np.array([0.80, 0.74, 0.66], np.float32) * (1 - 0.28 * y) + np.float32(0.02) * y
+        return frame
+    return FuncLayer(fn, z=-100, name="synthetic_room")
+
+
+@register("dfsc_interview_top_label")
+def _dfsc_top_label(p: dict, brand: BrandKit) -> list[Layer]:
+    return [_d.InterviewTopLabel(p["text"], sticker=p["sticker"] or None, duration=p["duration"], z=20)]
+
+
+@register("dfsc_interview_big_title")
+def _dfsc_big_title(p: dict, brand: BrandKit) -> list[Layer]:
+    out = [_d.InterviewBigTitle(p["title"], sticker=p["sticker"] or None, duration=p["duration"], z=20)]
+    if p["small_label"]:
+        out.insert(0, _d.InterviewSmallLabel(p["small_label"], duration=p["duration"], z=21))
+    return out
+
+
+@register("dfsc_interview_name_tag")
+def _dfsc_name_tag(p: dict, brand: BrandKit) -> list[Layer]:
+    return [_d.InterviewNameTag(p["name"], left_sticker=p["left_sticker"] or None,
+                                right_sticker=p["right_sticker"] or None, duration=p["duration"], z=20)]
+
+
+@register("dfsc_interview_subtitle")
+def _dfsc_subtitle(p: dict, brand: BrandKit) -> list[Layer]:
+    return [_d.InterviewSubtitle(_cues(p["lines"], 0.0, p["seconds_per_line"]), z=30)]
+
+
+@register("dfsc_end_card")
+def _dfsc_end_card(p: dict, brand: BrandKit) -> list[Layer]:
+    return [_d.EndCard(p["edition"], p["theme_zh"], p["theme_en"], p["cta_label"], p["cta_url"],
+                       slogan=p["slogan"], invite=p["invite"], name_en=p["name_en"], duration=p["duration"], z=50)]
+
+
+@register("dfsc_interview_reel")
+def _dfsc_interview_reel(p: dict, brand: BrandKit) -> list[Layer]:
+    """SOP structure: hook → answer (name tag) → key line → slogan → event invite → end card."""
+    seg = p["segment_seconds"]
+    t_name, t_key, t_slogan, t_end = seg, 2 * seg, 3 * seg, 4 * seg
+    subs = p["subtitles"]
+    per = max(t_slogan / max(len(subs), 1), 0.8)
+    return [
+        _d.InterviewTopLabel(p["hook_label"], sticker=p["hook_sticker"] or None, start=0, duration=seg, z=20),
+        _d.InterviewNameTag(p["name"], left_sticker=p["name_left_sticker"] or None,
+                            right_sticker=p["name_right_sticker"] or None, start=t_name, duration=seg, z=20),
+        _d.InterviewSmallLabel(p["key_small_label"], start=t_key, duration=seg, z=21),
+        _d.InterviewBigTitle(p["key_title"], sticker=p["key_sticker"] or None, start=t_key, duration=seg, z=20),
+        _d.InterviewSubtitle(_cues(subs, 0.0, per), start=0, z=30),
+        _d.InterviewBigTitle(p["slogan"], start=t_slogan, duration=seg, size=130, y=860, z=20),
+        _d.InterviewSmallLabel(p["invite"], start=t_slogan, duration=seg, y=1080, size=52, z=21),
+        _d.EndCard(p["edition"], p["theme_zh"], p["theme_en"], p["cta_label"], p["cta_url"],
+                   start=t_end, duration=p["end_seconds"], z=50),
+    ]
+
+
+@register("dfsc_launch_background")
+def _dfsc_launch_bg(p: dict, brand: BrandKit) -> list[Layer]:
+    return [_d.LaunchBackground(z=-90, duration=p["duration"]),
+            _d.LaunchStar(x=p["star_x"], y=p["star_y"], height=p["star_height"], stem=p["stem"], z=-80,
+                          duration=p["duration"])]
+
+
+@register("dfsc_launch_title")
+def _dfsc_launch_title(p: dict, brand: BrandKit) -> list[Layer]:
+    out = [_d.LaunchSerifText([p["title"]], y=p["title_y"], size=p["title_size"], duration=p["duration"], z=20)]
+    if p["lines"]:
+        out.append(_d.LaunchSerifText(p["lines"], y=p["lines_y"], size=64, role="serif_body",
+                                      start=0.4, duration=p["duration"] - 0.4, z=20))
+    return out
+
+
+@register("dfsc_launch_alumni_orbit")
+def _dfsc_launch_orbit(p: dict, brand: BrandKit) -> list[Layer]:
+    return [_d.LaunchStar(x=540, y=900, height=260, stem=False, duration=p["duration"], z=10),
+            _d.LaunchAlumniOrbit(p["names"], roles=p["roles"], duration=p["duration"], z=20)]
+
+
+@register("dfsc_launch_stats")
+def _dfsc_launch_stats(p: dict, brand: BrandKit) -> list[Layer]:
+    items = [(it["value"], it["label"]) for it in p["items"]]
+    return [_d.LaunchStats(items, footer=p["footer"], size=96, duration=p["duration"], z=20)]
+
+
+@register("dfsc_launch_sequence")
+def _dfsc_launch_sequence(p: dict, brand: BrandKit) -> list[Layer]:
+    """Film structure (FB 0:00–0:59.5): navy grid + star → serif title → alumni orbit → stats → end card."""
+    seg = p["segment_seconds"]
+    items = [(it["value"], it["label"]) for it in p["items"]]
+    return [
+        _d.LaunchBackground(duration=4 * seg, z=-90),
+        _d.LaunchStar(x=760, y=420, height=300, stem=False, duration=seg, z=-80),
+        _d.LaunchSerifText([p["title"]], y=640, size=190, duration=seg, z=20),
+        _d.LaunchSerifText(p["lines"], y=1180, size=64, role="serif_body", start=0.4, duration=seg - 0.4, z=20),
+        _d.LaunchStar(x=540, y=900, height=260, stem=False, start=seg, duration=seg, z=10),
+        _d.LaunchAlumniOrbit(p["names"], roles=p["roles"], start=seg, duration=seg, z=20),
+        _d.LaunchStar(x=760, y=560, height=200, stem=False, start=2 * seg, duration=seg, z=10),
+        _d.LaunchStats(items, footer=p["footer"], size=96, start=2 * seg, duration=seg, z=20),
+        _d.EndCard(p["edition"], p["theme_zh"], p["theme_en"], p["cta_label"], p["cta_url"],
+                   start=3 * seg, duration=p["end_seconds"], z=50),
+    ]

@@ -23,6 +23,10 @@ SYSTEM_FONTS = {
     **{f"cjk_{w.lower()}_hk": {"path": _NOTO.format(w), "index": _HK}
        for w in ("Thin", "Light", "DemiLight", "Regular", "Medium", "Bold", "Black")},
     **{f"cjk_{w.lower()}_sc": {"path": _NOTO.format(w), "index": _SC} for w in ("Regular", "Bold", "Black")},
+    **{f"cjk_serif_{w.lower()}_hk": {"path": f"/usr/share/fonts/opentype/noto/NotoSerifCJK-{w}.ttc", "index": _HK}
+       for w in ("Regular", "SemiBold", "Bold", "Black")},
+    **{f"cjk_serif_{w.lower()}": {"path": f"/usr/share/fonts/opentype/noto/NotoSerifCJK-{w}.ttc", "index": _TC}
+       for w in ("Regular", "SemiBold", "Bold", "Black")},
     "emoji": {"path": "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf", "index": 0},
 }
 

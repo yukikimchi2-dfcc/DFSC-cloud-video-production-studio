@@ -58,7 +58,8 @@ python3 tools/notion_public.py "https://app.notion.com/p/Dreamfactory-3f14ddbea6
 | 大文件上传器协议（3g，本地模拟端点） | ✅ 26 MB 中断续传 + MD5 + 解码（非 Google） |
 | Docker 镜像（CI） | ✅ PASS：GitHub Actions `docker` job |
 | Facebook / Notion 参考导入 | ✅ |
-| 风格分析（5 支）+ 草稿档案 | ✅ 完成 · ⏳ 待 Reviewer 审核（全部 UNREVIEWED） |
+| 风格分析（5 支）+ 草稿档案 | ✅ 完成；`DFSC_Interview_Reel` / `DFSC_Launch_Cinematic` → REFERENCE_ONLY（用户授权成片为基准） |
+| DFSC 两套模板（采访 Reel / 启航宣传片，11 个） | ✅ 依成片建立 + 视觉比对 + 测试；REFERENCE ONLY；来源 `projects/dfsc-2027/references/TEMPLATE_SOURCES.md` |
 | 本地 Whisper CPU 真实转写 | ✅（57.9 s 音频 / 30.7 s，约 1.9× 实时） |
 | Groq 转写 | ⏸ UNVERIFIED：无 `GROQ_API_KEY`（可选） |
 | 金句卡引号重叠 | ✅ 已修复 + 回归测试 |
@@ -67,13 +68,13 @@ python3 tools/notion_public.py "https://app.notion.com/p/Dreamfactory-3f14ddbea6
 
 ## 5. 下一步（需要人决定）
 
-1. 回答 `projects/dfsc-2027/references/STYLE_FINDINGS.md` 第 7 节的 4 个问题（繁/简字幕、圆梦口号、绿色标签与云朵片尾是否固定、3 支采访是否为已审核版本）。
-2. Reviewer 审核 `style_profiles/DFSC_Interview_Reel.yaml`、`templates/dfsc2027_north_star_open/preview.gif`。
+1. 提供圆梦口号与活动资讯后，填入模板参数 `slogan` / `invite`（目前为占位）。
+2. 如需 APPROVED：Reviewer 逐项查看 `templates/dfsc_*/preview.gif`（目前为 REFERENCE ONLY）。
 3. 正式影片交付（链接已在首条 MASTER SETUP PROMPT 提供，无需重发）：
    - 小文件（QC 报告、字幕、交接文件）：在会话中请 Claude 用官方 Google Drive 连接器上传到 `config/drive_output.yaml` 的目录（已验证）。
    - 影片（无人值守）：按 `docs/zh/04_Drive_OAuth_自动上传.md` 完成一次浏览器授权，把 `STUDIO_DRIVE_OAUTH_CLIENT_ID / _CLIENT_SECRET / _REFRESH_TOKEN` 放进环境 secret，开新会话后：
      `studio drive auth` → `studio drive bigtest --folder 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__`（26 MB 真实上传、断点续传、下载、MD5、解码）→ `studio queue run --upload`。
-     当前进度：yukikimchi2@gmail.com 的 Google Cloud 首次条款页未接受，尚未建立项目或 client。
+     当前进度：用户已接受 Google Cloud 条款，正在 Create project / OAuth client 表单，停在最终创建前（由用户操作）。
 4. 客户确认 Setup 完成 → 才开始第一支正式影片。
 
 ## 6. 给 Claude 的续接指令（贴到新会话）

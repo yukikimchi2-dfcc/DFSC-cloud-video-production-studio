@@ -4,4 +4,7 @@ north_star_black: [21]                  # large black 4-point star (bottom-right
 qihang_wordmark: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]   # 啟航 lettering (green)
 dfsc_lockup: [32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]   # paper plane + 圓夢工場。創業大賽 + English line
 paper_plane: [66, 67, 68, 69, 70]
+dfsc_wordmark: [32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 71]   # 圓夢工場。創業大賽 + English line WITHOUT the paper plane (end-card layout, ChiliAng 1:07)
+dfsc_name_zh: [32, 33, 34, 35, 36, 37, 38, 39, 71]   # 圓夢工場。創業大賽 characters only (end card renders the English line as lighter text)
+north_star_tricolor_nostem: [28, 29, 30]   # star without the blue stem (launch film 0:06–0:17)
 # (drawing 72 is an Illustrator bounding rectangle over the 。 ring — excluded on purpose)

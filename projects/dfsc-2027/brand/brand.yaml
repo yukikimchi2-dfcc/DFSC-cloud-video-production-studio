@@ -20,6 +20,21 @@ colors:
   background: "#47B649"
   text: "#FFFFFF"
   text_on_light: "#231F20"
+  # Sampled from the edited reference videos (see references/TEMPLATE_SOURCES.md):
+  ref_label_navy_top: "#10223E"      # interview top label gradient (ChiliAng 0:00.5)
+  ref_label_navy_bottom: "#0C192F"
+  ref_label_border: "#47526B"
+  ref_keyword_green: "#6CD76B"       # label keyword (0:00.5); subtitle keyword measured #67D367
+  ref_name_green_top: "#56CD58"      # name tag gradient (0:06)
+  ref_name_green_bottom: "#358134"
+  ref_endcard_bg: "#EDEDED"          # end card (0:67)
+  ref_cloud_green: "#4DAC54"
+  ref_endcard_text: "#2E2E31"
+  ref_endcard_english_blue: "#3B6FB4"  # end-card "Dream Factory Startup Contest" (ChiliAng 1:07)
+  ref_endcard_pill: "#646568"
+  ref_launch_navy: "#071C3C"         # launch film centre (FB 1078068961776091 0:09)
+  ref_launch_edge: "#00050D"
+  ref_launch_rule_blue: "#2E6BD1"    # rules beside 馬來西亞首個中文創業大賽 (FB 0:48), approximate
 
 fonts:
   # The key visual uses PingFang HK (Apple, not licensable for Linux servers) for CJK and
@@ -31,13 +46,19 @@ fonts:
   body: {system: cjk_regular_hk}
   subtitle: {system: cjk_bold_hk}
   numerals_thin: {system: cjk_thin_hk}   # matches the thin "2027" numerals
+  # Serif roles: the launch film (FB 1078068961776091, 0:09 「重來」) and the end-card 「啟航北極星」 use a heavy serif.
+  serif_title: {system: cjk_serif_black_hk}
+  serif_body: {system: cjk_serif_bold_hk}
 
 logos:
   north_star_tricolor: logos/north_star_tricolor.json
+  north_star_tricolor_nostem: logos/north_star_tricolor_nostem.json
   north_star_black: logos/north_star_black.json
   qihang_wordmark: logos/qihang_wordmark.json
   dfsc_lockup: logos/dfsc_lockup.json
   paper_plane: logos/paper_plane.json
+  dfsc_wordmark: logos/dfsc_wordmark.json
+  dfsc_name_zh: logos/dfsc_name_zh.json
 
 copy:
   edition: 第十一屆

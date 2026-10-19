@@ -1,0 +1,50 @@
+id: dfsc_launch_title
+name: DFSC 启航·衬线大标题
+version: 1.0.0
+category: dfsc_launch
+requires_project: dfsc-2027
+review_status: REFERENCE ONLY
+review_note: 以既有成片为风格基准（BASED_ON_REFERENCE）— 用户授权以既有成片为风格基准（2026-10-19）；非逐项审美批准
+description: 白色粗衬线繁体大标题由模糊淡入，下方衬线叙述两行。
+usage: 章节标题（如 重來 / 曝光 / 人脈）。
+duration: 4.0
+preview:
+  project: dfsc-2027
+  background: '#071C3C'
+  time: 2.0
+  fps: 20
+parameters:
+- name: title
+  type: str
+  default: 示例
+  description: 大标题
+- name: title_y
+  type: float
+  default: 640
+  description: ''
+- name: title_size
+  type: int
+  default: 190
+  description: ''
+- name: lines
+  type: list
+  default:
+  - 示例敘述第一行，
+  - 示例敘述第二行。
+  description: 叙述（留空不显示）
+- name: lines_y
+  type: float
+  default: 1180
+  description: ''
+- name: duration
+  type: float
+  default: 4.0
+  description: 秒
+sources:
+- video: Facebook 1078068961776091（第11屆啟航宣傳片）
+  timecode: 0:09
+  note: 「重來」
+- video: Facebook 1078068961776091（第11屆啟航宣傳片）
+  timecode: 0:10
+  note: 「昨天的創新，今天可能已被取代。」衬线叙述
+test_record: test_record.json

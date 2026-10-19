@@ -1,0 +1,36 @@
+id: dfsc_interview_top_label
+name: DFSC 采访·顶部标题条
+version: 1.0.0
+category: dfsc_interview
+requires_project: dfsc-2027
+review_status: REFERENCE ONLY
+review_note: 以既有成片为风格基准（BASED_ON_REFERENCE）— 用户授权以既有成片为风格基准（2026-10-19）；非逐项审美批准
+description: 海军蓝渐层直角标题条 + 细边框 + 白色粗体，[关键词] 绿色；右端 emoji 贴纸（白描边）。
+usage: 每段问题/金句的顶部标题。文字用 [ ] 标关键词。
+duration: 3.0
+preview:
+  project: dfsc-2027
+  background: synthetic_room
+  time: 1.0
+  fps: 20
+parameters:
+- name: text
+  type: str
+  default: '[示例]　鉤子標題'
+  description: 标题，[ ] 内为绿色关键词
+- name: sticker
+  type: str
+  default: 👂
+  description: 右端 emoji（留空不显示）
+- name: duration
+  type: float
+  default: 3.0
+  description: 秒
+sources:
+- video: DFCC_9Oct_ChiliAng_Eggteen.mp4
+  timecode: '0:00.5'
+  note: '「參加之前　先聽這句」+ 👂；条 x96–986 y305–445；渐层 #10223E→#0C192F，边框 #47526B，关键词 #6CD76B'
+- video: DFCC_9Oct_ChiliAng_Eggteen.mp4
+  timecode: 0:02 / 0:09 / 0:12
+  note: 同款标题条不同文字
+test_record: test_record.json

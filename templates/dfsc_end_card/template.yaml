@@ -1,0 +1,62 @@
+id: dfsc_end_card
+name: DFSC 片尾卡（两套共用）
+version: 1.0.0
+category: dfsc_shared
+requires_project: dfsc-2027
+review_status: REFERENCE ONLY
+review_note: 以既有成片为风格基准（BASED_ON_REFERENCE）— 用户授权以既有成片为风格基准（2026-10-19）；非逐项审美批准
+description: '浅灰底 #EDEDED、绿色云朵（#4DAC54）右上/左下滑入；第十一屆横线、圓夢工場。創業大賽（绿色。）、蓝色英文、衬线 啟航北極星、灰色
+  CTA 胶囊 + 纸飞机。'
+usage: 采访 Reel 与启航宣传片共用（参考片两者完全相同）。口号/活动邀请仅在提供时显示。
+duration: 4.0
+preview:
+  project: dfsc-2027
+  background: '#EDEDED'
+  time: 2.5
+  fps: 20
+parameters:
+- name: edition
+  type: str
+  default: 第十一屆
+  description: 届别（来源：片尾 1:07）
+- name: theme_zh
+  type: str
+  default: 啟航北極星
+  description: 主题（来源：片尾 1:07 / 主视觉）
+- name: theme_en
+  type: str
+  default: Find Your North Star
+  description: 英文主题
+- name: name_en
+  type: str
+  default: Dream Factory Startup Contest
+  description: 英文赛名（蓝字）
+- name: cta_label
+  type: str
+  default: 預熱開放報名
+  description: CTA 文案（来源：ChiliAng 1:07；随档期修改）
+- name: cta_url
+  type: str
+  default: dreamfactory.my
+  description: CTA 网址（来源：ChiliAng 1:07）
+- name: slogan
+  type: str
+  default: ''
+  description: 圆梦口号（SOP 标示【待定】，不预设）
+- name: invite
+  type: str
+  default: ''
+  description: 活动邀请（日期地点以主办方确认为准，不预设）
+- name: duration
+  type: float
+  default: 4.0
+  description: 秒
+sources:
+- video: DFCC_9Oct_ChiliAng_Eggteen.mp4
+  timecode: 1:04–1:09
+  note: '版面：届别 y579–615、中文 y712–818、啟航北極星 y1034–1140、FIND y1163–1187、胶囊 y1272–1370
+    #646568、英文蓝 #3B6FB4'
+- video: Facebook 1078068961776091（第11屆啟航宣傳片）
+  timecode: 0:51–0:59.5
+  note: 同一片尾卡
+test_record: test_record.json

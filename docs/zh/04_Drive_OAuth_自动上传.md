@@ -29,7 +29,7 @@
 
 ## 3. Google Cloud Console 配置清单（账号：yukikimchi2@gmail.com）
 
-**目前进度**：控制台首次使用弹窗停在「Malaysia / Terms of Service / Agree and continue」，**尚未接受条款**。以下步骤需在接受条款后，由你在浏览器完成。**不需要启用试用或计费**：Drive API 免费；若任何页面要求绑定计费或开始试用，请停止并告诉我。
+**目前进度**（2026-10-19）：已接受 Terms of Service，进行到 Create project / OAuth client 表单，停在最终创建前。以下步骤由你在浏览器完成。**不需要启用试用或计费**：Drive API 免费；若任何页面要求绑定计费或开始试用，请停止并告诉我。
 
 | # | 页面 | 设置 |
 |---|---|---|

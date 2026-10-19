@@ -1,0 +1,37 @@
+id: dfsc_interview_name_tag
+name: DFSC 采访·姓名牌
+version: 1.0.0
+category: dfsc_interview
+requires_project: dfsc-2027
+review_status: REFERENCE ONLY
+review_note: 以既有成片为风格基准（BASED_ON_REFERENCE）— 用户授权以既有成片为风格基准（2026-10-19）；非逐项审美批准
+description: 绿色渐层直角姓名牌（#56CD58→#358134），白色粗体，两端 emoji 贴纸。
+usage: 受访者首次出现时。
+duration: 3.0
+preview:
+  project: dfsc-2027
+  background: synthetic_room
+  time: 1.0
+  fps: 20
+parameters:
+- name: name
+  type: str
+  default: 〔受訪者姓名〕
+  description: 姓名（不预设真实人名）
+- name: left_sticker
+  type: str
+  default: 🥚
+  description: 左侧 emoji
+- name: right_sticker
+  type: str
+  default: 🍰
+  description: 右侧 emoji
+- name: duration
+  type: float
+  default: 3.0
+  description: 秒
+sources:
+- video: DFCC_9Oct_ChiliAng_Eggteen.mp4
+  timecode: 0:06
+  note: '「Chili Ang」🥚🍰；y226–413；渐层 #56CD58→#358134'
+test_record: test_record.json

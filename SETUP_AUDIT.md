@@ -26,7 +26,7 @@
 | 9 | 视频相关 Repository | 仅本仓库（初始只有 README） | 已存在 · 已建立系统 |
 | 10 | 旧的视频剪辑项目 | 3 个参考文件夹内为 3 支已剪好的采访 Reel（2026-10-09 采访日）；无工程文件 | 已存在 · 作为参考（只读） |
 | 11 | 现成 Motion Graphics 代码 | 无 → 已新建 `studio/motion/` | 尚未安装 → **已建立** |
-| 12 | 以前的视频模板 | 无模板文件；从成片观察到固定元素（顶部绿色标签、姓名贴纸、绿色关键词字幕、云朵片尾） | 尚无 → 待确认后做成模板 |
+| 12 | 以前的视频模板 | 无模板文件；从成片观察到固定元素（顶部标题条、姓名牌、绿色关键词字幕、云朵片尾） | 尚无 → **已依成片建为 2 套模板（11 个，REFERENCE ONLY）** |
 | 13 | 团队共享素材库 | 只取得 3 个参考文件夹（他人 Drive，公开链接）；团队主素材库位置未提供 | 部分可访问 |
 | 14 | 自动化工作流程 | 无 → 已建立 CI、渲染队列、SessionStart hook | 尚未安装 → **已建立** |
 | 15 | 可重复使用品牌素材 | 你提供的 `DFSC_2027_Key_visual.ai` → 已提取为矢量 Logo（星芒、三色北极星、啟航字标、圓夢工場 Lockup、纸飞机）与色板 | 已存在 · 已整合 |
@@ -97,7 +97,8 @@ DFSC 2027 品牌包：`projects/dfsc-2027/brand/brand.yaml` —— 设计师确�
 | 8 | 真实素材 → 字幕 / 剪辑计划 / 选段 | ✅ PASS | 16 条字幕（≤14 字/行，无重叠）、SRT 读回、Hook/Storyline/Benefits/CTA 选段；修复选段重叠 bug |
 | 9 | 人脸检测（真实画面） | ✅ PASS | 3 支影片 × 4 帧，12/12 检测到受访者（1 帧多检 1 个） |
 | 10 | QC 引擎（真实成片） | ✅ PASS | 3 支参考成片正确判定：峰值削波、HEVC、重复帧（`references/qc_reference_videos/`） |
-| 11 | Motion 模板 | ✅ PASS | 8 个模板全部重建预览 passed=True；金句卡引号重叠已修复（回归测试在旧代码失败、新代码通过） |
+| 11 | Motion 模板 | ✅ PASS | 8 个通用模板预览 passed=True；金句卡引号重叠已修复（回归测试在旧代码失败、新代码通过） |
+| 11b | DFSC 两套模板（依旧成片） | ✅ PASS（技术）· REFERENCE ONLY（风格） | 采访 Reel 家族 6 个 + 启航家族 6 个（片尾卡共用，共 11 个）；来源与时间码 `projects/dfsc-2027/references/TEMPLATE_SOURCES.md`；与参考关键帧逐一视觉比对；合成预览 11/11 passed；`tests/test_motion_dfsc_templates.py` + motion 测试 160 passed / 13 skipped；修复启航完整结构 13–16 s 黑尾（片尾卡 4 s → 7 s）。用户授权以成片为基准，**非逐项审美批准**；口号 / 活动资讯 / 人名为占位参数 |
 | 12 | 渲染 + QC（Final） | ✅ PASS | 合成测试卡 1080×1920 CRF16，实测 -14.06 LUFS / -12.4 dBTP，QC（含响度）PASSED |
 | 13 | 全新环境交接 | ✅ PASS | 从 GitHub 重新 clone + 全新 venv 安装 → 199 passed / 2 skipped，CLI / 渲染 / QC 正常 |
 | 14 | Groq 免费转写 | ⏸ **UNVERIFIED** | 网络可达，但无 `GROQ_API_KEY`（可选；模拟 API 测试通过） |
@@ -112,7 +113,7 @@ DFSC 2027 品牌包：`projects/dfsc-2027/brand/brand.yaml` —— 设计师确�
 |---|---|---|
 | 1 | 正式影片自动上传 | 按 `docs/zh/04_Drive_OAuth_自动上传.md`：接受 Google Cloud 条款 → 建项目 → 启用 Drive API → Auth Platform（External，**In production** 避免 7 天失效）→ scope `drive` → 建 Desktop client（或 Web client + Playground）→ 一次浏览器授权 → 3 个值放进环境 secret → 新会话执行 `studio drive bigtest --folder 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__`。小文件可继续由 Claude 经连接器上传（3d） |
 | 2 | 风格决策 | 回答 `projects/dfsc-2027/references/STYLE_FINDINGS.md` 第 7 节（繁/简字幕、圆梦口号、固定品牌元素、3 支采访是否为已审核版本） |
-| 3 | 审核 | Reviewer 审核 `DFSC_Interview_Reel`、`DFSC_Launch_Cinematic`、`dfsc2027_north_star_open` |
+| 3 | 审核 | 两套 DFSC 模板为 REFERENCE ONLY（以成片为基准）；如需成为品牌标准（APPROVED），Reviewer 逐项确认；`dfsc2027_north_star_open` 仍 UNREVIEWED |
 | 4 | Groq（可选） | 若要更快的免费转写：在环境设定加入 `GROQ_API_KEY`（音频会上传给 Groq 处理） |
 | 5 | Notion 链接 | 若希望直接用 `app.notion.com` 链接，需把 `notion.com` 子域加入白名单；目前已用 notion.so 绕行成功 |
 | 6 | 字体 | 确认 Noto Sans CJK HK 替代 PingFang HK |
@@ -131,4 +132,5 @@ DFSC 2027 品牌包：`projects/dfsc-2027/brand/brand.yaml` —— 设计师确�
 - 参考影片、Whisper 模型存在临时工作区，新容器需重新取得（`studio references ingest`、`studio models fetch`）。
 - 画面文字检测对浅色复杂背景上的字幕会漏判；BPM 估计复杂音乐可能差一个八度。
 - Glass Panel 在卡片缩放/旋转时模糊区域不随之变形。
+- DFSC 模板与成片的已知差异：Noto Emoji（成片为 Apple 风格）、数据卡数字字体、启航家族仅 9:16（参考 16:9）、片尾卡缺右上小 logo、网格非透视。详见 `TEMPLATE_SOURCES.md` §E。
 - 7 个初始风格档案只是**类别占位**；真实分析档案（Ref_* 与 2 个草稿）全部 UNREVIEWED。

@@ -1,6 +1,6 @@
 name: DFSC_Launch_Cinematic
 description: 第11届大赛启航宣传片风格（Facebook 1078068961776091，横屏 60s）。草稿，需审核。
-review_status: UNREVIEWED
+review_status: REFERENCE_ONLY
 category_only: false
 source_videos:
 - title: FB 第11届启航宣传片
@@ -21,6 +21,13 @@ animation:
   templates_candidate:
   - dfsc2027_north_star_open
   - title_card_impact
+  templates:
+  - dfsc_launch_background
+  - dfsc_launch_title
+  - dfsc_launch_alumni_orbit
+  - dfsc_launch_stats
+  - dfsc_end_card
+  - dfsc_launch_sequence
 visual:
   aspect: 16:9 1920x1080
   palette_measured:
@@ -50,3 +57,9 @@ history:
   status: UNREVIEWED
   by: claude-setup
   note: draft from FB launch video
+- at: '2026-10-19T11:00:34Z'
+  action: review
+  by: user (via claude-setup)
+  from: UNREVIEWED
+  status: REFERENCE_ONLY
+  note: 用户授权以既有成片为风格基准（2026-10-19）；非逐项审美批准。模板见 projects/dfsc-2027/references/TEMPLATE_SOURCES.md

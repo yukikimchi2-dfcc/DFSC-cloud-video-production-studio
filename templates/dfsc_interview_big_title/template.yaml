@@ -1,0 +1,40 @@
+id: dfsc_interview_big_title
+name: DFSC 采访·大字金句
+version: 1.0.0
+category: dfsc_interview
+requires_project: dfsc-2027
+review_status: REFERENCE ONLY
+review_note: 以既有成片为风格基准（BASED_ON_REFERENCE）— 用户授权以既有成片为风格基准（2026-10-19）；非逐项审美批准
+description: 上方小海军蓝标签 + 超大黑色粗衬线字、粗白描边，可加 emoji。
+usage: 强调一句核心话（钩子/转折）。
+duration: 3.0
+preview:
+  project: dfsc-2027
+  background: synthetic_room
+  time: 1.0
+  fps: 20
+parameters:
+- name: small_label
+  type: str
+  default: 示例小標
+  description: 小标签（留空不显示）
+- name: title
+  type: str
+  default: 示例金句
+  description: 大字（建议 ≤5 字）
+- name: sticker
+  type: str
+  default: 💡
+  description: emoji
+- name: duration
+  type: float
+  default: 3.0
+  description: 秒
+sources:
+- video: DFCC_9Oct_ChiliAng_Eggteen.mp4
+  timecode: 0:04
+  note: 「參加圓夢之前」+「只有想法」💡：黑色粗衬线 + 白描边
+- video: DFCC_9Oct_ChiliAng_Eggteen.mp4
+  timecode: 0:50
+  note: 「跟你講」+「參加就對了」👍
+test_record: test_record.json

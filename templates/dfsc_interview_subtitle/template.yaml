@@ -1,0 +1,37 @@
+id: dfsc_interview_subtitle
+name: DFSC 采访·底部字幕
+version: 1.0.0
+category: dfsc_interview
+requires_project: dfsc-2027
+review_status: REFERENCE ONLY
+review_note: 以既有成片为风格基准（BASED_ON_REFERENCE）— 用户授权以既有成片为风格基准（2026-10-19）；非逐项审美批准
+description: 繁体白色粗体 + 黑描边，[关键词] 绿色并加绿色底线；中心约 y=1296（67.5%）。
+usage: 逐句字幕；配合转写 + 人工校对。
+duration: 6.0
+preview:
+  project: dfsc-2027
+  background: synthetic_room
+  time: 1.0
+  fps: 20
+parameters:
+- name: lines
+  type: list
+  default:
+  - 示例字幕第一句[關鍵詞]
+  - 第二句示例[字幕]
+  description: 每句一条，[ ] 为绿色关键词
+- name: seconds_per_line
+  type: float
+  default: 3.0
+  description: 每句秒数
+sources:
+- video: DFCC_9Oct_ChiliAng_Eggteen.mp4
+  timecode: '0:00.5'
+  note: '「在還沒有參加[圓夢]之前」字形 y1267–1326；关键词 #67D367 + 底线'
+- video: DFCC_YYLim_QJoyBalloon.mp4
+  timecode: 全片
+  note: 同款字幕
+- video: DFCC_9Oct_JoshuaChin_SmartRental.mov
+  timecode: 全片
+  note: 同款字幕
+test_record: test_record.json

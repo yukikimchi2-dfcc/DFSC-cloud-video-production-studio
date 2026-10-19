@@ -1,7 +1,6 @@
 name: DFSC_Interview_Reel
-description: DFSC 采访故事 Reel（创业者 / 导师 / 评审）。草稿：由剪辑 SOP + 3 支 Drive 采访成片的测量与关键帧观察综合而成，需
-  Reviewer 审核。
-review_status: UNREVIEWED
+description: DFSC 采访故事 Reel（创业者 / 导师 / 评审）。草稿：由剪辑 SOP + 3 支 Drive 采访成片的测量与关键帧观察综合而成，需 Reviewer 审核。
+review_status: REFERENCE_ONLY
 category_only: false
 source_videos:
 - title: Notion 剪辑 SOP
@@ -62,7 +61,13 @@ animation:
   - lower_third_basic
   - subtitle_word_highlight
   - brand_lockup_outro
-  missing_template: top rounded green label title (to build after approval)
+  templates:
+  - dfsc_interview_top_label
+  - dfsc_interview_big_title
+  - dfsc_interview_name_tag
+  - dfsc_interview_subtitle
+  - dfsc_end_card
+  - dfsc_interview_reel
 visual:
   aspect: 9:16 1080x1920
   fps_source: 60
@@ -81,10 +86,8 @@ visual:
   saturation:
   - 0.2
   - 0.23
-  subtitle_zone_measured: detector reported ~0.40 height — LOW CONFIDENCE; keyframes
-    show subtitles ≈ 0.75–0.80 height
-  brand_green_accent: '#47B649 (key visual) — references use a similar green; exact
-    hex unverified'
+  subtitle_zone_measured: detector reported ~0.40 height — LOW CONFIDENCE; keyframes show subtitles ≈ 0.75–0.80 height
+  brand_green_accent: '#47B649 (key visual) — references use a similar green; exact hex unverified'
 audio:
   integrated_lufs_measured:
   - -14.1
@@ -113,3 +116,9 @@ history:
   status: UNREVIEWED
   by: claude-setup
   note: draft from SOP + 3 reference videos
+- at: '2026-10-19T11:00:34Z'
+  action: review
+  by: user (via claude-setup)
+  from: UNREVIEWED
+  status: REFERENCE_ONLY
+  note: 用户授权以既有成片为风格基准（2026-10-19）；非逐项审美批准。模板见 projects/dfsc-2027/references/TEMPLATE_SOURCES.md

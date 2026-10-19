@@ -34,6 +34,9 @@ def test_template_metadata_complete(tid):
 @pytest.mark.parametrize("tid", TEMPLATES)
 @pytest.mark.parametrize("project", [None, "dfsc-2027"])
 def test_template_builds_and_renders(tid, project):
+    req = get_template(tid).get("requires_project")
+    if req and project != req:
+        pytest.skip(f"{tid} uses {req} brand colours")
     brand = load_brand(project)
     tl = preview_timeline(tid, brand, width=135, height=240)
     ctx = tl.context(135, 240)
