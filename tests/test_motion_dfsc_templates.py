@@ -76,3 +76,42 @@ def test_parse_marked():
     assert dfsc.parse_marked("在還沒有參加[圓夢]之前") == [("在還沒有參加", False), ("圓夢", True), ("之前", False)]
     assert dfsc.parse_marked("[全部]") == [("全部", True)]
     assert dfsc.parse_marked("沒有標記") == [("沒有標記", False)]
+
+
+# ---- interview components used by real edits (projects/dfsc-2027/edits/*): variants seen in the reference reels
+
+def _ctx(brand):
+    from studio.core.timeline import Timeline
+    return Timeline(1080, 1920, 30, brand=brand).context()
+
+
+def test_name_tag_subline_extends_down_without_moving_plate(brand):
+    ctx = _ctx(brand)
+    plain = dfsc.InterviewNameTag("Nelson Chin", right_sticker="🍵")
+    sub = dfsc.InterviewNameTag("Nelson Chin", right_sticker="🍵", subline="五告凉 · 第十屆參賽者")
+    a, b = plain._get(ctx), sub._get(ctx)
+    assert b.h > a.h
+    fa = plain.draw(np.zeros((1920, 1080, 3), np.float32), ctx, 1.0)
+    fb = sub.draw(np.zeros((1920, 1080, 3), np.float32), ctx, 1.0)
+    rows = lambda f: np.where(f.max(axis=(1, 2)) > 0.05)[0]       # noqa: E731
+    assert rows(fa)[0] == rows(fb)[0] and rows(fb)[-1] > rows(fa)[-1]
+
+
+def test_top_label_green_style_and_left_sticker(brand):
+    ctx = _ctx(brand)
+    navy = dfsc.InterviewTopLabel("看到這個商機", size=72)._get(ctx)
+    green = dfsc.InterviewTopLabel("看到這個商機", size=72, style="green", sticker="💡", sticker_side="left")._get(ctx)
+    mid = lambda p: p.rgba[p.h // 2, p.w // 2, :3]                 # noqa: E731
+    assert mid(green)[1] > mid(green)[0] + 0.2 and mid(navy)[2] > mid(navy)[1]
+
+
+def test_big_title_colour_and_question_pill_and_flash(brand):
+    ctx = _ctx(brand)
+    red = dfsc.InterviewBigTitle("不歸路", color="#E53935", role="title", size=120)._get(ctx)
+    px = red.rgba[red.rgba[..., 3] > 0.99][:, :3]
+    assert (px[:, 0] - px[:, 1] > 0.5).any()                        # red fill present
+    pill = dfsc.InterviewQuestionPill("創業還是打工？")._get(ctx)
+    assert pill.w > pill.h and 0.6 < pill.rgba[pill.h // 2, 5, 3] < 0.9   # translucent body
+    flash = dfsc.WhiteFlash()
+    f = flash.draw(np.zeros((4, 4, 3), np.float32), ctx, flash.rise + flash.hold / 2)
+    assert f.mean() > 0.9 and flash.draw(np.zeros((4, 4, 3), np.float32), ctx, flash.duration).mean() < 0.01

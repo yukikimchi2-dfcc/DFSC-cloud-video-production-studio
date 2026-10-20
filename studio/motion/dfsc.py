@@ -152,29 +152,37 @@ class InterviewTopLabel(_CachedLayer):
     optional emoji sticker overlapping the right end. Ref: ChiliAng 0:00.5 (x 96–986, y 305–445)."""
 
     def __init__(self, text: str, y: float = 375, size: int = 96, sticker: str | None = None,
-                 min_width: int = 0, **kw):
+                 min_width: int = 0, style: str = "navy", sticker_side: str = "right", **kw):
         super().__init__(**kw)
         self.text, self.y, self.size, self.sticker, self.min_width = text, y, size, sticker, min_width
+        self.style, self.sticker_side = style, sticker_side
 
     def art(self, ctx):
         b = ctx.brand
-        t = text_patch(b, self.text, "title", self.size, "#FFFFFF", b.color("ref_keyword_green"), shadow=3)
+        if self.style == "green":     # green plate, white text (JoshuaChin 0:15 / ChiliAng 0:33「接觸更多的世界」)
+            t = text_patch(b, self.text, "title", self.size, "#FFFFFF", "#FFFFFF", shadow=3)
+            colors = (b.color("ref_name_green_top"), b.color("ref_name_green_bottom"), None, 0)
+        else:
+            t = text_patch(b, self.text, "title", self.size, "#FFFFFF", b.color("ref_keyword_green"), shadow=3)
+            colors = (b.color("ref_label_navy_top"), b.color("ref_label_navy_bottom"), b.color("ref_label_border"), 2)
         w = max(t.w + 120, self.min_width)
         h = int(self.size * 1.45)
-        bar = _grad_rect(b, w, h, b.color("ref_label_navy_top"), b.color("ref_label_navy_bottom"),
-                         b.color("ref_label_border"), 2)
-        out = Patch(bar)
+        out = Patch(_grad_rect(b, w, h, *colors))
         canvas.composite(out.rgba[..., :3], Patch(t.rgba, (w - t.w) // 2, (h - t.h) // 2))  # text onto bar
         art = np.zeros((h + 60, w + 140, 4), np.float32)
-        paste(art, out.rgba, 20, 30)
+        left = self.sticker and self.sticker_side == "left"
+        ox = 120 if left else 20
+        paste(art, out.rgba, ox, 30)
         if self.sticker:
             st = _sticker(self.sticker, int(h * 1.15))
-            paste(art, st, 20 + w - st.shape[1] // 2, 30 + h // 2 - st.shape[0] // 2)
+            sx = ox - st.shape[1] // 2 if left else ox + w - st.shape[1] // 2
+            paste(art, st, sx, 30 + h // 2 - st.shape[0] // 2)
         return Patch(art)
 
     def draw(self, frame, ctx, t):
         s, a = _pop(t)
-        return _place(frame, self._get(ctx), ctx, 540 + 50, self.y, s, a * self.opacity)
+        dx = 0 if not self.sticker else (-50 if self.sticker_side == "left" else 50)
+        return _place(frame, self._get(ctx), ctx, 540 + dx, self.y, s, a * self.opacity)
 
 
 class InterviewSmallLabel(_CachedLayer):
@@ -201,14 +209,17 @@ class InterviewSmallLabel(_CachedLayer):
 class InterviewBigTitle(_CachedLayer):
     """Huge black heavy-serif words with a thick white outline (+ optional emoji). Ref: ChiliAng 0:04 「只有想法」."""
 
-    def __init__(self, text: str, y: float = 420, size: int = 190, sticker: str | None = None, **kw):
+    def __init__(self, text: str, y: float = 420, size: int = 190, sticker: str | None = None,
+                 color="#111111", stroke_color="#FFFFFF", role: str = "serif_title", **kw):
         super().__init__(**kw)
         self.text, self.y, self.size, self.sticker = text, y, size, sticker
+        self.color, self.stroke_color, self.role = color, stroke_color, role
 
     def art(self, ctx):
+        # colour / role variants: JoshuaChin 0:00 red heavy sans「九死一生！」, 0:40 green「不斷的操練」
         b = ctx.brand
-        t = text_patch(b, self.text, "serif_title", self.size, "#111111", "#111111",
-                       stroke=max(self.size // 14, 6), stroke_color="#FFFFFF")
+        t = text_patch(b, self.text, self.role, self.size, self.color, self.color,
+                       stroke=max(self.size // 14, 6), stroke_color=self.stroke_color)
         if not self.sticker:
             return t
         st = _sticker(self.sticker, int(self.size * 0.7))
@@ -227,10 +238,10 @@ class InterviewNameTag(_CachedLayer):
     Ref: ChiliAng 0:06 「Chili Ang」 (y 226–413)."""
 
     def __init__(self, name: str, y: float = 320, size: int = 110, left_sticker: str | None = None,
-                 right_sticker: str | None = None, **kw):
+                 right_sticker: str | None = None, subline: str = "", **kw):
         super().__init__(**kw)
         self.name, self.y, self.size = name, y, size
-        self.left, self.right = left_sticker, right_sticker
+        self.left, self.right, self.subline = left_sticker, right_sticker, subline
 
     def art(self, ctx):
         b = ctx.brand
@@ -245,11 +256,75 @@ class InterviewNameTag(_CachedLayer):
         for char, x, y in ((self.left, ox - sh // 2, oy + h - sh // 2), (self.right, ox + w - sh // 2, 0)):
             if char:
                 paste(art, _sticker(char, sh), x, y)
+        if self.subline:
+            # light box, dark spaced text under the plate: JoshuaChin 0:03「Smart Rental · 圓夢工場導師」,
+            # ChiliAng 0:06「Eggteen 創辦人 · 二代創業」
+            st = text_patch(b, self.subline, "heading", int(self.size * 0.36), "#2E2E31", "#2E2E31", tracking=0.08)
+            bw, bh = st.w + 40, st.h + 8
+            box = np.zeros((bh, bw, 4), np.float32)
+            box[..., :3], box[..., 3] = 0.94, 0.88
+            paste(box, st.rgba, 20, 4)
+            full = np.zeros((art.shape[0] + bh, max(art.shape[1], bw), 4), np.float32)
+            paste(full, art, (full.shape[1] - art.shape[1]) // 2, 0)
+            paste(full, box, (full.shape[1] - bw) // 2, oy + h + 14)
+            art = full
         return Patch(art)
 
     def draw(self, frame, ctx, t):
         s, a = _pop(t)
-        return _place(frame, self._get(ctx), ctx, 540, self.y, s, a * self.opacity)
+        art = self._get(ctx)
+        h = int(self.size * 1.7)
+        cy = self.y + (art.h - (h + int(h * 0.75))) / 2      # subline extends downwards; plate stays put
+        return _place(frame, art, ctx, 540, cy, s, a * self.opacity)
+
+
+class InterviewQuestionPill(_CachedLayer):
+    """Dark translucent bar with a thin green border, green dot and white question text.
+    Ref: JoshuaChin 0:00.6「• 創業成功，到底有多難？」(≈ x 200–875, centre y ≈155)."""
+
+    def __init__(self, text: str, y: float = 155, size: int = 46, **kw):
+        super().__init__(**kw)
+        self.text, self.y, self.size = text, y, size
+
+    def art(self, ctx):
+        b = ctx.brand
+        green = resolve_color(b, b.color("ref_keyword_green"))
+        t = text_patch(b, self.text, "heading", self.size, "#FFFFFF", b.color("ref_keyword_green"))
+        dot = int(self.size * 0.28)
+        w, h = t.w + dot + 80, int(self.size * 1.75)
+        bar = np.zeros((h, w, 4), np.float32)
+        bar[..., :3], bar[..., 3] = (0.10, 0.12, 0.14), 0.72
+        bar[:2, :, :3] = bar[-2:, :, :3] = green
+        bar[:, :2, :3] = bar[:, -2:, :3] = green
+        bar[:2, :, 3] = bar[-2:, :, 3] = bar[:, :2, 3] = bar[:, -2:, 3] = 1
+        cv2.circle(bar, (30 + dot // 2, h // 2), dot // 2, (*green, 1.0), -1, cv2.LINE_AA)
+        paste(bar, t.rgba, 30 + dot + 18, (h - t.h) // 2)
+        return Patch(bar)
+
+    def draw(self, frame, ctx, t):
+        a = min(1.0, t / 0.2)
+        return _place(frame, self._get(ctx), ctx, 540, self.y, 1.0, a * self.opacity)
+
+
+class WhiteFlash(Layer):
+    """Quick white flash between sections: ≈0.07 s up, short hold, ≈0.07 s down.
+    Ref: ChiliAng 59.17–59.37 (luma 155 → 252 → 161)."""
+
+    def __init__(self, rise: float = 0.07, hold: float = 0.07, fall: float = 0.1, peak: float = 0.95, **kw):
+        kw.setdefault("duration", rise + hold + fall)
+        super().__init__(**kw)
+        self.rise, self.hold, self.fall, self.peak = rise, hold, fall, peak
+
+    def draw(self, frame, ctx, t):
+        if t < self.rise:
+            k = t / self.rise
+        elif t < self.rise + self.hold:
+            k = 1.0
+        else:
+            k = max(0.0, 1 - (t - self.rise - self.hold) / self.fall)
+        a = k * self.peak * self.opacity
+        frame[:] = frame * (1 - a) + a
+        return frame
 
 
 class InterviewSubtitle(Layer):

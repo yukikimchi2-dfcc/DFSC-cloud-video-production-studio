@@ -54,6 +54,10 @@ handover:
   - brand/source/DFSC_2027_Key_visual.ai（Illustrator 主视觉，已提取矢量 Logo）
   - 参考：Drive 3 支采访 Reel（文件夹 anyone:writer；Claude 端以公开链接只读使用，未修改原片）、FB 启航宣传片 + 学长姐故事、Notion
     工作区与 SOP（references/）
+  - 采访 Reel 成片：Nelson Chin · 五告凉 · 第十屆參賽者 → renders/dfsc-2027/dfsc2027_nelson_chin_gaochill_v004_final.mp4（65
+    s，QC PASSED，仅在云端容器内）；剪辑定义 edits/nelson_chin_gaochill/
+  - brand/logos/dreamfactory_watermark.png、dreamfactory_logo_light.png：由 ChiliAng
+    片尾卡（68.5 s）抠出的 dream factory 标志
   templates:
   - dfsc2027_north_star_open@0.1.0（UNREVIEWED）
   - 采访 Reel 家族：dfsc_interview_top_label / big_title / name_tag / subtitle / reel（REFERENCE
@@ -73,6 +77,9 @@ handover:
   - Whisper 转写需人工校对（例：「創業之律」应为「創業自律」）
   - Drive 输出：对话连接器可建目录、上传报告/小文件（825 B MP4 已验证）；正式体积影片经连接器 NOT PASS（只能内嵌 base64）
   - 无人值守上传 BLOCKED：容器无 Google OAuth 凭证
-  - ChatCut：Claude 网页 Custom Connector（远程 MCP，云端宿主注入）只读连接 PASS（62 个工具、OAuth、list_projects 返回 0 项目）；剪辑 / 导入 / 生成 / 导出未测（UNVERIFIED）
-  - DFSC 模板与成片差异：Noto Emoji、数据卡数字字体、启航仅 9:16、片尾缺小 logo、网格非透视（TEMPLATE_SOURCES.md §E）
-  next_action: Setup 已可交接；正式剪辑须等用户提供具体剪辑 brief 与指定素材后才开始（见根目录 CLAUDE.md）
+  - ChatCut：Claude 网页 Custom Connector（远程 MCP，云端宿主注入）只读连接 PASS（62 个工具、OAuth、list_projects
+    返回 0 项目）；剪辑 / 导入 / 生成 / 导出未测（UNVERIFIED）
+  - DFSC 模板与成片差异：Noto Emoji、数据卡数字字体、启航仅 9:16、网格非透视（TEMPLATE_SOURCES.md §E）；片尾小 logo
+    已由片尾卡抠出
+  - Nelson Chin 成片 MP4（73 MB）未上传 Drive：连接器无法传正式体积影片、容器无 OAuth
+  next_action: Nelson Chin Reel v004 待审核（剪辑 SOP §5 检查表）；确认后上传 Drive 07_Approved_Final_Videos
