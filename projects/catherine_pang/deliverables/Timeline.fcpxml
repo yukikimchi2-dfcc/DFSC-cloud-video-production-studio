@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fcpxml>
+<fcpxml version="1.9">
+  <resources>
+    <format id="r1" name="FFVideoFormat1080x1920p2398" frameDuration="1001/24000s" width="1080" height="1920" colorSpace="1-1-1 (Rec. 709)"/>
+    <asset id="r2" name="CatherinePang_raw_interview" start="161634473/2000s" duration="1244243/4800s" hasVideo="1" hasAudio="1" format="r1" audioSources="1" audioChannels="2" audioRate="48000">
+      <media-rep kind="original-media" src="file:///RELINK/CatherinePang_raw_interview.mp4"/>
+    </asset>
+    <asset id="r3" name="DFSC_brand_outro" start="0s" duration="73073/8000s" hasVideo="1" hasAudio="1" format="r1" audioSources="1" audioChannels="2" audioRate="48000">
+      <media-rep kind="original-media" src="file:///RELINK/DFSC_brand_outro.mp4"/>
+    </asset>
+    <asset id="r4" name="BGM_original" start="0s" duration="73073/1000s" hasAudio="1" audioSources="1" audioChannels="2" audioRate="48000">
+      <media-rep kind="original-media" src="file:///RELINK/stems/bgm.wav"/>
+    </asset>
+    <asset id="r5" name="SFX" start="0s" duration="73073/1000s" hasAudio="1" audioSources="1" audioChannels="2" audioRate="48000">
+      <media-rep kind="original-media" src="file:///RELINK/stems/sfx.wav"/>
+    </asset>
+    <asset id="r6" name="dreamfactory_watermark" start="0s" duration="0s" hasVideo="1" format="r1">
+      <media-rep kind="original-media" src="file:///RELINK/Logo_Transparent_White.png"/>
+    </asset>
+  </resources>
+  <library>
+    <event name="DFSC Catherine Pang">
+      <project name="CatherinePang_洪記糖水_editable">
+        <sequence format="r1" duration="657657/8000s" tcStart="0s" tcFormat="NDF" audioLayout="stereo" audioRate="48k">
+          <spine>
+            <asset-clip ref="r2" offset="0s" start="12151139/150s" duration="1001/1200s" name="hook1 很多人都覺得" tcFormat="NDF">
+              <asset-clip ref="r4" lane="-1" offset="12151139/150s" start="0s" duration="73073/1000s" name="BGM (original, royalty-free)"/>
+              <asset-clip ref="r5" lane="-2" offset="12151139/150s" start="0s" duration="73073/1000s" name="SFX"/>
+              <video ref="r6" lane="1" offset="12151139/150s" start="0s" duration="73073/1000s" name="watermark (x35 y62 w172)"/>
+            </asset-clip>
+            <asset-clip ref="r2" offset="1001/1200s" start="1944203261/24000s" duration="1001/1000s" name="hook2 創業很辛苦" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="11011/6000s" start="388845457/4800s" duration="11011/8000s" name="hook3 其實創業不辛苦的" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="77077/24000s" start="1944263321/24000s" duration="3003/1600s" name="hook4 只是你要來到對的地方" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="61061/12000s" start="972154183/12000s" duration="17017/24000s" name="hook5 對的平台" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="139139/24000s" start="10106096/125s" duration="3003/1600s" name="intro1 我是甜大姐 Catherine Pang" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="23023/3000s" start="1940455517/24000s" duration="53053/24000s" name="intro2 我本身是從事糖水行業" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="79079/8000s" start="40427387/500s" duration="7007/4800s" name="intro3 擁有自己的中央廚房" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="17017/1500s" start="30323293/375s" duration="53053/24000s" name="why1 我覺得創業才是我要的東西" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="13013/960s" start="388148761/4800s" duration="1001/4800s" name="why2 因為我自己本身" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="11011/800s" start="242595353/3000s" duration="13013/12000s" name="why2 因為我自己本身" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="89089/6000s" start="38815777/480s" duration="49049/24000s" name="why3 不是那種朝九晚五的乖乖派" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="27027/1600s" start="1940845907/24000s" duration="1001/1500s" name="why3 不是那種朝九晚五的乖乖派" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="421421/24000s" start="485283799/6000s" duration="1001/750s" name="st1 我是第三次創業了" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="151151/8000s" start="647057411/8000s" duration="31031/24000s" name="st2 我第一次創業的時候" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="121121/6000s" start="30331301/375s" duration="17017/6000s" name="st3 是我在剛剛要踏入30歲的時候" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="23023/1000s" start="129418289/1600s" duration="31031/24000s" name="st4 那時候我就進入了" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="583583/24000s" start="1941312373/24000s" duration="13013/8000s" name="st5 吉隆坡最大的批發市場" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="311311/12000s" start="485337853/6000s" duration="7007/8000s" name="st6 就是批發辣椒" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="643643/24000s" start="1942149209/24000s" duration="1001/500s" name="st7 啟動資金是不到5000塊" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="691691/24000s" start="485361877/6000s" duration="1001/2000s" name="st8 我剛剛好40歲的時候" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="703703/24000s" start="161788627/2000s" duration="31031/24000s" name="st8 我剛剛好40歲的時候" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="367367/12000s" start="1941510571/24000s" duration="13013/12000s" name="st9 疫情，就是從最高峰的時候" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="19019/600s" start="388310923/4800s" duration="13013/12000s" name="st9 疫情，就是從最高峰的時候" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="131131/4000s" start="647193547/8000s" duration="11011/12000s" name="st10 掉到最谷底" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="101101/3000s" start="242703461/3000s" duration="41041/24000s" name="st11 41歲的時候再重新創業" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="283283/8000s" start="388334947/4800s" duration="7007/12000s" name="st12 為了還債" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="863863/24000s" start="80903823/1000s" duration="7007/24000s" name="st12 為了還債" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="29029/800s" start="323704381/4000s" duration="3003/1600s" name="st13 第二次的時候是零的" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="61061/1600s" start="647423777/8000s" duration="9009/8000s" name="st14 是負債累累的" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="157157/4000s" start="323626303/4000s" duration="29029/12000s" name="st15 起起跌跌也踩了很多的坑之後" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="1001/24s" start="970916947/12000s" duration="11011/12000s" name="st17 我是在45歲的時候才開始創業" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="511511/12000s" start="485465981/6000s" duration="9009/8000s" name="st17 我是在45歲的時候才開始創業" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="1050049/24000s" start="970952983/12000s" duration="29029/24000s" name="st17 我是在45歲的時候才開始創業" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="539539/12000s" start="1943834893/24000s" duration="31031/24000s" name="in1 天下沒有白走的路" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="1110109/24000s" start="161988827/2000s" duration="3003/1600s" name="in2 每走的一步都算數" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="577577/12000s" start="1215214/15s" duration="11011/12000s" name="in3 為什麼我會參加" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="49049/1000s" start="972184213/12000s" duration="1001/1200s" name="in4 第九屆的圓夢創業大賽" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="299299/6000s" start="324066743/4000s" duration="1001/1000s" name="in4 第九屆的圓夢創業大賽" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="61061/1200s" start="486108623/6000s" duration="19019/24000s" name="in5 因為我來這邊" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="413413/8000s" start="1944453511/24000s" duration="37037/24000s" name="in6 我找到我要的資源" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="319319/6000s" start="162040879/2000s" duration="31031/24000s" name="in7 找到了我要的平台" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="1308307/24000s" start="1944521579/24000s" duration="3003/4000s" name="in8 再加上有一群都是在創業" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="53053/960s" start="1944555613/24000s" duration="1001/800s" name="in8 再加上有一群都是在創業" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="271271/4800s" start="1944585643/24000s" duration="1001/800s" name="in9 大家都是很正能量" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="277277/4800s" start="1944615673/24000s" duration="1001/960s" name="in10 互相扶持的" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="47047/800s" start="648226579/8000s" duration="7007/12000s" name="msg1 有一句話想送給大家" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="89089/1500s" start="1944699757/24000s" duration="1001/1500s" name="msg1 有一句話想送給大家" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="3003/50s" start="1944779837/24000s" duration="41041/24000s" name="msg2 最重要是你肯熬過去" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="1482481/24000s" start="1944825883/24000s" duration="11011/8000s" name="msg3 因為熬過的苦" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="757757/12000s" start="486222737/6000s" duration="1001/600s" name="msg4 你才會覺得苦中的甜" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="259259/4000s" start="194493299/2400s" duration="23023/24000s" name="msg5 才是最甜" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="1578577/24000s" start="972802831/12000s" duration="13013/8000s" name="cta1 希望在來臨的第十一屆" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="101101/1500s" start="194565371/2400s" duration="37037/24000s" name="cta1 希望在來臨的第十一屆" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="551551/8000s" start="162140979/2000s" duration="1001/400s" name="cta2 圓夢工場創業大賽裡面見到你" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r2" offset="571571/8000s" start="10134124/125s" duration="13013/8000s" name="cta3 我們一起互相加油" tcFormat="NDF"></asset-clip>
+            <asset-clip ref="r3" offset="73073/1000s" start="0s" duration="73073/8000s" name="DFSC brand outro"/>
+          </spine>
+        </sequence>
+      </project>
+    </event>
+  </library>
+</fcpxml>
