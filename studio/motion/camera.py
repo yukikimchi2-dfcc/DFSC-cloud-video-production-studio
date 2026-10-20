@@ -142,6 +142,22 @@ class CameraShake(CameraLayer):
                 self.rotation * env * smooth_noise(t, self.seed + 9, octaves=2, freq=self.frequency * 0.7))
 
 
+class ZoomPunch(CameraLayer):
+    """Beat-synced punch-in for keyword moments: snaps to 1+amount in `attack` s (out_cubic),
+    holds, and eases back over the last `release` s of the layer."""
+
+    def __init__(self, amount: float = 0.08, attack: float = 0.12, release: float = 0.25,
+                 center=(0.5, 0.4), **kw):
+        super().__init__(**kw)
+        self.amount, self.attack, self.release, self.center = amount, attack, release, center
+
+    def camera(self, t, ctx):
+        k = easing.progress(t, 0, self.attack, "out_cubic")
+        if self.duration is not None:
+            k *= 1 - easing.progress(t, self.duration - self.release, self.release, "in_out_sine")
+        return 1 + self.amount * k, self.center[0], self.center[1], 0.0
+
+
 class ZoomThrough(CameraLayer):
     """Accelerating punch-in toward a point, with radial blur ramping up — pair with a cut."""
 

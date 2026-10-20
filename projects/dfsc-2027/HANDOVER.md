@@ -8,7 +8,7 @@
 | 当前状态 | **Not Started** |
 | 负责人 | 未指定 |
 | 风格档案 | 未指定（尚无 APPROVED 风格） |
-| 生成时代码版本 | `91211bb-dirty`（最新以分支 HEAD 为准） |
+| 生成时代码版本 | `2c9ea37-dirty`（最新以分支 HEAD 为准） |
 | Drive 输出根目录 | 1Lk3HhFLwgQi30d-2lRDFvqn7gRckszmU（`config/drive_output.yaml`） |
 | Drive 项目文件夹 | 1WZ8GvoxLe-OJ1DFSTHfPtREU5PprEwP_ |
 | Drive 预览目录 | 1a2f5BEUMFZS0TFQ1L1RvKbjoNty6mB__ |
@@ -20,8 +20,8 @@
 ## 使用素材
 - brand/source/DFSC_2027_Key_visual.ai（Illustrator 主视觉，已提取矢量 Logo）
 - 参考：Drive 3 支采访 Reel（文件夹 anyone:writer；Claude 端以公开链接只读使用，未修改原片）、FB 启航宣传片 + 学长姐故事、Notion 工作区与 SOP（references/）
-- 采访 Reel 成片：Nelson Chin · 五告凉 · 第十屆參賽者 → renders/dfsc-2027/dfsc2027_nelson_chin_gaochill_v004_final.mp4（65 s，QC PASSED，仅在云端容器内）；剪辑定义 edits/nelson_chin_gaochill/
 - brand/logos/dreamfactory_watermark.png、dreamfactory_logo_light.png：由 ChiliAng 片尾卡（68.5 s）抠出的 dream factory 标志
+- 采访 Reel 成片：Nelson Chin · 五告凉 · 第十屆參賽者 → v004（65 s，原版）与 v006（54 s：去水词、1.15 倍速、动态效果、关键词音效、原创 BGM），QC PASSED，仅在云端容器 renders/dfsc-2027/；剪辑定义 edits/nelson_chin_gaochill/
 
 ## 使用模板
 - dfsc2027_north_star_open@0.1.0（UNREVIEWED）
@@ -46,7 +46,7 @@
 - Nelson Chin 成片 MP4（73 MB）未上传 Drive：连接器无法传正式体积影片、容器无 OAuth
 
 ## 下一步行动
-- Nelson Chin Reel v004 待审核（剪辑 SOP §5 检查表）；确认后上传 Drive 07_Approved_Final_Videos
+- Nelson Chin Reel v006 待审核（剪辑 SOP §5 检查表）；确认后上传 Drive 07_Approved_Final_Videos
 
 ## 最近修改
 - 2026-10-19T13:38:45+00:00 · chatcut_connector_verified · claude-setup · {"surface": "Claude web Custom Connector (remote MCP, host-injected)", "tools_discovered": 62, "oauth_call": "PASS", "list_projects": "0 projects", "custom_headers": "none", "edit_import_generate_export": "UNVERIFIED"}

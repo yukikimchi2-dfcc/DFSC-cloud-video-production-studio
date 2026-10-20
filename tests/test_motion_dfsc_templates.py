@@ -115,3 +115,20 @@ def test_big_title_colour_and_question_pill_and_flash(brand):
     flash = dfsc.WhiteFlash()
     f = flash.draw(np.zeros((4, 4, 3), np.float32), ctx, flash.rise + flash.hold / 2)
     assert f.mean() > 0.9 and flash.draw(np.zeros((4, 4, 3), np.float32), ctx, flash.duration).mean() < 0.01
+
+
+def test_subtitle_pop_in_fades_in_then_settles(brand):
+    ctx = _ctx(brand)
+    cues = [(0.0, 2.0, "我在賣[涼茶]")]
+    draw = lambda layer, t: layer.draw(np.zeros((1920, 1080, 3), np.float32), ctx, t)   # noqa: E731
+    pop, plain = dfsc.InterviewSubtitle(cues, pop=0.12), dfsc.InterviewSubtitle(cues)
+    assert draw(pop, 0.03).max() < 0.6 < draw(pop, 1.0).max()
+    assert np.allclose(draw(pop, 1.0), draw(plain, 1.0))                # settles to the reference style
+
+
+def test_zoom_punch_attack_hold_release(brand):
+    from studio.motion.camera import ZoomPunch
+    ctx = _ctx(brand)
+    zp = ZoomPunch(amount=0.08, attack=0.12, release=0.25, duration=2.0)
+    z = lambda t: zp.camera(t, ctx)[0]                                   # noqa: E731
+    assert z(0.0) == pytest.approx(1.0) and z(1.0) == pytest.approx(1.08) and z(2.0) == pytest.approx(1.0)

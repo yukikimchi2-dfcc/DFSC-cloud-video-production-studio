@@ -4,7 +4,7 @@
 |---|---|
 | 素材 | `9Oct_凉茶_0050.MP4`（Drive `1Wa3MwPiNKw12j3q6i7C5DUBeIgqH6v3X`，1728×3072 HEVC 59.94 fps，107 s，第一条音轨 = 手持麦）——只读，未修改 |
 | 风格 | `DFSC_Interview_Reel`（REFERENCE ONLY），对齐同日成片 `DFCC_9Oct_JoshuaChin_SmartRental`、`DFCC_9Oct_ChiliAng_Eggteen` |
-| 输出 | 1080×1920 · 59.94 fps（同素材）· H.264 High / AAC 256k · −14 LUFS / ≤ −1.5 dBTP · 约 65 s |
+| 输出 | 1080×1920 · 59.94 fps（同素材）· H.264 High / AAC 256k · −14 LUFS / ≤ −1.5 dBTP · v004 约 65 s；v006 约 54 s |
 | 重剪 | `python3 projects/dfsc-2027/edits/nelson_chin_gaochill/edit.py --source <素材> --outro-ref <ChiliAng 成片>`（`--preview` 出 720p） |
 
 剪辑点、字幕、字卡全部写在 `edit.py` 的 `RANGES` / `CUES` / `OVERLAYS`（素材时间），改数字重跑即可；输出按 `_v###` 递增，不覆盖。
@@ -47,3 +47,16 @@
 2. **「100千」**：受访者原话；参考片 JoshuaChin 字卡同样写「100千」。
 3. 片尾沿用参考片的第十一屆品牌片尾；受访者是第十屆參賽者，姓名牌已注明。
 4. 圆梦口号 / 活动邀请：SOP 仍为【待定】，参考成片也未使用，本片未加。
+
+## v006 修改（用户要求：去水词、加速、动态效果、关键词音效、BGM）
+
+| 项目 | 做法 | 参数（`edit.py`） |
+|---|---|---|
+| 去水词 | 「啊」（我在賣涼茶，啊，我賣…）、「嗯」（一年半前之前）、「那個」（投我涼茶吧之前）、「啥」（啟動資金之前）、钩子前的「話」尾音、part——time 中间的憋气；每处剪法都把接好的声音重新转写确认，没有剪到真话 | `RANGES`、`FILLER_CUTS` |
+| 去停顿 | 讲话中 ≥0.22 s 的停顿缩到 0.14 s，每段首尾静音剪到 0.05 / 0.10 s（音量曲线先做 70 ms 中值平滑，呼吸声不会打断停顿判断） | `PAUSE_*`、`EDGE_KEEP_*` |
+| 加速 | 讲话部分整体 1.15 倍（atempo，音调不变）；品牌片尾不加速 | `SPEED` |
+| 动态效果 | 每个镜头缓慢推近 3.5 %；大字出现时镜头冲击放大 7–8 %（不歸路 加震动）；字卡淡出；字幕逐句弹出；三处白闪 | `PUSH_IN`、`OVERLAYS` 的 punch / shake、`LABEL_FADE_OUT`、`SUB_POP` |
+| 关键词音效 | 字卡 pop、姓名牌 / 转场 whoosh、「看到這個商機」「8000塊」ding、「不歸路」「投我涼茶吧」impact | `SFX_DEFAULT`、`SFX_GAIN_DB`、`OVERLAYS` 的 sfx |
+| BGM | 原创合成配乐（C 大调 I–V–vi–IV，104 BPM，lo-fi pop），讲话时自动压低，约在人声下 13 dB；片尾前 1.2 s 淡出，接回品牌片尾原本的音乐 | `MUSIC_LUFS`、`studio/edit/sfx.py` |
+
+音效与配乐全部由 `studio/edit/sfx.py` 用程序合成，属原创、无版权问题（符合剪辑 SOP「只用无版权音乐」）。参考成片讲话段原本没有背景音乐，本版按用户要求加入。

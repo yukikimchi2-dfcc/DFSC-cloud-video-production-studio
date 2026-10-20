@@ -331,24 +331,26 @@ class InterviewSubtitle(Layer):
     """Bottom subtitles: white heavy sans, black outline, [keywords] green with underline bar.
     Ref: ChiliAng 0:00.5 — glyph rows y 1267–1326 → centre ≈1296, cap height ≈60 px."""
 
-    def __init__(self, cues: list[tuple[float, float, str]], y: float = 1296, size: int = 66, **kw):
+    def __init__(self, cues: list[tuple[float, float, str]], y: float = 1296, size: int = 66, pop: float = 0.0, **kw):
         kw.setdefault("duration", max((e for _, e, _ in cues), default=0))
         super().__init__(**kw)
-        self.cues, self.y, self.size = cues, y, size
+        self.cues, self.y, self.size, self.pop = cues, y, size, pop
         self._cache: dict[str, Patch] = {}
 
     def active_cue(self, t: float) -> str | None:
         return next((txt for s, e, txt in self.cues if s <= t < e), None)
 
     def draw(self, frame, ctx, t):
-        txt = self.active_cue(t)
-        if not txt:
+        cue = next(((s, txt) for s, e, txt in self.cues if s <= t < e), None)
+        if not cue:
             return frame
+        start, txt = cue
         if txt not in self._cache:
             b = ctx.brand
             self._cache[txt] = text_patch(b, txt, "title", self.size, "#FFFFFF", b.color("ref_keyword_green"),
                                           stroke=7, stroke_color="#000000", underline=True)
-        return _place(frame, self._cache[txt], ctx, 540, self.y, 1.0, self.opacity)
+        scale, alpha = (_pop(t - start, self.pop) if self.pop > 0 else (1.0, 1.0))  # optional per-line pop-in
+        return _place(frame, self._cache[txt], ctx, 540, self.y, scale, alpha * self.opacity)
 
 
 # ============================================================== shared end card (both families)
