@@ -4,7 +4,10 @@ The outro is taken from the reference from OUTRO_IN to its end. The reference
 dissolves from the speaker into the outro over ~0.25 s; the same dissolve is
 rebuilt here (first outro frame held under the dissolve, audio cross-faded).
 
-usage: python finalize.py <talk_video.mp4> <talk_audio.wav> <reference.mp4> <out.mp4> [--outro-out outro.mp4]
+usage: python finalize.py <talk_video.mp4> <talk_audio.wav> <outro_source.mp4> <out.mp4>
+                          [--outro-in SECONDS] [--outro-out outro.mp4]
+  outro_source is the reference video (outro from 54.02 s) or any replacement outro clip
+  (pass --outro-in 0 for a clip that starts with the outro).
 """
 import subprocess
 import sys
@@ -19,7 +22,10 @@ def dur(path):
 
 
 def main():
+    global OUTRO_IN
     talk_v, talk_a, ref, out = sys.argv[1:5]
+    if "--outro-in" in sys.argv:
+        OUTRO_IN = float(sys.argv[sys.argv.index("--outro-in") + 1])
     frames = int(subprocess.run(["ffprobe", "-v", "error", "-count_frames", "-select_streams", "v:0", "-show_entries",
                                  "stream=nb_read_frames", "-of", "default=nw=1:nk=1", talk_v],
                                 capture_output=True, text=True).stdout)
@@ -31,7 +37,8 @@ def main():
           f"tpad=start_mode=clone:start_duration={XFADE},settb=AVTB[o];"
           f"[0:v]fps=24000/1001,format=yuv420p,settb=AVTB[m];"
           f"[m][o]xfade=transition=fade:duration={XFADE}:offset={T - XFADE:.5f},format=yuv420p[v];"
-          f"[1:a]atrim=start={OUTRO_IN - XFADE},asetpts=PTS-STARTPTS,aresample=48000[oa];"
+          f"[1:a]atrim=start={max(0.0, OUTRO_IN - XFADE)},asetpts=PTS-STARTPTS,aresample=48000"
+          f"{',adelay=' + str(int(XFADE * 1000)) + ':all=1' if OUTRO_IN < XFADE else ''}[oa];"
           f"[2:a]aresample=48000,aformat=channel_layouts=stereo[ta];"
           f"[ta][oa]acrossfade=d={XFADE}:c1=tri:c2=tri[a]")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", talk_v, "-i", ref, "-i", talk_a, "-filter_complex", fc,

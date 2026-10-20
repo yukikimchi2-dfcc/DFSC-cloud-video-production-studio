@@ -4,12 +4,15 @@
 #   WORK = scratch folder               OUT = deliverables folder
 # Edit plan.py (what is said / subtitle text) or titles.py (on-screen graphics),
 # then run this script again.
+#   LOGO=new_logo.png      replace the watermark (white-on-video version, transparent PNG)
+#   OUTRO=new_outro.mp4    replace the brand outro (clip that starts with the outro)
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 STUDIO="$HERE/../../studio"
 RAW="${RAW:?path to raw interview}"; REF="${REF:?path to reference video}"
 WORK="${WORK:-/tmp/catherine_work}"; OUT="${OUT:-$HERE/deliverables}"
-LOGO_WHITE="$HERE/assets/Logo_Transparent_White.png"
+LOGO_WHITE="${LOGO:-$HERE/assets/Logo_Transparent_White.png}"
+if [ -n "${OUTRO:-}" ]; then OUTRO_SRC="$OUTRO"; OUTRO_IN=0; else OUTRO_SRC="$REF"; OUTRO_IN=54.02; fi
 FROM="${FROM:-1}"                     # resume from a step (1-5)
 mkdir -p "$WORK/build" "$OUT/stems"
 
@@ -38,11 +41,12 @@ python3 "$STUDIO/render.py" "$WORK/edl.json" "$HERE/titles.py" "$WORK/build/arol
 fi
 
 # 5. outro + final files
-python3 "$STUDIO/finalize.py" "$WORK/build/video_talk.mp4" "$WORK/build/mix_talk.wav" "$REF" "$OUT/Final_Edit.mp4" \
-  --outro-out "$OUT/DFSC_品牌片尾_第十一屆.mp4"
+python3 "$STUDIO/finalize.py" "$WORK/build/video_talk.mp4" "$WORK/build/mix_talk.wav" "$OUTRO_SRC" "$OUT/Final_Edit.mp4" \
+  --outro-in "$OUTRO_IN" --outro-out "$OUT/DFSC_品牌片尾_第十一屆.mp4"
 ffmpeg -v error -y -i "$WORK/build/video_clean.mp4" -i "$WORK/build/mix_talk.wav" -map 0:v -map 1:a -c:v copy \
   -c:a aac -b:a 256k -movflags +faststart "$OUT/CatherinePang_A-roll_無字卡.mp4"
 for s in speech_proc bgm sfx mix_talk; do cp "$WORK/build/$s.wav" "$OUT/stems/$s.wav"; done
 python3 "$STUDIO/export.py" "$WORK/edl.json" "$HERE/titles.py" "$OUT" --src-tc 22:25:36:12
 cp "$WORK/edl.json" "$OUT/edl.json"
+python3 "$STUDIO/render.py" "$WORK/edl.json" "$HERE/titles.py" - "$LOGO_WHITE" - --titles-pack "$OUT/editable_project/titles"
 echo "done -> $OUT"

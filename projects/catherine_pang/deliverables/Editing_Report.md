@@ -140,4 +140,6 @@ Rebuild everything with `projects/catherine_pang/build.sh` (edit `plan.py` to ch
 | `Edit_Decision_List.edl` | CMX3600 EDL (relinks to the raw file, source TC 22:25:36:12) |
 | `Timeline.fcpxml` | FCPXML 1.9 for Final Cut / DaVinci Resolve (A-roll cuts, outro, watermark, music, SFX). Relink `file:///RELINK/...` to your local files |
 | `edl.json` | machine-readable edit (phrases, clips, subtitle timing) |
-| ChatCut project | 「Catherine Pang · 洪記糖水 · 第九屆參賽者」 with the same layout as the Nelson Chin project (editable A-roll + captions + outro + watermark timeline, and the finished cut as reference) |
+| `editable_project/README.md` | **how to edit**: ChatCut layer map, 剪映/CapCut/Premiere layer table, one-command rebuild (swap subtitles / logo / titles / outro) |
+| `editable_project/titles/` | 38 title cards as transparent MOV clips (full 1080×1920 canvas, drop in place) + `titles_timecodes.csv` |
+| ChatCut project | 「Catherine Pang · 洪記糖水 · 第九屆參賽者」 — editable timeline: A-roll 無字卡 + dissolve + outro (V1), watermark (V2), 41 editable title Motion Graphics (V3–V5), corrected captions; plus the finished cut as a reference timeline |

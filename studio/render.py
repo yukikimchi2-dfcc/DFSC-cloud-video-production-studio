@@ -3,6 +3,7 @@
 usage: python render.py <edl.json> <titles.py> <aroll.mp4> <logo_white.png> <out.mp4>
                         [--frames 10,200,...  (writes PNG previews instead of a video)]
                         [--no-overlays        (text-free A-roll: framing + cut effects only)]
+                        [--titles-pack DIR    (each title as a transparent MOV + timecode sheet)]
 """
 import importlib.util
 import json
@@ -93,7 +94,7 @@ def frame_matrix(face, zoom):
 
 # --------------------------------------------------------------------------- compositing
 def blend(frame, rgba, x, y, alpha=1.0):
-    """frame: uint8 HxWx3 (modified in place); rgba: float 0..1."""
+    """frame: uint8 HxWx3 or HxWx4 (modified in place); rgba: float 0..1."""
     x, y = int(round(x)), int(round(y))
     h, w = rgba.shape[:2]
     x0, y0, x1, y1 = max(0, x), max(0, y), min(W, x + w), min(H, y + h)
@@ -102,7 +103,43 @@ def blend(frame, rgba, x, y, alpha=1.0):
     s = rgba[y0 - y:y1 - y, x0 - x:x1 - x]
     a = s[..., 3:4] * alpha
     d = frame[y0:y1, x0:x1].astype(np.float32)
+    if frame.shape[2] == 4:                      # transparent layer: "over" compositing
+        da = d[..., 3:4] / 255
+        oa = a + da * (1 - a)
+        rgb = (s[..., :3] * 255 * a + d[..., :3] * da * (1 - a)) / np.maximum(oa, 1e-6)
+        frame[y0:y1, x0:x1] = np.concatenate([rgb, oa * 255], 2).astype(np.uint8)
+        return
     frame[y0:y1, x0:x1] = (d * (1 - a) + s[..., :3] * 255 * a).astype(np.uint8)
+
+
+def export_title_pack(titles, fps, out_dir):
+    """Every title as its own transparent clip (MOV, PNG codec), full 1080x1920 canvas so it
+    drops in place in any editor; plus cue sheet with record timecodes."""
+    import csv
+    os.makedirs(out_dir, exist_ok=True)
+    rows = []
+    for n, tt in enumerate(titles, 1):
+        f0, f1 = int(round(tt.t0 * fps)), int(round(tt.t1 * fps))
+        s = tt.s
+        label = re.sub(r"[\[\]\s/：:・]", "", s.get("text") or s.get("name") or s.get("left", "")) or s["type"]
+        name = f"{n:02d}_{s['type']}_{label}.mov"
+        enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgba", "-s", f"{W}x{H}",
+                                "-r", "24000/1001", "-i", "-", "-c:v", "png", "-pix_fmt", "rgba",
+                                f"{out_dir}/{name}"], stdin=subprocess.PIPE)
+        for f in range(f0, f1 + 1):
+            frame = np.zeros((H, W, 4), np.uint8)
+            tt.draw(frame, f / fps)
+            enc.stdin.write(frame.tobytes())
+        enc.stdin.close()
+        enc.wait()
+        sec = lambda fr: f"{fr // fps // 60:02.0f}:{fr / fps % 60:06.3f}"  # noqa: E731
+        rows.append([name, f0, f1 + 1 - f0, sec(f0), sec(f1 + 1), s["type"], s.get("text") or s.get("name", ""),
+                     s.get("emoji", "")])
+    with open(f"{out_dir}/titles_timecodes.csv", "w", newline="", encoding="utf-8-sig") as fh:
+        w = csv.writer(fh)
+        w.writerow(["file", "start frame (23.976)", "length frames", "start mm:ss", "end mm:ss", "type", "text", "emoji"])
+        w.writerows(rows)
+    print(f"{len(rows)} title clips -> {out_dir}")
 
 
 def runs_from(text):
@@ -309,6 +346,10 @@ def main():
     edl = json.load(open(edl_path))
     fps = edl["fps"]
     anchors = Anchors(edl)
+    if "--titles-pack" in sys.argv:
+        titles = [Title(s, anchors) for s in load_mod(titles_path).TITLES]
+        export_title_pack(titles, fps, sys.argv[sys.argv.index("--titles-pack") + 1])
+        return
     titles = [Title(s, anchors) for s in load_mod(titles_path).TITLES]
     subs = Subtitles(edl)
     faces = face_track(aroll, edl)
