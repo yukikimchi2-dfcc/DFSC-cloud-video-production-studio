@@ -13,7 +13,7 @@ Fields
   text  : on-screen subtitle (Traditional Chinese, ASR mistakes corrected)
   kw    : keywords shown green + underlined
   zoom  : "wide" (base framing) | "close" (punch-in)
-  fx    : effect on the cut into this phrase: glitch | shake | blur
+  fx    : effect on the cut into this phrase: glitch | shake | zoom
 """
 
 PHRASES = [
@@ -32,7 +32,7 @@ PHRASES = [
     dict(id="why2", say=[(47.1, "因为"), (48.1, "我自己本身")], text="因為我自己本身", kw=[], zoom="close"),
     dict(id="why3", say=[(49.0, "不是那种早九晚五的"), (51.4, "乖乖派")], text="不是那種朝九晚五的乖乖派", kw=["乖乖派"], zoom="close"),
     # ---------------- STORY ----------------
-    dict(id="st1", say=[(63.6, "我是第三次创业了")], text="我是第三次創業了", kw=["第三次"], zoom="wide", fx="blur"),
+    dict(id="st1", say=[(63.6, "我是第三次创业了")], text="我是第三次創業了", kw=["第三次"], zoom="wide", fx="zoom"),
     dict(id="st2", say=[(64.9, "我第一次创业的时候")], text="我第一次創業的時候", kw=[], zoom="wide"),
     dict(id="st3", say=[(66.0, "是我在刚刚要踏入三十岁的时候")], text="是我在剛剛要踏入30歲的時候", kw=["30歲"], zoom="wide"),
     dict(id="st4", say=[(69.0, "那时候我就进入了")], text="那時候我就進入了", kw=[], zoom="close"),
@@ -49,7 +49,7 @@ PHRASES = [
     dict(id="st15", say=[(89.4, "起起跌跌也大了很多的坑之后")], text="起起跌跌也踩了很多的坑之後", kw=["很多的坑"], zoom="wide"),
     dict(id="st17", say=[(92.8, "我是在四十五岁"), (95.6, "的时候才开始创业")], text="我是在45歲的時候才開始創業", kw=["45歲"], zoom="close"),
     # ---------------- INSIGHT ----------------
-    dict(id="in1", say=[(175.6, "天下没有白走的路")], text="天下沒有白走的路", kw=["白走的路"], zoom="wide", fx="blur"),
+    dict(id="in1", say=[(175.6, "天下没有白走的路")], text="天下沒有白走的路", kw=["白走的路"], zoom="wide", fx="zoom"),
     dict(id="in2", say=[(177.2, "每一走的一步都算数")], text="每走的一步都算數", kw=["都算數"], zoom="wide"),
     dict(id="in3", say=[(197.0, "为什么我会参加")], text="為什麼我會參加", kw=[], zoom="close"),
     dict(id="in4", say=[(198.2, "第九届的"), (199.5, "圆梦创业大赛")], text="第九屆的圓夢創業大賽", kw=["圓夢創業大賽"], zoom="close"),

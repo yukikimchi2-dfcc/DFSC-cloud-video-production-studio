@@ -916,7 +916,7 @@
    "kw": [
     "第三次"
    ],
-   "fx": "blur",
+   "fx": "zoom",
    "zoom": "wide",
    "units": [
     "我",
@@ -1440,7 +1440,7 @@
    "kw": [
     "白走的路"
    ],
-   "fx": "blur",
+   "fx": "zoom",
    "zoom": "wide",
    "units": [
     "天",

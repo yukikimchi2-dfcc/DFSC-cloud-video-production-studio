@@ -7,7 +7,6 @@ usage: python render.py <edl.json> <titles.py> <aroll.mp4> <logo_white.png> <out
 """
 import importlib.util
 import json
-import math
 import os
 import random
 import re
@@ -24,6 +23,7 @@ import gfx  # noqa: E402
 W, H = 1080, 1920
 ZOOM = {"wide": 1.10, "close": 1.27}   # punch-in levels (reference alternates two framings)
 PUSH = 0.025                           # slow push-in over a phrase (motion)
+ZOOM_THROUGH = 0.14                    # extra scale reached by a zoom-through transition
 EYE_Y = 0.44                           # face centre lands at 44% of frame height
 LOGO_BOX = (35, 62, 172)               # x, y, width - measured on the reference
 SUB_MAX_W = 960
@@ -374,9 +374,13 @@ def main():
         ph_of_frame[a:] = i
     # cut effects: phrase fx + glitch whenever a serif title enters
     fx_at = []
+    zoom_land = {}                       # zoom-through: incoming shot starts at the outgoing shot's scale
     for i, p in enumerate(phrases):
         if p.get("fx"):
             fx_at.append((int(round(p["start"] * fps)), p["fx"], i))
+            if p["fx"] == "zoom" and i:
+                out_scale = ZOOM[phrases[i - 1]["zoom"]] * (1 + PUSH) * (1 + ZOOM_THROUGH)
+                zoom_land[i] = out_scale * 1.03 / ZOOM[p["zoom"]] - 1
     for i, tt in enumerate(titles):
         if tt.s["type"] == "serif":
             fx_at.append((int(round(tt.t0 * fps)), "glitch", 100 + i))
@@ -390,7 +394,6 @@ def main():
                                 "-preset", "slow", "-crf", "17", "-pix_fmt", "yuv420p",
                                 "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
                                 "-movflags", "+faststart", out], stdin=subprocess.PIPE)
-    prev_src = None
     for f in range(edl["frames"]):
         raw = dec.stdout.read(W * H * 3)
         if len(raw) < W * H * 3:
@@ -409,14 +412,15 @@ def main():
                 dx, dy = fx_shake(k, 8, sd)
                 M = M.copy(); M[0, 2] += dx; M[1, 2] += dy
                 M[:, :2] *= 1.04; M[0, 2] -= W * 0.02; M[1, 2] -= H * 0.02
+        for k, kind, sd in [(f - f0, kind, sd) for f0, kind, sd in fx_at if -3 <= f - f0 < 6]:
+            if kind == "zoom":                         # clean zoom-through section transition (no blur)
+                if k < 0:                              # outgoing: accelerate into the frame
+                    sc = 1 + ZOOM_THROUGH * ((k + 4) / 4) ** 2
+                else:                                  # incoming: keeps pushing in, then settles
+                    sc = 1 + zoom_land.get(sd, ZOOM_THROUGH) * (1 - (k + 1) / 6) ** 3
+                S = np.float32([[sc, 0, (1 - sc) * W / 2], [0, sc, (1 - sc) * H * 0.45]])
+                M = (np.vstack([S, [0, 0, 1]]) @ np.vstack([M, [0, 0, 1]]))[:2].astype(np.float32)
         frame = cv2.warpAffine(src, M, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT)
-        for k, kind, sd in [(f - f0, kind, sd) for f0, kind, sd in fx_at if -3 <= f - f0 < 5]:
-            if kind == "blur":                         # ghost + zoom-blur transition (reference 0:40)
-                s = 1 - abs(k + 0.5) / 4.5
-                ghost = cv2.warpAffine(frame, np.float32([[1.08, 0, -W * 0.04], [0, 1.08, -H * 0.04]]),
-                                       (W, H), borderMode=cv2.BORDER_REFLECT)
-                frame = cv2.addWeighted(frame, 1 - 0.45 * s, ghost, 0.45 * s, 12 * s)
-                frame = cv2.GaussianBlur(frame, (0, 0), 1 + 9 * s)
         if overlays:
             blend(frame, logo_np, *logo_xy)
             for tt in titles:

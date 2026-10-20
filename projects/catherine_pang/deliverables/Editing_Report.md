@@ -21,10 +21,10 @@
 | Title motion | Box grows horizontally from a thin bar (~5 frames), characters fade in one by one, a diagonal light sweep crosses the box, a star glint flashes at the top-right corner, emoji sticker pops in, reverse on exit | identical |
 | Emphasis words | Big serif (粗明體 style) white or green, dark outline, characters zoom in from blur, gold sparkles, RGB-glitch on entry (「不簡單」「極高」「等你來挑戰」) | Noto Serif CJK TC Black 168 px: 「不辛苦」「掉到最谷底」「負債累累」「苦中的甜」「才是最甜」「一起加油」 |
 | Framing | Medium close-up, face centre ≈ 43 % of height, two framings alternating (punch-ins), titles above the head | face-tracked (per phrase), face centre at 44 %, framings 1.10× / 1.27×, plus a 2.5 % slow push-in per phrase |
-| Cut effects | jump cuts; RGB split/glitch on emphasis; camera shake; ghost/zoom-blur transition between sections; dissolve into outro | glitch (hook, 「才是最甜」, every serif entry), shake (「掉到最谷底」), ghost/zoom-blur (into the story and into the insight section), 0.25 s dissolve into outro |
+| Cut effects | jump cuts; RGB split/glitch on emphasis; camera shake; section transitions; dissolve into outro | glitch (hook, 「才是最甜」, every serif entry), shake (「掉到最谷底」), clean zoom-through (no blur) into the story and into the insight section, 0.25 s dissolve into outro |
 | Logo | 「dream factory 圓夢工場」, white + green version, top-left x 35 y 62, width 172 px, 100 % opacity, on screen from frame 0 until the outro | identical position/size/timing (see §6) |
-| Music | quiet sustained pad under the first ~70 %, fuller groove from ~38 s, outro has its own music + whoosh | original music, same arc: pad + e-piano first, bass/drums from the insight section (45 s), hands over to the outro's own music |
-| SFX | accents on title/keyword moments | 46 cues: whoosh + glint on big boxes, swish on small boxes/rows, pop on stickers/✅, impact + glitch on serif words, thump on shake, whoosh on blur transitions |
+| Music | (vocal-separated with Demucs) ~99 BPM, F major, warm uplifting corporate-pop: sparse piano + warm pad/bass ~13 LU under the voice for the first ~70 %, then strings, bass pulse and kick/clap/hats ~9 LU under the voice; outro has its own music | **original composition** in the same family: 100 BPM, F major, own chord progression (F–Am–Bb–C / Dm–Bb–F–C) and melody, real instrument samples (piano, warm pad, finger bass, strings, vibraphone, drums; FluidR3 GM, MIT licence). Quiet part ~14 LU under the voice, full section from 「天下沒有白走的路」 ~10 LU under it, music drops out for one bar on 「掉到最谷底」 |
+| SFX | accents on key words | **only on the 6 key words** (impact + short glitch): 不辛苦、掉到最谷底、負債累累、苦中的甜、才是最甜、一起加油 — no sound on ordinary sentence starts or title boxes |
 | Outro | 54.0 → 63.1 s: starfield 「第十一屆，三個賽道 創意 / 成長 / 轉型」→ green clouds →「圓夢工場・創業大賽 / Dream Factory Startup Contest / 啟航北極星 / 預熱開放報名 dreamfactory.my」 | **original outro reused unchanged** (picture + sound), same dissolve |
 | Loudness | talk −13.9 LUFS, outro −13.4 LUFS | talk −14.0 LUFS, outro kept at its original level |
 
@@ -86,7 +86,7 @@ Identification: the interviewer is off-camera and ~12 dB quieter on Catherine's 
 2. `align.py` — character-level forced alignment (wav2vec2-XLSR Chinese, CTC Viterbi). Whisper's word times were 0.2 – 0.3 s off, which left stray syllables at cuts; alignment fixed that.
 3. `build_edl.py` — phrases from `projects/catherine_pang/plan.py` → frame-accurate EDL (56 clips, 45 phrases), cut points on the speech envelope, pause shortening, subtitle timing per character
 4. `assemble.py` — frame-accurate A-roll from the 10-bit HEVC + sample-exact audio
-5. `audio.py` — speech clean-up (HPF 80 Hz, light FFT denoise, gentle de-ess, 2.5:1 compression), original music, SFX, ducking (−5 dB under speech), loudness −14 LUFS
+5. `audio.py` + `music.py` — speech clean-up (HPF 80 Hz, light FFT denoise, gentle de-ess, 2.5:1 compression), original music composed as MIDI and rendered with FluidSynth (voice-range EQ dips, −3 dB ducking), key-word SFX, loudness −14 LUFS
 6. `render.py` — face tracking, framing, cut effects, logo, titles, stickers, sparkles, subtitles
 7. `finalize.py` — 0.25 s dissolve into the reused outro, final encode
 8. `export.py` — SRT / ASS / cut list / graphics cues / CMX3600 EDL / FCPXML
@@ -119,7 +119,7 @@ Rebuild everything with `projects/catherine_pang/build.sh` (edit `plan.py` to ch
 1. **Her nickname**: ASR heard 「田大姐」. I used **「甜大姐」** (same sound, fits a 糖水 brand). Her Chinese name is unknown, so the name card shows **Catherine Pang** with 「洪記糖水 ・ 第九屆參賽者」. Change both in `plan.py` / `titles.py` if needed.
 2. **Fonts**: the reference's exact commercial fonts are not identifiable from video. Noto Sans CJK TC (= 思源黑體) and Noto Serif CJK TC (= 思源宋體) are visually the closest open-licence matches.
 3. **Emoji stickers**: the reference uses Apple-style emoji, which are not licensable here. Noto Color Emoji is used with the same white sticker outline and animation.
-4. **Music & SFX**: the reference's library tracks are unknown. Both are **original, synthesised in this pipeline**, so they contain no third-party recordings, are safe for commercial use, and cannot trigger Facebook/Instagram rights claims.
+4. **Music & SFX**: the reference's library track is unknown, so a new piece was **composed** to the reference's measured brief (tempo, key, arrangement arc, levels) with its own chords and melody, and rendered with MIT-licensed instrument samples; SFX are synthesised. No third-party recordings → safe for commercial use, no Facebook/Instagram rights claims. MIDI: `stems/bgm_original.mid`.
 5. **Background**: Catherine was filmed in front of a busy event banner (「下一站 走向IPO / THE SANDBOX」) that sits behind the logo, whereas the reference had a plain wall. The logo has a faint soft shadow to stay legible. This is the only visual addition.
 6. **Subtitle wording**: lightly normalised where she slipped:「每一走的一步」→「每走的一步都算數」, ASR 「早九晚五」→「朝九晚五」, 「中央出發」→「中央廚房」, 「最古頂」→「最谷底」, 「也大了很多的坑」→「也踩了很多的坑」, 「圓夢工廠」→「圓夢工場」. Simplified ASR output was converted to Traditional Chinese to match video 1.
 7. **Title wording** summarises her sentences, as in video 1 (e.g. 「一場疫情」「啟動資金：零」). The header 「創業之前 先聽這句」 is reused from video 1 as the series format.
